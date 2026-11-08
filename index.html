@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Murdoku">
+<meta name="theme-color" content="#120b22">
+<title>Murdoku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Baloo+2:wght@400;500;600;700;800&family=Bungee&family=Kalam:wght@400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120b22;--bg2:#1b1233;--panel:#1d1538;--panel2:#271d4a;--line:#3d2f72;--ink:#f4efff;--soft:#a99bd6;
+ --lav:#b69cff;--pink:#ff2d6f;--yel:#ffe14d;--cyan:#4dd2ff;--green:#3ef07a;--orange:#ffa31a;--wall:#14101e;--case:#b69cff}
+*{touch-action:manipulation;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;margin:0;color:var(--ink);font-family:"Baloo 2",system-ui,sans-serif;
+ background:radial-gradient(120% 60% at 50% 0%,#2a1856 0%,var(--bg) 60%) fixed,var(--bg);min-height:100%}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+.hidden{display:none!important}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px 40px}
+
+/* Kopf */
+.top{display:flex;align-items:center;gap:10px;padding:12px 14px 6px;max-width:560px;margin:0 auto}
+.top .back{font-size:24px;width:44px;height:44px;border-radius:14px;background:var(--panel2);border:1.5px solid var(--line);display:grid;place-items:center;color:var(--ink)}
+.brand{flex:1;font-weight:700;font-size:24px;color:var(--lav);text-shadow:0 0 14px #b69cff99}
+.langs{display:flex;background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:3px}
+.langs button{padding:5px 12px;border-radius:999px;font-size:14px;font-weight:700;color:var(--soft)}
+.langs button.on{background:var(--lav);color:#1a1033;box-shadow:0 0 12px #b69cffaa}
+
+/* Titel */
+.logo{text-align:center;margin:18px 0 6px}
+.logo h1{margin:0;font-family:"Bungee",Impact,sans-serif;font-weight:400;font-size:clamp(46px,14vw,72px);letter-spacing:2px;line-height:1;color:#fff;position:relative;display:inline-block;
+ text-shadow:0 0 6px #fff,0 0 18px #ff4fd8,0 0 38px #b69cff,0 0 60px #7a3cff}
+.logo h1 .d{position:relative}
+.logo h1 .d::after{content:"";position:absolute;left:46%;top:2px;width:7px;height:26px;background:#e3122f;border-radius:0 0 6px 6px;box-shadow:0 0 10px #ff1f3d}
+.logo h1 .d.k::after{left:58%;height:18px}
+.pillT{display:inline-block;margin-top:12px;background:#fff;color:#1a1033;border-radius:999px;padding:7px 18px;font-weight:600;font-size:clamp(13px,3.6vw,16px);box-shadow:0 0 18px #ff4fd855}
+.pillT b{color:#e3122f}
+.player{display:flex;gap:8px;align-items:center;margin:16px 0 4px;font-size:14px;color:var(--soft);background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:10px 12px}
+.player input{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;background:var(--bg);color:var(--ink)}
+.sync{font-size:12px;color:var(--soft)}
+.book{margin:22px 0 10px;font-size:22px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--lav);text-shadow:0 0 12px #b69cff88;flex-wrap:wrap}
+.book small{font-weight:500;color:var(--soft);font-size:13px;text-shadow:none;flex-basis:100%;order:3;margin-top:-4px}
+.book .rb{margin-left:auto;font-size:14px;color:var(--ink);background:var(--panel2);border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;text-shadow:none}
+.cases{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.case{min-height:84px;background:var(--panel);border:2px solid var(--cc);border-radius:20px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:10px 12px;text-align:left;color:var(--ink);box-shadow:0 0 12px color-mix(in srgb,var(--cc) 40%,transparent),inset 0 0 14px color-mix(in srgb,var(--cc) 14%,transparent)}
+.case .cn{font-size:13px;font-weight:700;color:var(--cc)}
+.case .ct{font-size:17px;font-weight:600;line-height:1.15;overflow-wrap:anywhere;hyphens:auto}
+.case .ck{font-size:12px;color:var(--green);font-weight:600}
+.case.done{background:linear-gradient(160deg,#1f3a2c,var(--panel) 60%)}
+.empty{color:var(--soft);font-size:14px}
+
+/* Fall */
+.caseNav{display:flex;align-items:center;justify-content:space-between;margin:2px 0 0}
+.caseNav button{width:48px;height:48px;border-radius:16px;background:var(--panel);border:2px solid var(--case);color:var(--case);font-size:30px;line-height:1;font-weight:700;box-shadow:0 0 12px color-mix(in srgb,var(--case) 45%,transparent)}
+.caseNav button:disabled{opacity:.25;box-shadow:none}
+.caseNav span{color:var(--soft);font-weight:600;font-size:14px}
+.caseHead{text-align:center;margin:6px 0 14px}
+.caseHead h1{margin:0;font-size:30px;color:var(--case);text-shadow:0 0 16px var(--case)}
+.caseHead p{margin:6px 0 0;font-size:15px;color:var(--soft)}
+.suspects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 10px;margin-bottom:16px}
+.sus{display:flex;flex-direction:column;align-items:center;text-align:center;border-radius:20px;padding:5px 3px 3px;transition:box-shadow .15s,background .15s}
+.pol{background:#fff;padding:6px 6px 0;box-shadow:0 3px 8px #0008;border:1.5px solid #333;width:88%;color:#1a1520}
+.pol svg{display:block;width:100%;aspect-ratio:1;border:1.5px solid #333}
+.pol .nm{font-family:"Dancing Script",cursive;font-size:22px;font-weight:700;line-height:1.25;padding:2px 0 3px}
+.sus.victim .pol{background:#f6dede}
+.clue{overflow-wrap:anywhere;hyphens:auto;-webkit-hyphens:auto;background:var(--panel2);border:1.5px solid var(--line);border-radius:16px;padding:7px 8px;margin-top:-4px;font-size:13.5px;line-height:1.25;width:100%;color:#e9e3ff}
+.clue b{font-weight:700;color:var(--yel)}
+.sus.on{background:#ff2d6f22;box-shadow:0 0 0 2.5px var(--pink),0 0 22px #ff2d6f88}
+.sus.placed .pol{opacity:.45}
+.sus.placed .clue{opacity:.6}
+
+.bwrap{position:relative;margin:0 auto;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.board{touch-action:pan-x pan-y;position:absolute;border:5px solid var(--wall);background:var(--wall);touch-action:manipulation;border-radius:4px;box-shadow:0 0 0 2px var(--case),0 0 26px var(--case),0 0 60px #7a3cff55}
+.cell{touch-action:pan-x pan-y;position:absolute;outline:1px solid rgba(30,30,40,.55);outline-offset:-0.5px}
+.wall{position:absolute;background:var(--wall);z-index:3;pointer-events:none}
+.ov{position:absolute;pointer-events:none;z-index:2}
+.win{position:absolute;z-index:5;pointer-events:none}
+.rlab{position:absolute;z-index:6;transform:translate(-50%,0);background:#fbf8ef;color:#1b1a20;border:2px solid var(--wall);border-radius:999px;padding:1px 9px;font-family:"Zilla Slab",Georgia,serif;font-weight:700;text-transform:uppercase;white-space:nowrap;pointer-events:none;letter-spacing:.2px}
+.mark{position:absolute;z-index:7;display:grid;place-items:center;pointer-events:none}
+.mark .tok{width:72%;height:72%;border-radius:50%;background:#fff;color:#1b1a20;border:2.5px solid var(--wall);display:grid;place-items:center;font-family:"Kalam",cursive;font-weight:700;line-height:1}
+.mark .tok.vic{background:#e7b9c4}
+.mark .tok.bad{border-color:#d22;box-shadow:0 0 0 3px #f66}
+.mark svg{width:70%;height:70%}
+.mark.auto svg{opacity:1}
+.notes{position:absolute;z-index:7;pointer-events:none}
+.notes span{position:absolute;width:38%;height:38%;display:grid;place-items:center;border-radius:50%;background:#fffd;color:#1b1a20;border:1.5px solid var(--wall);font-family:"Kalam",cursive;font-weight:700;line-height:1}
+.notes span.vic{background:#f1c9d2}
+.axl{position:absolute;display:grid;place-items:center;font-size:12px;color:var(--soft);font-weight:600}
+.cmp{position:absolute;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--lav);font-size:15px;font-weight:700;text-shadow:0 0 8px #b69cff}
+.cmp i{display:block;background:#6a58a8}
+.infos{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:0 0 16px}
+.info{background:#cdc6ea;color:#1b1a20;border-radius:18px;padding:10px 14px;text-align:center;max-width:250px;box-shadow:0 4px 0 #0005;font-family:"Zilla Slab",Georgia,serif}
+.info b{display:block;font-size:19px;line-height:1.1}
+.info span{display:block;font-size:14px;line-height:1.25;margin:4px 0 6px}
+.info svg{display:block;margin:0 auto}
+.gen{display:flex;align-items:center;gap:10px;background:#cdc6ea;color:#1b1a20;border-radius:16px;padding:9px 14px;margin:0 auto 14px;max-width:340px;font-family:"Zilla Slab",Georgia,serif;font-size:15px;box-shadow:0 3px 0 #0005}
+.gen i{font-style:normal;font-size:22px}
+.howto{text-align:center;font-size:13px;color:var(--soft);margin:2px 0 8px}
+
+.tools{display:flex;gap:8px;margin:16px 0 8px}
+.tools button{flex:1;background:var(--panel);border:2px solid var(--line);border-radius:18px;padding:12px 4px;font-weight:700;font-size:15px}
+.tools button.on{background:var(--lav);border-color:var(--lav);color:#1a1033;box-shadow:0 0 16px #b69cffaa}
+#checkBtn{border-color:var(--green);color:var(--green);box-shadow:0 0 12px #3ef07a44}
+.bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.bar button{background:var(--panel);border:1.5px solid var(--line);border-radius:999px;padding:6px 10px;font-size:13.5px;font-weight:600}
+.bar button.on{background:var(--lav);color:#1a1033}
+#hintBtn{border-color:var(--yel);color:var(--yel)}
+#solBtn{border-color:var(--pink);color:#ff7aa4}
+.timer{margin-left:auto;font-weight:700;color:var(--cyan);text-shadow:0 0 10px #4dd2ff;font-variant-numeric:tabular-nums}
+
+.verdict{margin:22px auto 0;width:82%;background:#efe9dc;color:#1b1a20;padding:14px 16px 18px;box-shadow:0 0 22px #ff2d6f55;transform:rotate(-1deg);clip-path:polygon(0 0,100% 0,100% 100%,62% 100%,60% 94%,57% 100%,0 100%);text-align:left;display:block;font-family:"Zilla Slab",Georgia,serif}
+.verdict .l{font-size:15px}
+.verdict .v{border-bottom:2px solid #333;min-height:30px;margin-top:6px;font-family:"Dancing Script",cursive;font-size:26px;text-align:center}
+
+/* Modal */
+.modal{overscroll-behavior:contain;touch-action:none;position:fixed;inset:0;background:#07040fcc;display:grid;place-items:center;z-index:50;padding:16px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.box{overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;background:var(--panel);border:2px solid var(--lav);border-radius:26px;padding:20px;max-width:420px;width:100%;max-height:86vh;overflow:auto;text-align:center;box-shadow:0 0 30px #b69cff55;color:var(--ink)}
+.box h2{margin:0 0 10px;color:var(--lav);text-shadow:0 0 12px #b69cff88}
+.box p{margin:0 0 14px;color:var(--soft)}
+.box.rules{text-align:left}
+.box.wide{max-width:540px;padding:16px 12px}
+.box.rules h3{margin:14px 0 4px;color:var(--yel)}
+.box.rules ul{margin:0;padding-left:18px;line-height:1.45;font-size:15px}
+.box.rules b{color:var(--cyan)}
+.objs{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.objs div{background:#fff;color:#1b1a20;border-radius:12px;padding:4px;text-align:center;font-size:12px;width:66px}
+.objs svg{width:44px;height:44px;display:block;margin:0 auto}
+.objs.ok div{background:#c9f2cf}.objs.no div{background:#ffc9d4}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.choices button{background:#fff;color:#1b1a20;border-radius:14px;padding:6px 4px;font-family:"Dancing Script",cursive;font-size:20px;font-weight:700}
+.choices svg{width:52px;height:52px;display:block;margin:0 auto 2px;border:1.5px solid #333}
+.btn{background:var(--lav);color:#1a1033;border-radius:14px;padding:11px 18px;font-weight:700;margin:4px;box-shadow:0 0 14px #b69cff88}
+.btn.sec{background:var(--panel2);color:var(--ink);box-shadow:none;border:1.5px solid var(--line)}
+.badge{display:inline-grid;place-items:center;width:1.45em;height:1.45em;border-radius:50%;color:#fff;font-weight:700;font-family:"Zilla Slab",serif;font-size:.95em;vertical-align:-.25em;margin:0 1px;box-shadow:inset 0 -2px 0 #0003,0 0 8px #fff3}
+.badge.vic{color:#3a1a20}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--panel2);border:1.5px solid var(--lav);color:#fff;padding:11px 18px;border-radius:16px;font-size:14px;z-index:60;max-width:90vw;text-align:center;box-shadow:0 0 18px #b69cff66}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <button class="back hidden" id="backBtn">⌂</button>
+  <div class="brand" id="brand"></div>
+  <div class="langs"><button data-l="de">DE</button><button data-l="tr">TR</button></div>
+</div>
+
+<div id="home" class="wrap">
+  <div class="logo">
+    <h1>MU<span class="d">R</span>DO<span class="d k">K</span>U</h1><br>
+    <div class="pillT" id="pillT"></div>
+  </div>
+  <div class="player"><span data-t="player"></span><input id="nameIn" placeholder="Fırat" autocomplete="off"><span class="sync" id="syncSt"></span></div>
+  <div id="bookList"></div>
+</div>
+
+<div id="game" class="wrap hidden">
+  <div class="caseNav"><button id="prevBtn">‹</button><span id="navNo"></span><button id="nextBtn">›</button></div>
+  <div class="caseHead"><h1 id="cTitle"></h1><p id="cIntro"></p></div>
+  <div class="suspects" id="suspects"></div>
+  <div id="general"></div>
+  <div class="bar">
+    <button id="undoBtn" data-t="undo"></button>
+    <button id="resetBtn" data-t="reset"></button>
+    <button id="hintBtn" data-t="hint"></button>
+    <button id="solBtn" data-t="sol"></button>
+    <button id="rulesBtn" data-t="rules"></button>
+    <span class="timer" id="timer">0:00</span>
+  </div>
+  <div style="height:10px"></div>
+  <div class="bwrap" id="board"></div>
+  <div class="tools">
+    <button id="toolPlace" data-t="toolPlace"></button>
+    <button id="toolX" data-t="toolX"></button>
+    <button id="checkBtn" data-t="check"></button>
+  </div>
+  <div class="howto" id="howto"></div>
+  <button class="verdict" id="verdict"><div class="l" data-t="verdict"></div><div class="v" id="verdictName"></div></button>
+  <div class="infos" id="infos" style="margin-top:26px"></div>
+</div>
+
+<div id="modal" class="modal hidden"><div class="box" id="mbox"></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ============ FIREBASE (wie Chimera/Haushalt, Projekt "schulwegend") ============
+   Leer lassen = Fortschritt nur lokal im Browser. */
+const firebaseConfig = {
+  apiKey: "",
+  authDomain: "schulwegend.firebaseapp.com",
+  databaseURL: "",
+  projectId: "schulwegend",
+  appId: ""
+};
+
+/* ============ SYMBOLE (SVG, Draufsicht) ============ */
+const OL="#2b2a33";
+const SVG={
+ table:`<svg viewBox="0 0 100 100"><rect x="12" y="10" width="76" height="66" rx="3" fill="#aeb8c8" stroke="${OL}" stroke-width="4"/><rect x="12" y="62" width="76" height="14" fill="#5c6474" stroke="${OL}" stroke-width="4"/><rect x="20" y="76" width="9" height="14" fill="#5c6474" stroke="${OL}" stroke-width="3"/><rect x="71" y="76" width="9" height="14" fill="#5c6474" stroke="${OL}" stroke-width="3"/></svg>`,
+ plant:`<svg viewBox="0 0 100 100"><ellipse cx="52" cy="84" rx="26" ry="10" fill="#33313b"/><path d="M30 58 L70 58 L64 86 L36 86 Z" fill="#6c8fc6" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/><ellipse cx="50" cy="58" rx="20" ry="5" fill="#4f6fa3" stroke="${OL}" stroke-width="3"/><g fill="#5fae4f" stroke="#2f5d2a" stroke-width="3" stroke-linejoin="round"><path d="M50 58 C40 40 22 30 12 34 C26 38 38 48 46 60Z"/><path d="M50 58 C58 38 76 26 90 30 C76 36 62 48 54 60Z"/><path d="M50 58 C46 36 40 18 32 8 C44 18 52 36 54 58Z"/><path d="M50 58 C56 36 62 22 72 12 C64 26 58 42 54 60Z"/><path d="M50 58 C36 52 24 54 14 62 C28 58 40 60 48 62Z"/><path d="M50 58 C64 52 78 54 88 62 C74 58 62 60 52 62Z"/></g></svg>`,
+ carpet:`<svg viewBox="0 0 100 100"><rect x="12" y="12" width="76" height="76" fill="#cfe3e6" stroke="${OL}" stroke-width="4"/><rect x="24" y="24" width="52" height="52" fill="none" stroke="${OL}" stroke-width="3"/><rect x="18" y="18" width="64" height="64" fill="none" stroke="#7aa0a6" stroke-width="2"/></svg>`,
+ chair:chairSVG(),
+ statue:`<svg viewBox="0 0 100 100"><rect x="26" y="78" width="48" height="14" fill="#8a8890" stroke="${OL}" stroke-width="3.5"/><path d="M42 78 C38 64 40 52 44 44 C40 38 42 30 46 26 C44 18 50 10 56 14 C60 18 58 24 56 28 C62 32 62 42 58 48 C62 56 64 66 60 78Z" fill="#5a5862" stroke="${OL}" stroke-width="3.5"/><path d="M46 46 C50 50 54 52 58 50 M44 60 C50 62 56 62 60 60" stroke="#7a7882" stroke-width="2.5" fill="none"/></svg>`,
+ gift:`<svg viewBox="0 0 100 100"><rect x="18" y="40" width="64" height="48" rx="3" fill="#c25a8a" stroke="${OL}" stroke-width="4"/><rect x="14" y="30" width="72" height="16" rx="3" fill="#d46a9a" stroke="${OL}" stroke-width="4"/><rect x="44" y="30" width="12" height="58" fill="#a8c4e0" stroke="${OL}" stroke-width="3"/><path d="M50 30 C36 14 22 18 30 28 C34 32 44 31 50 30 C56 31 66 32 70 28 C78 18 64 14 50 30Z" fill="#a8c4e0" stroke="${OL}" stroke-width="3.5"/></svg>`,
+ rock:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="80" rx="36" ry="9" fill="#0003"/><path d="M16 70 C12 50 26 26 48 24 C70 22 88 40 86 62 C85 76 70 82 50 82 C32 82 18 80 16 70Z" fill="#6a6774" stroke="${OL}" stroke-width="4"/><path d="M30 40 C38 32 50 30 58 32" stroke="#8d8a98" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`,
+ rubble:`<svg viewBox="0 0 100 100"><path d="M10 74 C14 60 24 56 32 58 C36 48 48 46 56 52 C64 44 80 48 84 60 C92 62 94 74 88 80 L14 82Z" fill="#6f655a" stroke="${OL}" stroke-width="3.5"/><path d="M24 66 C28 62 34 62 38 66 M58 62 C62 58 70 58 74 64" stroke="#8a7f72" stroke-width="3" fill="none"/><rect x="20" y="24" width="14" height="62" rx="2" fill="#8a6a48" stroke="${OL}" stroke-width="3.5" transform="rotate(38 27 55)"/><rect x="56" y="20" width="12" height="44" rx="2" fill="#9a7a52" stroke="${OL}" stroke-width="3.5" transform="rotate(-30 62 42)"/><path d="M40 58 L52 40 L60 50 L52 66Z" fill="#7a6e60" stroke="${OL}" stroke-width="3"/></svg>`,
+ register:`<svg viewBox="0 0 100 100"><rect x="16" y="46" width="70" height="44" rx="5" fill="#6f7180" stroke="${OL}" stroke-width="4"/><rect x="16" y="46" width="70" height="12" fill="#8a8c9a" stroke="${OL}" stroke-width="4"/><rect x="22" y="12" width="58" height="40" rx="5" fill="#d9dbe2" stroke="${OL}" stroke-width="4"/><rect x="62" y="6" width="14" height="10" rx="2" fill="#d9dbe2" stroke="${OL}" stroke-width="3"/><g fill="#5a5c68">${[0,1,2].map(r=>[0,1,2].map(c=>`<rect x="${28+c*9}" y="${18+r*9}" width="6" height="6" rx="1"/>`).join("")).join("")}</g><rect x="58" y="18" width="5" height="26" rx="1.5" fill="#5a5c68"/><rect x="67" y="18" width="5" height="26" rx="1.5" fill="#5a5c68"/></svg>`,
+ tv:`<svg viewBox="0 0 100 100"><rect x="10" y="44" width="80" height="44" rx="5" fill="#55576a" stroke="${OL}" stroke-width="4"/><rect x="20" y="12" width="60" height="52" rx="5" fill="#6d7084" stroke="${OL}" stroke-width="4"/><rect x="27" y="18" width="46" height="38" rx="2" fill="#f4f4f4" stroke="${OL}" stroke-width="3"/><text x="50" y="47" font-size="26" text-anchor="middle" fill="${OL}">♪</text></svg>`,
+ shelf:`<svg viewBox="0 0 100 100"><rect x="12" y="8" width="76" height="84" fill="#7a5233" stroke="${OL}" stroke-width="4"/><g fill="#3a3a44"><rect x="18" y="14" width="64" height="20"/><rect x="18" y="40" width="64" height="20"/><rect x="18" y="66" width="64" height="20"/></g><g fill="#f0d468"><rect x="22" y="16" width="6" height="18"/><rect x="30" y="16" width="4" height="18"/><rect x="36" y="20" width="5" height="14" transform="rotate(-15 38 27)"/><rect x="58" y="42" width="6" height="18"/><rect x="66" y="42" width="4" height="18"/><rect x="72" y="42" width="5" height="18"/><rect x="24" y="68" width="5" height="18"/><rect x="31" y="68" width="5" height="18"/><rect x="38" y="68" width="5" height="18"/><rect x="45" y="68" width="5" height="18"/></g></svg>`,
+ box:`<svg viewBox="0 0 100 100"><rect x="12" y="12" width="76" height="76" fill="#c9b08f" stroke="${OL}" stroke-width="4"/><line x1="50" y1="12" x2="50" y2="64" stroke="${OL}" stroke-width="3"/><line x1="12" y1="64" x2="88" y2="64" stroke="${OL}" stroke-width="3"/><rect x="12" y="64" width="76" height="24" fill="#b39a78" stroke="${OL}" stroke-width="4"/></svg>`
+};
+function bedSVG(w,h){ // Kopfende oben (bzw. links bei waagerecht)
+  const W=w*100,H=h*100,vert=h>=w;
+  if(vert) return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><rect x="10" y="8" width="${W-20}" height="${H-12}" rx="6" fill="#f4f1ea" stroke="${OL}" stroke-width="4"/><rect x="22" y="16" width="${W-44}" height="42" rx="10" fill="#fff" stroke="${OL}" stroke-width="3"/><rect x="10" y="76" width="${W-20}" height="${H-84}" rx="4" fill="#efeadf" stroke="${OL}" stroke-width="4"/><line x1="10" y1="${H-14}" x2="${W-10}" y2="${H-14}" stroke="#bbb4a4" stroke-width="3"/></svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><rect x="8" y="10" width="${W-12}" height="${H-20}" rx="6" fill="#f4f1ea" stroke="${OL}" stroke-width="4"/><rect x="16" y="22" width="42" height="${H-44}" rx="10" fill="#fff" stroke="${OL}" stroke-width="3"/><rect x="76" y="10" width="${W-84}" height="${H-20}" rx="4" fill="#efeadf" stroke="${OL}" stroke-width="4"/></svg>`;
+}
+function tableSVG(w,h,col){const W=w*100,H=h*100,top=col||"#aeb8c8",band=col?shade(col,-35):"#5c6474";
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><rect x="10" y="10" width="${W-20}" height="${H-34}" rx="3" fill="${top}" stroke="${OL}" stroke-width="4"/><rect x="10" y="${H-38}" width="${W-20}" height="14" fill="${band}" stroke="${OL}" stroke-width="4"/><rect x="18" y="${H-24}" width="9" height="14" fill="${band}" stroke="${OL}" stroke-width="3"/><rect x="${W-27}" y="${H-24}" width="9" height="14" fill="${band}" stroke="${OL}" stroke-width="3"/></svg>`;}
+function shade(hex,p){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(v+v*p/100)));return "#"+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,"0")).join("");}
+let _pid=0;
+function polyGeom(cells){
+  const r0=Math.min(...cells.map(c=>c[0])),c0=Math.min(...cells.map(c=>c[1]));
+  const R=Math.max(...cells.map(c=>c[0]))-r0+1,C=Math.max(...cells.map(c=>c[1]))-c0+1;
+  const has=(r,c)=>cells.some(x=>x[0]===r&&x[1]===c);
+  const sq=cells.map(([r,c])=>`M${(c-c0)*100} ${(r-r0)*100}h100v100h-100z`).join("");
+  const seg=[],bottom=[];
+  cells.forEach(([r,c])=>{const x=(c-c0)*100,y=(r-r0)*100;
+    if(!has(r-1,c))seg.push(`M${x} ${y}h100`);
+    if(!has(r+1,c)){seg.push(`M${x} ${y+100}h100`);bottom.push([x,y+100,r,c]);}
+    if(!has(r,c-1))seg.push(`M${x} ${y}v100`);
+    if(!has(r,c+1))seg.push(`M${x+100} ${y}v100`);});
+  return {R,C,has,sq,edges:seg.join(""),bottom,r0,c0};
+}
+function erodeMask(id,g,d){return `<mask id="${id}" maskUnits="userSpaceOnUse" x="0" y="0" width="${g.C*100}" height="${g.R*100}"><path d="${g.sq}" fill="#fff"/><path d="${g.edges}" stroke="#000" stroke-width="${d*2}" stroke-linecap="round" fill="none"/></mask>`;}
+function polyTableSVG(cells,col){
+  const top=col||"#aeb8c8",band=col?shade(col,-35):"#5c6474",g=polyGeom(cells),id="pt"+(++_pid);
+  const be=g.bottom.map(([x,y])=>`M${x} ${y}h100`).join("");
+  // Beine an den Enden der unteren Kanten
+  const legs=[];g.bottom.forEach(([x,y,r,c])=>{
+    if(!g.has(r,c-1)||g.has(r+1,c-1))legs.push(x+12);
+    if(!g.has(r,c+1)||g.has(r+1,c+1))legs.push(x+79);
+    legs.forEach((v,i)=>{if(typeof v==="number")legs[i]=[v,y];});});
+  return `<svg viewBox="0 0 ${g.C*100} ${g.R*100}" preserveAspectRatio="none"><defs>${erodeMask(id+"a",g,6)}${erodeMask(id+"b",g,10)}</defs>
+   ${legs.map(([x,y])=>`<rect x="${x}" y="${y-14}" width="9" height="12" fill="${band}" stroke="${OL}" stroke-width="3"/>`).join("")}
+   <g mask="url(#${id}a)"><rect width="${g.C*100}" height="${g.R*100}" fill="${OL}"/></g>
+   <g mask="url(#${id}b)"><rect width="${g.C*100}" height="${g.R*100}" fill="${top}"/>
+    <path d="${be}" stroke="${OL}" stroke-width="52" fill="none"/><path d="${be}" stroke="${band}" stroke-width="44" fill="none"/></g></svg>`;
+}
+function polyCarpetSVG(cells,col){
+  const fill=col||"#cfe3e6",line=shade(fill,-30),g=polyGeom(cells),id="pc"+(++_pid);
+  return `<svg viewBox="0 0 ${g.C*100} ${g.R*100}" preserveAspectRatio="none"><defs>${erodeMask(id+"a",g,8)}${erodeMask(id+"b",g,12)}${erodeMask(id+"c",g,18)}${erodeMask(id+"d",g,21)}</defs>
+   <g mask="url(#${id}a)"><rect width="${g.C*100}" height="${g.R*100}" fill="${line}"/></g>
+   <g mask="url(#${id}b)"><rect width="${g.C*100}" height="${g.R*100}" fill="${fill}"/></g>
+   <g mask="url(#${id}c)"><rect width="${g.C*100}" height="${g.R*100}" fill="${line}" fill-opacity=".55"/></g>
+   <g mask="url(#${id}d)"><rect width="${g.C*100}" height="${g.R*100}" fill="${fill}"/></g></svg>`;
+}
+function carpetSVG(w,h){const W=w*100,H=h*100;
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><rect x="12" y="12" width="${W-24}" height="${H-24}" fill="#cfe3e6" stroke="${OL}" stroke-width="4"/><rect x="18" y="18" width="${W-36}" height="${H-36}" fill="none" stroke="#7aa0a6" stroke-width="2"/><rect x="24" y="24" width="${W-48}" height="${H-48}" fill="none" stroke="${OL}" stroke-width="3"/></svg>`;}
+function bigBedSVG(w,h,color){return bedSVG(w,h).replace(/#efeadf/g,color||"#efeadf");}
+const WINDOW_SVG=(horiz)=>horiz
+ ?`<svg viewBox="0 0 100 34" preserveAspectRatio="none"><rect x="3" y="3" width="94" height="28" rx="8" fill="#f8f8f2" stroke="${OL}" stroke-width="4"/><rect x="16" y="12" width="68" height="10" rx="5" fill="none" stroke="${OL}" stroke-width="3"/></svg>`
+ :`<svg viewBox="0 0 34 100" preserveAspectRatio="none"><rect x="3" y="3" width="28" height="94" rx="8" fill="#f8f8f2" stroke="${OL}" stroke-width="4"/><rect x="12" y="16" width="10" height="68" rx="5" fill="none" stroke="${OL}" stroke-width="3"/></svg>`;
+const XSVG=`<svg viewBox="0 0 100 100"><path d="M18 18 L82 82 M82 18 L18 82" stroke="${OL}" stroke-width="16" stroke-linecap="round"/></svg>`;
+
+const LCOL=["#a24a33","#3f7d47","#3e8f9a","#5f62a8","#4b3866","#b07a1e","#2f6f8f","#8f3f6f","#5a7a2a","#7a4a2a"];
+function pColor(p){if(p.victim)return "#e7aab6";const i=L.people.filter(q=>!q.victim).indexOf(p);return p.col||LCOL[i%LCOL.length];}
+function pawnSVG(p,murder){
+  const t=letter(p);
+  if(p.victim)return `<svg viewBox="0 0 100 100" style="width:96%;height:96%"><path d="M10 46 C8 26 34 22 52 28 C68 18 94 26 90 48 C92 68 72 78 52 72 C34 80 10 70 10 54Z" fill="#3b2530" stroke="#1b1a20" stroke-width="3"/><text x="50" y="62" font-size="34" font-weight="700" text-anchor="middle" fill="#fff" font-family="Zilla Slab,Georgia,serif">${t}</text></svg>`;
+  const c=pColor(p);
+  const knife=murder?`<path d="M78 30 L86 22 L90 26 L82 38 Z" fill="#e8e8ee" stroke="#1b1a20" stroke-width="2.5"/><rect x="74" y="36" width="8" height="16" rx="2" fill="#6b4a2a" stroke="#1b1a20" stroke-width="2.5" transform="rotate(30 78 44)"/>`:"";
+  return `<svg viewBox="0 0 100 100" style="width:92%;height:92%;overflow:visible"><ellipse cx="50" cy="90" rx="30" ry="7" fill="#0006"/><path d="M50 6 C63 6 69 16 67 27 C66 33 62 36 59 38 L65 42 C72 47 74 55 74 64 L76 84 C76 91 24 91 24 84 L26 64 C26 55 28 47 35 42 L41 38 C38 36 34 33 33 27 C31 16 37 6 50 6Z" fill="${c}" stroke="#1b1a20" stroke-width="3"/><path d="M40 14 C44 10 50 9 54 11" stroke="#fff6" stroke-width="3" fill="none" stroke-linecap="round"/><text x="50" y="76" font-size="32" font-weight="700" text-anchor="middle" fill="#fff" font-family="Zilla Slab,Georgia,serif">${t}</text>${knife}</svg>`;
+}
+function chairSVG(fill){
+  const f=fill||"#eeeae6", st="#3f5459", sw=5;
+  const sil=`<rect x="18" y="56" width="66" height="34" rx="11"/><path d="M30 60 L30 24 C30 11 40 5 51 5 C62 5 72 11 72 24 L72 60Z"/><rect x="16" y="40" width="17" height="34" rx="6"/><rect x="69" y="44" width="17" height="34" rx="6"/>`;
+  return `<svg viewBox="0 0 100 100"><g transform="translate(-6 5)" fill="#5f7479">${sil}</g>
+  <rect x="18" y="56" width="66" height="34" rx="11" fill="${f}" stroke="${st}" stroke-width="${sw}"/>
+  <path d="M30 60 L30 24 C30 11 40 5 51 5 C62 5 72 11 72 24 L72 60Z" fill="${f}" stroke="${st}" stroke-width="${sw}"/>
+  <path d="M31.5 20 C38 12 64 12 70.5 20" fill="none" stroke="${st}" stroke-width="${sw}"/>
+  <rect x="31" y="47" width="40" height="36" rx="4" fill="${f}" stroke="${st}" stroke-width="${sw}"/>
+  <rect x="16" y="40" width="17" height="34" rx="6" fill="${f}" stroke="${st}" stroke-width="${sw}"/>
+  <rect x="69" y="44" width="17" height="34" rx="6" fill="${f}" stroke="${st}" stroke-width="${sw}"/>
+</svg>`;}
+
+/* Dekoration auf Tischen (nur Optik, blockiert nichts) */
+const DECO={
+ mug:`<svg viewBox="0 0 100 100"><path d="M24 30 L70 30 L66 84 C66 88 28 88 28 84Z" fill="#3a3a44" stroke="${OL}" stroke-width="5"/><path d="M70 42 C88 42 88 70 68 70" fill="none" stroke="${OL}" stroke-width="7"/><ellipse cx="47" cy="32" rx="22" ry="6" fill="#5a3a26"/></svg>`,
+ beer:`<svg viewBox="0 0 100 100"><path d="M28 22 L72 22 L68 88 L32 88Z" fill="#f2d25a" fill-opacity=".9" stroke="#8a7a4a" stroke-width="4"/><path d="M26 22 C26 10 74 10 74 22 C74 30 26 30 26 22Z" fill="#fffbea" stroke="#8a7a4a" stroke-width="3"/></svg>`,
+ glass:`<svg viewBox="0 0 100 100"><path d="M30 18 L70 18 L66 86 L34 86Z" fill="#e8f2f6" fill-opacity=".85" stroke="#7a8a92" stroke-width="4"/><path d="M33 46 L67 46 L66 86 L34 86Z" fill="#bfe0ec"/></svg>`,
+ plate:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#f4efe2" stroke="#8a7a6a" stroke-width="4"/><circle cx="50" cy="50" r="24" fill="none" stroke="#d8cfbc" stroke-width="3"/></svg>`,
+ pizza:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#f4efe2" stroke="#8a7a6a" stroke-width="4"/><circle cx="50" cy="50" r="30" fill="#e8b45a" stroke="#b07a3a" stroke-width="3"/><g fill="#b03a2a"><circle cx="40" cy="42" r="5"/><circle cx="60" cy="46" r="5"/><circle cx="48" cy="62" r="5"/></g></svg>`,
+ book:`<svg viewBox="0 0 100 100"><rect x="18" y="24" width="64" height="52" rx="3" fill="#8a5aa8" stroke="${OL}" stroke-width="4"/><rect x="22" y="64" width="56" height="8" fill="#f2efe6"/></svg>`,
+ paper:`<svg viewBox="0 0 100 100"><rect x="22" y="16" width="56" height="70" rx="3" fill="#fbfaf6" stroke="#8a8a92" stroke-width="3" transform="rotate(-8 50 50)"/><path d="M32 34 L66 30 M33 46 L67 42 M34 58 L60 55" stroke="#b8b8c0" stroke-width="3" transform="rotate(-8 50 50)"/></svg>`,
+ microscope:`<svg viewBox="0 0 100 100"><rect x="22" y="78" width="56" height="10" rx="3" fill="#cfcfd8" stroke="${OL}" stroke-width="3"/><path d="M58 78 L58 60 C58 40 70 34 70 22" stroke="#cfcfd8" stroke-width="10" fill="none"/><rect x="36" y="16" width="16" height="36" rx="4" fill="#e6e6ee" stroke="${OL}" stroke-width="3" transform="rotate(-20 44 34)"/><rect x="30" y="58" width="34" height="6" fill="#bdbdc8" stroke="${OL}" stroke-width="2"/></svg>`,
+ bottles:`<svg viewBox="0 0 100 100">${[22,50,78].map((x,i)=>`<path d="M${x-9} 80 L${x-9} 50 C${x-9} 42 ${x-4} 40 ${x-4} 32 L${x-4} 18 L${x+4} 18 L${x+4} 32 C${x+4} 40 ${x+9} 42 ${x+9} 50 L${x+9} 80Z" fill="${["#9ab0a8","#b8c890","#9ab0a8","#c8d0a0","#9ab8a8"][i]}" fill-opacity=".85" stroke="#5a6a5a" stroke-width="2"/>`).join("")}</svg>`,
+ cans:`<svg viewBox="0 0 100 100">${[[22,40,"#c84a3a"],[50,34,"#e8b43a"],[78,42,"#4a8ac0"],[36,66,"#5aa84a"],[66,68,"#c84a3a"]].map(([x,y,c])=>`<ellipse cx="${x}" cy="${y}" rx="12" ry="9" fill="${c}" stroke="#3a3440" stroke-width="2.5"/><ellipse cx="${x}" cy="${y-1}" rx="7" ry="5" fill="#ffffff55"/>`).join("")}</svg>`,
+ jars:`<svg viewBox="0 0 100 100">${[[26,50,"#d87a5a"],[50,46,"#b88ad0"],[74,52,"#d87a5a"]].map(([x,y,c])=>`<rect x="${x-11}" y="${y-14}" width="22" height="28" rx="6" fill="${c}" fill-opacity=".85" stroke="#4a3a44" stroke-width="2.5"/><rect x="${x-9}" y="${y-19}" width="18" height="6" rx="2" fill="#8a7a7a" stroke="#4a3a44" stroke-width="2"/>`).join("")}</svg>`,
+ stain:`<svg viewBox="0 0 100 100"><circle cx="48" cy="52" r="16" fill="#9a2a3a"/><circle cx="66" cy="44" r="6" fill="#9a2a3a"/><circle cx="36" cy="66" r="5" fill="#9a2a3a"/></svg>`
+};
+/* Objekttypen: occ = darf besetzt werden (Band-Regeln können das überschreiben) */
+const OBJ={
+ chair:{de:"Stuhl",tr:"Sandalye",occ:true}, carpet:{de:"Teppich",tr:"Halı",occ:true}, bed:{de:"Bett",tr:"Yatak",occ:true},
+ table:{de:"Tisch",tr:"Masa",occ:false}, tv:{de:"Fernseher",tr:"Televizyon",occ:false}, plant:{de:"Pflanze",tr:"Bitki",occ:false},
+ shelf:{de:"Regal",tr:"Raf",occ:false}, box:{de:"Kiste",tr:"Kutu",occ:false}, register:{de:"Kasse",tr:"Kasa",occ:false}, statue:{de:"Statue",tr:"Heykel",occ:false}, gift:{de:"Geschenk",tr:"Hediye",occ:false}, rock:{de:"Felsbrocken",tr:"Kaya parçası",occ:false}, rubble:{de:"Schutt",tr:"Moloz",occ:false}, window:{de:"Fenster",tr:"Pencere",occ:null}
+};
+
+/* Bodenmuster */
+const FLOORS={
+ checker:(a,b)=>`background-color:${a};background-image:conic-gradient(${b} 25%,transparent 0 50%,${b} 0 75%,transparent 0);background-size:50% 50%`,
+ wood:(a,b)=>`background-color:${a};background-image:repeating-linear-gradient(90deg,transparent 0 calc(33.3% - 1px),${b} calc(33.3% - 1px) 33.3%),linear-gradient(0deg,transparent 47%,${b} 47% 49%,transparent 49%);background-size:100% 100%,33.3% 100%`,
+ diamond:(a,b)=>`background-color:${a};background-image:linear-gradient(45deg,${b} 25%,transparent 25% 75%,${b} 75%),linear-gradient(-45deg,${b} 25%,transparent 25% 75%,${b} 75%);background-size:100% 100%`,
+ grass:(a,b)=>`background-color:${a};background-image:radial-gradient(${b} 1.2px,transparent 1.6px),radial-gradient(${b} 1px,transparent 1.4px);background-size:14px 14px,10px 10px;background-position:0 0,5px 7px`,
+ water:(a,b)=>`background-color:${a};background-image:radial-gradient(ellipse 40% 28% at 30% 30%,${b}cc 60%,transparent 64%),radial-gradient(ellipse 34% 24% at 75% 72%,${b}cc 60%,transparent 64%);background-size:60% 60%`,
+ plain:(a)=>`background-color:${a}`
+};
+
+/* Avatar (gesichtslos, flach) */
+function avatar(p){
+  const l=p.look||{}, bg=l.bg||"#7a4a3a", skin=l.skin||"#eec6a0", hair=l.hair||"#3a2a22", shirt=l.shirt||"#6f8fb0", st=l.style||"short";
+  const sh="#00000018";
+  // Hinter dem Kopf liegende Haare
+  const back={
+    long:`<path d="M29 86 C22 60 24 24 50 22 C76 24 78 60 71 86 Z" fill="${hair}"/>`,
+    longStraight:`<path d="M30 84 L30 44 C30 28 39 21 50 21 C61 21 70 28 70 44 L70 84 Z" fill="${hair}"/>`,
+    wavy:`<path d="M28 88 C20 76 26 66 24 56 C20 36 32 20 50 20 C68 20 80 36 76 56 C74 66 80 76 72 88 Z" fill="${hair}"/>`,
+  }[st]||"";
+  // Vor dem Kopf liegende Haare
+  const front={
+    short:`<path d="M33.5 45 C32 31 39 21.5 50 21.5 C61 21.5 68 31 66.5 45 L65 45 C64.5 39 63 35.5 60 33.5 C55 31.5 45 31.5 40 33.5 C37 35.5 35.5 39 35 45 Z" fill="${hair}"/><path d="M33.6 45 L35 45 L35 52 L33.8 51Z M66.4 45 L65 45 L65 52 L66.2 51Z" fill="${hair}"/>`,
+    long:`<path d="M31 56 C29 32 38 22 50 22 C63 22 71 32 69 56 C67 44 63 38 57 34 C50 40 40 41 34 40 C33 45 32 50 31 56Z" fill="${hair}"/>`,
+    longStraight:`<path d="M32 52 C31 31 40 23 50 23 C60 23 69 31 68 52 C66 42 60 34 50 32 C40 34 34 42 32 52Z" fill="${hair}"/><path d="M50 23 L50 32" stroke="${sh}" stroke-width="1.5"/>`,
+    bun:`<circle cx="50" cy="17" r="9.5" fill="${hair}"/><path d="M32 48 C30 30 39 23 50 23 C61 23 70 30 68 48 C66 38 60 33 50 33 C41 33 35 38 32 48Z" fill="${hair}"/><path d="M42 25 C46 22 54 22 58 25" stroke="${sh}" stroke-width="2" fill="none"/>`,
+    side:`<path d="M32 50 C30 30 40 22 52 22 C64 22 72 32 70 52 C71 64 66 74 58 80 C62 68 62 56 58 44 C54 36 44 34 36 40 C34 43 33 46 32 50Z" fill="${hair}"/>`,
+    bob:`<path d="M30 66 C26 40 34 22 50 22 C66 22 74 40 70 66 L64 66 C66 50 64 40 60 34 C52 38 42 38 36 36 C34 44 34 54 36 66Z" fill="${hair}"/>`,
+    curly:`<g fill="${hair}"><circle cx="35" cy="36" r="7"/><circle cx="40" cy="26" r="8"/><circle cx="50" cy="21" r="8.5"/><circle cx="60" cy="24" r="8"/><circle cx="67" cy="33" r="7"/><circle cx="68" cy="43" r="5"/><circle cx="33" cy="45" r="5"/><circle cx="45" cy="30" r="6"/><circle cx="56" cy="31" r="6"/></g>`,
+    swept:`<path d="M33.5 46 C31 30 35 16 48 13 C60 10 71 16 69 30 C68.5 36 67.5 41 66.5 46 L65 46 C64.5 40 63 36.5 59.5 34 C53 30 44 31 39 34.5 C36.5 37 35.5 41 35 46 Z" fill="${hair}"/><path d="M40 22 C46 16 56 15 64 20 M42 27 C48 22 57 21 64 25" stroke="#0000002a" stroke-width="1.6" fill="none"/>`,
+    swoop:`<path d="M32 50 C29 30 39 21 51 21 C63 21 71 29 68 48 C66 40 63 36 60 34 C56 44 48 50 38 52 C44 46 48 40 48 36 C42 38 36 42 32 50Z" fill="${hair}"/>`,
+    spiky:`<path d="M32 48 L29 31 L36 34 L34 19 L42 27 L44 12 L50 24 L56 11 L59 25 L66 16 L66 30 L72 28 L68 48 C66 40 60 35 50 35 C41 35 35 40 32 48Z" fill="${hair}" stroke="${sh}" stroke-width="1.5" stroke-linejoin="round"/>`,
+    wavy:`<path d="M32 54 C30 32 39 22 50 22 C62 22 70 32 68 54 C66 42 60 34 50 32 C40 34 34 42 32 54Z" fill="${hair}"/>`,
+    bald:``
+  }[st]||"";
+  const beard=l.beard?`<path d="M34 50 C34 62 40 72 50 72 C60 72 66 62 66 50 C64 58 60 62 56 62 C54 59 46 59 44 62 C40 62 36 58 34 50Z" fill="${l.beardColor||hair}"/>`:"";
+  const gc=typeof l.glasses==="string"?l.glasses:null;
+  const glasses=gc?`<g fill="none" stroke="${gc}" stroke-width="2.4"><rect x="37" y="44" width="11" height="7" rx="2.5"/><rect x="52" y="44" width="11" height="7" rx="2.5"/><line x1="48" y1="47" x2="52" y2="47"/><line x1="33" y1="46" x2="37" y2="46"/><line x1="63" y1="46" x2="67" y2="46"/></g>`:l.glasses?`<g fill="#ffffffaa" stroke="#fff" stroke-width="1.6"><rect x="37.5" y="45" width="10.5" height="7" rx="2.5"/><rect x="52" y="45" width="10.5" height="7" rx="2.5"/></g><line x1="48" y1="48" x2="52" y2="48" stroke="#fff" stroke-width="1.6"/>`:"";
+  const must=l.mustache?`<path d="M40 57 C44 53 48 54 50 56 C52 54 56 53 60 57 C61 61 57 61 55 59 C53 58 51 59 50 59 C49 59 47 58 45 59 C43 61 39 61 40 57Z" fill="${l.mustache}"/>`:"";
+  const phones=l.headphones?`<path d="M31 46 C30 26 70 26 69 46" stroke="${l.headphones}" stroke-width="3.5" fill="none"/><rect x="26" y="42" width="9" height="15" rx="4" fill="${l.headphones}" stroke="#0004" stroke-width="1.5"/><rect x="65" y="42" width="9" height="15" rx="4" fill="${l.headphones}" stroke="#0004" stroke-width="1.5"/><path d="M30 57 C32 70 40 76 48 80" stroke="${l.headphones}" stroke-width="1.4" fill="none"/>`:"";
+  const cap=l.cap?(l.capType==="flat"?`<path d="M31 41 C29 27 39 19 52 19 C65 19 73 27 71 38 Z" fill="${l.cap}"/><path d="M29 41 C40 34 62 33 74 38 C72 43 66 45 52 44 C42 44 34 44 29 41Z" fill="${shade(l.cap,-25)}"/><path d="M40 22 C46 20 54 20 60 22" stroke="#0002" stroke-width="2" fill="none"/>`:`<path d="M32 40 C31 26 40 18 50 18 C61 18 69 26 68 40 Z" fill="${l.cap}"/><path d="M30 41 C38 36 62 36 70 41 L68 45 C60 42 40 42 32 45Z" fill="${shade(l.cap,-30)}"/><circle cx="50" cy="19" r="2" fill="${shade(l.cap,-30)}"/>`):"";
+  const party=l.partyhat?`<g transform="rotate(18 62 20)"><path d="M54 30 L62 4 L70 30Z" fill="#c8b0e8" stroke="#0003" stroke-width="1.2"/><path d="M57 22 L67 22 M59 15 L65 15" stroke="#f6f2fa" stroke-width="3"/></g>`:"";
+  const clown=l.clown?`<circle cx="50" cy="55" r="5" fill="#d8283a"/>`:"";
+  const bow=l.bowtie?`<path d="M44 78 L56 78 L52 100 L48 100Z" fill="#dfe6ee"/><path d="M42 80 L50 84 L42 88Z M58 80 L50 84 L58 88Z" fill="#111"/><circle cx="50" cy="84" r="2.2" fill="#111"/>`:"";
+  const pol=l.police?`<path d="M42 78 L50 86 L58 78" stroke="#1b2238" stroke-width="3" fill="none"/><circle cx="38" cy="84" r="2.2" fill="#e8c44a"/><circle cx="62" cy="84" r="2.2" fill="#e8c44a"/>`+(l.cap?`<path d="M44 22 L50 16 L56 22 L50 28Z" fill="#e8c44a"/>`:""):"";
+  const hh=l.hardhat?`<path d="M30 40 C29 24 40 15 50 15 C60 15 71 24 70 40 Z" fill="${l.hardhat}" stroke="#0003" stroke-width="1.5"/><path d="M26 40 L74 40 L74 45 L26 45Z" fill="${shade(l.hardhat,-18)}"/><path d="M50 16 L50 38" stroke="${shade(l.hardhat,-18)}" stroke-width="4"/>`:"";
+  const gog=l.goggles?`<path d="M33 42 C33 38 67 38 67 42 L66 52 C62 56 56 55 52 52 L48 52 C44 55 38 56 34 52Z" fill="#fff6dccc" stroke="#f4ecd0" stroke-width="2.5"/><path d="M48 52 L52 52" stroke="#c9b98a" stroke-width="2"/>`:"";
+  const mask=l.mask?`<path d="M36 54 C42 52 58 52 64 54 L63 63 C59 70 54 72 50 72 C46 72 41 70 37 63Z" fill="${l.mask}" stroke="#0002" stroke-width="1.2"/><path d="M50 53 L50 72" stroke="#0001" stroke-width="1.5"/><path d="M50 53 C58 53 63 54 63 63 C59 70 54 72 50 72Z" fill="#0000001a"/>`:"";
+  const sung=l.sunglasses?`<g fill="${l.sunglasses}"><rect x="36" y="44" width="12" height="8" rx="3"/><rect x="52" y="44" width="12" height="8" rx="3"/></g><line x1="47" y1="47" x2="53" y2="47" stroke="${l.sunglasses}" stroke-width="2"/>`:"";
+  const neck=l.necklace?`<path d="M42 77 C45 86 55 86 58 77" stroke="${l.necklace}" stroke-width="1.8" fill="none"/><circle cx="50" cy="85" r="2.2" fill="${l.necklace}"/>`:"";
+  const x=p.victim?`<path d="M26 72 L76 96 M76 72 L26 96" stroke="#c0392b" stroke-width="2.5" stroke-linecap="round"/>`:"";
+  return `<svg viewBox="0 0 100 100"><rect width="100" height="100" fill="${bg}"/>${back}`+
+   `<path d="M12 100 C14 84 28 77 50 77 C72 77 86 84 88 100Z" fill="${shirt}"/>`+
+   `<path d="M43 60 L57 60 L57 79 C53 82 47 82 43 79Z" fill="${skin}"/><path d="M43 66 L57 66 L57 70 C53 72 47 72 43 70Z" fill="${sh}"/>`+
+   `<ellipse cx="32.5" cy="50" rx="3.5" ry="5" fill="${skin}"/><ellipse cx="67.5" cy="50" rx="3.5" ry="5" fill="${skin}"/>`+
+   `<path d="M33 46 C33 30 41 25 50 25 C59 25 67 30 67 46 C67 60 59 69 50 69 C41 69 33 60 33 46Z" fill="${skin}"/>`+
+   `<path d="M50 25 C59 25 67 30 67 46 C67 60 59 69 50 69 Z" fill="${sh}"/>`+
+   `${neck}${beard}${must}${front}${cap}${phones}${glasses}${sung}${mask}${gog}${bow}${pol}${hh}${party}${clown}${x}</svg>`;
+}
+
+/* ============ BÄNDE + REGELN ============ */
+const BOOKS=[
+ {id:"b1",de:"Band 1",tr:"1. Cilt",sub:{de:"80 Logikrätsel rund um mysteriöse Mordfälle",tr:"Gizemli cinayetler üzerine 80 mantık bulmacası"},
+  occ:["chair","carpet","bed"], noocc:["table","tv","plant","shelf","box"],
+  rules:{
+   de:`<h3>Ziel</h3><ul><li>Finde heraus, wer der Mörder ist: die Person, die im selben Raum wie das Opfer war.</li></ul>
+   <h3>Regeln</h3><ul><li>Jede Person befindet sich in einer anderen Zeile und Spalte.</li>
+   <li>Nur Betten, Stühle und Teppiche können besetzt werden. Tische, Fernseher, Pflanzen, Regale und Kisten nicht.</li>
+   <li>Das Opfer ist im letzten freien Feld. Wer allein mit ihm im selben Raum war, ist der Mörder.</li></ul>
+   <h3>Begriffe</h3><ul>
+   <li><b>neben</b>: direkt darüber, darunter, links oder rechts – und im selben Raum.</li>
+   <li><b>vor einem Fenster</b>: auf einem Feld direkt neben dem Fenster. Fenster liegen auf dicken Linien (Rand oder zwischen zwei Feldern).</li>
+   <li><b>allein</b>: niemand sonst im Raum (auch nicht das Opfer). <b>allein mit (b)</b>: nur diese zwei im Raum. <b>leer</b>: niemand im Raum.</li>
+   <li><b>Ecke</b>: wo zwei Wände eines Raumes zusammentreffen.</li>
+   <li><b>westlich / östlich von</b>: links / rechts von jemandem, nicht unbedingt im selben Raum.</li>
+   <li><b>die einzige Person auf einem Stuhl</b>: niemand sonst auf einem Stuhl, auch nicht das Opfer (gilt genauso für Teppich, Tisch …).</li>
+   <li><b>Raum</b>: jeder umschlossene Bereich, auch Durchgänge.</li></ul>`,
+   tr:`<h3>Amaç</h3><ul><li>Katili bul: kurbanla aynı odada olan kişi.</li></ul>
+   <h3>Kurallar</h3><ul><li>Her kişi farklı bir satırda ve farklı bir sütunda bulunur.</li>
+   <li>Sadece yataklar, sandalyeler ve halılar kullanılabilir. Masa, televizyon, bitki, raf ve kutuların olduğu karelere kimse konamaz.</li>
+   <li>Kurban son boş karededir. Onunla aynı odada yalnız kalan kişi katildir.</li></ul>
+   <h3>Terimler</h3><ul>
+   <li><b>yanında</b>: hemen üstünde, altında, solunda veya sağında – ve aynı odada.</li>
+   <li><b>pencerenin önünde</b>: pencereye doğrudan bitişik karede. Pencereler kalın çizgiler üzerindedir (kenarda veya iki kare arasında).</li>
+   <li><b>yalnız</b>: odada başka kimse yok (kurban da yok). <b>(b) ile yalnız</b>: odada sadece bu ikisi var. <b>boş</b>: odada kimse yok.</li>
+   <li><b>köşe</b>: odanın iki duvarının birleştiği yer.</li>
+   <li><b>batısında / doğusunda</b>: birinin solunda / sağında, aynı odada olması gerekmez.</li>
+   <li><b>sandalyedeki tek kişi</b>: başka kimse sandalyede değil, kurban da (halı, masa … için de aynı).</li>
+   <li><b>oda</b>: duvarlarla çevrili her alan, geçitler de dahil.</li></ul>`}},
+ {id:"b2",de:"Band 2",tr:"2. Cilt",sub:{de:"Zurück in die Zeit",tr:"Geçmişe yolculuk"},occ:["chair","carpet","bed"],noocc:["table","tv","plant","shelf","box"],rules:null},
+ {id:"b3",de:"Band 3",tr:"3. Cilt",sub:{de:"Rund um die Welt",tr:"Dünya turu"},occ:["chair","carpet","bed"],noocc:["table","tv","plant","shelf","box"],rules:null}
+];
+
+/* ============ FÄLLE ============
+ rooms: ein Buchstabe pro Feld; roomNames: Name + Boden (floor,a,b)
+ objects: {t,r,c,w?,h?}  Fenster: {t:"window",r,c,side:"top|bottom|left|right"}
+ people: clue mit **fett**; solution {id:[zeile,spalte]} (0-basiert)          */
+const LEVELS=[
+{
+ id:"b1-01",book:"b1",no:1,size:6,page:"#e8def0",glow:"#ff6ad5",
+ title:{de:"Dein erster Fall",tr:"İlk vakan"},
+ intro:{de:"Dieser sollte nicht allzu knifflig sein. Erinnere dich einfach an dein Training.",tr:"Bu çok zor olmamalı. Sadece eğitimini hatırla."},
+ rooms:["WWWSSS","WWWSSS","WWWSSS","EEEDDD","EEEDDD","EEEDDD"],
+ roomNames:{
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"checker",a:"#d4ece2",b:"#bfe0d3"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#d2cfe0",b:"#b9b5cc"},
+  E:{de:"Eingangsbereich",tr:"Giriş",floor:"wood",a:"#dccbc8",b:"#c4b0ac"},
+  D:{de:"Esszimmer",tr:"Yemek odası",floor:"diamond",a:"#d6ece6",b:"#b7cfd8"}
+ },
+ objects:[
+  {t:"window",r:0,c:1,side:"top"},{t:"window",r:0,c:4,side:"top"},
+  {t:"carpet",r:1,c:2},{t:"bed",r:1,c:4,h:2},
+  {t:"table",r:3,c:0},{t:"plant",r:4,c:2},{t:"table",r:5,c:0},
+  {t:"table",r:3,c:5},{t:"plant",r:4,c:5}
+ ],
+ people:[
+  {id:"axel",name:"Axel",look:{bg:"#8e3b2c",hair:"#1f1a1c",shirt:"#9cc3a9",style:"short"},
+   de:"Er war vor einem **Fenster**.",tr:"Bir **pencerenin** önündeydi."},
+  {id:"bella",name:"Bella",look:{bg:"#2f6b3a",hair:"#7a3b34",shirt:"#9b82c9",style:"long"},
+   de:"Sie war im **Eingangsbereich**.",tr:"**Girişteydi**."},
+  {id:"coraline",name:"Coraline",look:{bg:"#3c8fa3",hair:"#d8662a",shirt:"#1d1d1d",style:"bun",necklace:"#f4e6c8"},
+   de:"Sie war auf dem **Teppich**.",tr:"**Halının** üstündeydi."},
+  {id:"dominik",name:"Dominik",look:{bg:"#3e4f86",hair:"#f2cc4a",shirt:"#25304a",style:"spiky"},
+   de:"Er war auf dem **Bett**.",tr:"**Yatağın** üstündeydi."},
+  {id:"elisa",name:"Elisa",look:{bg:"#3b3870",hair:"#2e2320",shirt:"#4a4060",style:"longStraight",glasses:true,skin:"#c99a78"},
+   de:"Sie war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"oliver",name:"Oliver",victim:true,look:{bg:"#8a3c2e",hair:"#3a2a22",shirt:"#4f7fc4",style:"short"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld.",tr:"**Kurban.** Son kalan karedeydi."}
+ ],
+ solution:{axel:[0,1],coraline:[1,2],dominik:[2,4],oliver:[3,3],bella:[4,0],elisa:[5,5]},
+ hintOrder:["coraline","dominik","axel","bella","elisa","oliver"],
+ steps:{
+  de:["Es gibt nur ein Teppich-Feld für **C**. Schließe den Rest von Zeile 2 und Spalte 3 aus.",
+      "Das lokalisiert **D** auf dem Bett in Zeile 3, Spalte 5. Schließe den Rest von Zeile 3 und Spalte 5 aus.",
+      "Das lokalisiert **A** in Spalte 2, vor dem verbleibenden Fenster.",
+      "Das lokalisiert **B** in Spalte 1 im Eingangsbereich.",
+      "**E** muss im letzten Feld neben einer Pflanze sein, in Spalte 6.",
+      "Das lokalisiert **O** im letzten verbleibenden Feld: Zeile 4, Spalte 4. **E** war allein mit **O**. Elisa ist die Mörderin!"],
+  tr:["**C** için tek bir halı karesi var. 2. satırın ve 3. sütunun geri kalanını ele.",
+      "Bu, **D**'yi 3. satır, 5. sütundaki yatağa yerleştirir. 3. satırın ve 5. sütunun geri kalanını ele.",
+      "Bu, **A**'yı 2. sütunda, kalan pencerenin önüne yerleştirir.",
+      "Bu, **B**'yi girişte, 1. sütuna yerleştirir.",
+      "**E** bitkinin yanındaki son karede olmalı, 6. sütunda.",
+      "Bu, **O**'yu son kalan kareye yerleştirir: 4. satır, 4. sütun. **E**, **O** ile yalnızdı. Katil Elisa!"]
+ },
+ murderer:"elisa"
+},
+{
+ id:"b1-02",book:"b1",no:2,size:6,page:"#dbe8ef",glow:"#4dd2ff",
+ title:{de:"Ferienwohnung",tr:"Tatil Dairesi"},
+ intro:{de:"Jemand wird die Kaution für das AirBnB verlieren, wenn diese Blutflecken nicht beseitigt werden.",tr:"Bu kan lekeleri temizlenmezse biri AirBnB depozitosunu kaybedecek."},
+ rooms:["SSBBGG","SSBBGG","SSBBGG","SSBBGG","WWWWWW","WWWWWW"],
+ roomNames:{
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#e4efee",b:"#cbdcda"},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"plain",a:"#eef4f4"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#e4efee",b:"#cbdcda"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"checker",a:"#f4f8f8",b:"#cfe5e3"}
+ },
+ objects:[
+  {t:"chair",r:1,c:0},{t:"bed",r:2,c:0,w:2},
+  {t:"table",r:0,c:2},
+  {t:"tv",r:0,c:4},{t:"plant",r:1,c:5},{t:"bed",r:2,c:4,w:2},
+  {t:"plant",r:4,c:0},{t:"tv",r:5,c:0},{t:"table",r:5,c:3}
+ ],
+ people:[
+  {id:"arianna",name:"Arianna",look:{bg:"#e9e6e2",hair:"#b98b3a",shirt:"#3e5fa8",style:"side",glasses:"#151515"},
+   de:"Sie war **neben** einem **Fernseher**.",tr:"Bir **televizyonun yanındaydı**."},
+  {id:"bernd",name:"Bernd",look:{bg:"#c9cde3",hair:"#7a3e22",shirt:"#8b84c4",style:"swoop"},
+   de:"Er saß auf dem **Stuhl**.",tr:"**Sandalyede** oturuyordu."},
+  {id:"colleen",name:"Colleen",look:{bg:"#a9d2e3",hair:"#1d1a1c",shirt:"#6a5aa0",style:"wavy"},
+   de:"Sie war im **Badezimmer**.",tr:"**Banyodaydı**."},
+  {id:"dario",name:"Dario",look:{bg:"#6c5aa8",hair:"#f2f2f2",shirt:"#1b1b1f",style:"swept",glasses:"#111"},
+   de:"Er war **neben** einer **Pflanze** und er war auf einem **Bett**.",tr:"Bir **bitkinin yanındaydı** ve bir **yatağın** üstündeydi."},
+  {id:"erik",name:"Erik",look:{bg:"#dfe8dc",hair:"#1d1a1a",shirt:"#4f8f7a",style:"short",skin:"#8a5a3c"},
+   de:"Er war **neben** einem **Bett**.",tr:"Bir **yatağın yanındaydı**."},
+  {id:"oscar",name:"Oscar",victim:true,look:{bg:"#9c3a2c",hair:"#4a3528",shirt:"#7a2e2a",style:"short",beard:true},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld.",tr:"**Kurban.** Son kalan karedeydi."}
+ ],
+ solution:{colleen:[0,3],bernd:[1,0],dario:[2,5],erik:[3,4],oscar:[4,2],arianna:[5,1]},
+ hintOrder:["bernd","dario","colleen","arianna","erik","oscar"],
+ hintSteps:[0,0,[1,2],3,4,[4,5]],
+ steps:{
+  de:["Wir können **B** auf dem Stuhl lokalisieren, und **D** in Zeile 3, Spalte 6.",
+      "**E** muss dann in Zeile 4 sein, entweder in Spalte 2 oder Spalte 5.",
+      "**C** muss dann im Badezimmer sein, Spalte 4.",
+      "**A** kann nur im letzten Feld neben einem Fernseher sein, im Wohnzimmer, Spalte 2.",
+      "So lassen sich **E** und **O** lokalisieren.",
+      "**A** war allein mit **O** im Wohnzimmer. Arianna ist die Mörderin!"],
+  tr:["**B**'yi sandalyede, **D**'yi 3. satır, 6. sütunda bulabiliriz.",
+      "O zaman **E** 4. satırda olmalı, ya 2. ya da 5. sütunda.",
+      "O zaman **C** banyoda, 4. sütunda olmalı.",
+      "**A** sadece televizyonun yanındaki son karede olabilir: oturma odası, 2. sütun.",
+      "Böylece **E** ve **O** bulunur.",
+      "**A**, oturma odasında **O** ile yalnızdı. Katil Arianna!"]
+ },
+ murderer:"arianna"
+},
+{
+ id:"b1-03",book:"b1",no:3,size:6,page:"#dcd8ee",glow:"#b69cff",
+ title:{de:"English Breakfast",tr:"English Breakfast"},
+ intro:{de:"Sieht wirklich gemütlich aus, aber jetzt wissen wir, dass sich hier etwas zusammenbraute.",tr:"Gerçekten çok rahat görünüyor, ama artık burada bir şeylerin demlendiğini biliyoruz."},
+ rooms:["GBBBKK","GBBBKK","GSSSKK","GSSSWW","GGWWWW","GGWWWW"],
+ roomNames:{
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#cfc8df",b:"#b6aecb"},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"wood",a:"#cdc6de",b:"#b4accb"},
+  K:{de:"Küche",tr:"Mutfak",floor:"diamond",a:"#f1d9de",b:"#b9a3cf"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#cfe3df",b:"#b2cdc8"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#efecd6",b:"#d6d2b6"}
+ },
+ objects:[
+  {t:"bed",r:0,c:0,h:2},{t:"carpet",r:2,c:0,h:2},
+  {t:"chair",r:1,c:3,col:"#f7e7a8"},
+  {t:"table",r:0,c:4,w:2},{t:"plant",r:2,c:4},
+  {t:"table",r:2,c:3},{t:"bed",r:3,c:1,w:2},{t:"carpet",r:3,c:3},
+  {t:"plant",r:3,c:4},{t:"window",r:3,c:5,side:"right"},{t:"chair",r:4,c:2,col:"#f7e7a8"},{t:"tv",r:5,c:2}
+ ],
+ people:[
+  {id:"alexander",name:"Alexander",look:{bg:"#a98fc4",hair:"#6e6e70",shirt:"#7b55a0",style:"short",glasses:"#111",skin:"#e8a868"},
+   de:"Er war auf einem **Bett**.",tr:"Bir **yatağın** üstündeydi."},
+  {id:"burkhard",name:"Burkhard",look:{bg:"#7fb08c",hair:"#f2cf4a",shirt:"#3b5f9a",style:"long",beard:true},
+   de:"Er war in der **Küche**.",tr:"**Mutfaktaydı**."},
+  {id:"cleo",name:"Cleo",look:{bg:"#c9c0e0",hair:"#a3492c",shirt:"#5a9a86",style:"bob"},
+   de:"Sie war **neben** einem **Tisch**.",tr:"Bir **masanın yanındaydı**."},
+  {id:"diane",name:"Diane",look:{bg:"#a7d6e6",hair:"#151313",shirt:"#222",style:"bob",skin:"#9a6a48",necklace:"#d23b3b"},
+   de:"Sie war **neben** dem **Fernseher**.",tr:"**Televizyonun yanındaydı**."},
+  {id:"elsa",name:"Elsa",look:{bg:"#efe2a6",hair:"#b9b9c2",shirt:"#f1f1ee",style:"side",skin:"#6b4630"},
+   de:"Sie war vor dem **Fenster**.",tr:"**Pencerenin** önündeydi."},
+  {id:"orville",name:"Orville",victim:true,look:{bg:"#a33a2a",hair:"#9a8a4a",shirt:"#6b2b3a",style:"swoop"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld.",tr:"**Kurban.** Son kalan karedeydi."}
+ ],
+ solution:{alexander:[0,0],burkhard:[1,4],cleo:[2,2],elsa:[3,5],orville:[4,1],diane:[5,3]},
+ hintOrder:["elsa","burkhard","alexander","cleo","diane","orville"],
+ steps:{
+  de:["**E** muss vor dem einzigen Fenster sein, in Zeile 4, Spalte 6.",
+      "Das lokalisiert **B** im letzten verbleibenden Feld in der Küche.",
+      "Das lokalisiert **A** im letzten verbleibenden Feld auf einem Bett.",
+      "Das lokalisiert auch **C** im letzten Feld neben einem Tisch.",
+      "Das lokalisiert **D** im letzten Feld neben dem Fernseher.",
+      "Das lokalisiert **O**, allein im Gästezimmer mit **A**. Alexander ist der Mörder!"],
+  tr:["**E** tek pencerenin önünde olmalı: 4. satır, 6. sütun.",
+      "Bu, **B**'yi mutfaktaki son kalan kareye yerleştirir.",
+      "Bu, **A**'yı bir yataktaki son kalan kareye yerleştirir.",
+      "Bu, **C**'yi de bir masanın yanındaki son kareye yerleştirir.",
+      "Bu, **D**'yi televizyonun yanındaki son kareye yerleştirir.",
+      "Bu, **O**'yu bulur: misafir odasında **A** ile yalnız. Katil Alexander!"]
+ },
+ murderer:"alexander"
+},
+{
+ id:"b1-04",book:"b1",no:4,size:6,
+ info:[{title:{de:"Ecke",tr:"Köşe"},text:{de:"Hier treffen zwei Wände eines Raumes aufeinander",tr:"Bir odanın iki duvarının birleştiği yer"},grid:["v.v","v.v"," v "]}],
+ title:{de:"Vier Fenster",tr:"Dört Pencere"},
+ intro:{de:"Trotz all des Sonnenlichts geschahen hier zwielichtige Dinge.",tr:"Bunca güneş ışığına rağmen burada karanlık işler döndü."},
+ rooms:["WWWSSS","WWWSSS","WWWSSS","BBBGGG","BBBGGG","BBBGGG"],
+ roomNames:{
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#f3d9cf",b:"#e2bcae"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#f7f0c6",b:"#e2d89c"},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"wood",a:"#f4d9ab",b:"#dfbb82"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"checker",a:"#f8e3a2",b:"#f0b495"}
+ },
+ objects:[
+  {t:"window",r:0,c:0,side:"left"},{t:"window",r:0,c:5,side:"right"},{t:"window",r:5,c:0,side:"left"},{t:"window",r:5,c:5,side:"right"},
+  {t:"chair",r:1,c:0},{t:"tv",r:1,c:1},{t:"table",r:2,c:2,col:"#5a463d"},
+  {t:"bed",r:1,c:3,w:2,col:"#ecc95e"},{t:"chair",r:1,c:5},
+  {t:"table",r:4,c:0,w:2,col:"#5a463d"},{t:"table",r:5,c:2,col:"#5a463d"},
+  {t:"plant",r:3,c:4},{t:"plant",r:4,c:4},{t:"chair",r:4,c:5}
+ ],
+ people:[
+  {id:"antonio",name:"Antonio",look:{bg:"#d9a632",hair:"#ececf0",shirt:"#8a4a3a",style:"swept",skin:"#a9764e"},
+   de:"Er war in einer **Ecke**.",tr:"Bir **köşedeydi**."},
+  {id:"ben",name:"Ben",look:{bg:"#8faa4e",hair:"#151313",shirt:"#a8d2e6",style:"short",skin:"#7a5232",glasses:"#111"},
+   de:"Er saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"cathrin",name:"Cathrin",look:{bg:"#d98c6e",hair:"#f2d36a",shirt:"#4a3a8a",style:"long",glasses:"#f6ecc8"},
+   de:"Sie war vor einem **Fenster**.",tr:"Bir **pencerenin** önündeydi."},
+  {id:"dahlia",name:"Dahlia",look:{bg:"#f2c48a",hair:"#231a18",shirt:"#8a8fc8",style:"curly",skin:"#d39a6e"},
+   de:"Sie war **nicht neben** einer **Wand**.",tr:"Bir **duvarın yanında değildi**."},
+  {id:"emmy",name:"Emmy",look:{bg:"#b5b23c",hair:"#9a3a2a",shirt:"#d79a3a",style:"bob"},
+   de:"Sie war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"olivia",name:"Olivia",victim:true,look:{bg:"#8a5450",hair:"#151313",shirt:"#1b1b1f",style:"bob",skin:"#a06a4a",glasses:"#f6ecc8"},
+   de:"**Das Opfer.** Sie war im letzten verbleibenden Feld.",tr:"**Kurban.** Son kalan karedeydi."}
+ ],
+ solution:{antonio:[0,2],dahlia:[1,4],olivia:[2,1],emmy:[3,3],ben:[4,5],cathrin:[5,0]},
+ hintOrder:["dahlia","ben","emmy","antonio","cathrin","olivia"],
+ hintSteps:[0,1,2,[3,4],5,[5,6]],
+ steps:{
+  de:["Es gibt nur vier Felder, die nicht neben einer Wand sind, und drei davon können nicht besetzt sein. Daher muss **D** im verbleibenden sein: Zeile 2, Spalte 5.",
+      "Das lokalisiert **B** auf dem letzten verbleibenden Stuhl.",
+      "Das lokalisiert **E** im letzten Feld neben einer Pflanze.",
+      "Das platziert auch **C** in Spalte 1, vor einem der beiden Fenster.",
+      "Das lokalisiert **A** in der letzten verfügbaren Ecke.",
+      "Das lokalisiert **C** in Zeile 6, was **O** im Wohnzimmer lokalisiert.",
+      "**O** war allein mit **A** im Wohnzimmer. Antonio ist der Mörder!"],
+  tr:["Duvarın yanında olmayan sadece dört kare var ve bunların üçü kullanılamaz. Bu yüzden **D** kalan karede olmalı: 2. satır, 5. sütun.",
+      "Bu, **B**'yi kalan son sandalyeye yerleştirir.",
+      "Bu, **E**'yi bitkinin yanındaki son kareye yerleştirir.",
+      "Bu, **C**'yi de 1. sütuna, iki pencereden birinin önüne koyar.",
+      "Bu, **A**'yı kalan son köşeye yerleştirir.",
+      "Bu, **C**'yi 6. satıra yerleştirir; bu da **O**'yu oturma odasında bulur.",
+      "**O**, oturma odasında **A** ile yalnızdı. Katil Antonio!"]
+ },
+ murderer:"antonio"
+},
+{
+ id:"b1-05",book:"b1",no:5,size:6,
+ info:[{title:{de:"Tipp",tr:"İpucu"},text:{de:"Wenn du weißt, dass Aaron auf einem bestimmten Bett ist, kann niemand sonst in Feldern dieser Spalte sein. Streiche die Felder durch!",tr:"Aaron'un belirli bir yatakta olduğunu biliyorsan, o sütundaki diğer karelerde kimse olamaz. O kareleri çiz!"},grid:["..x..","..A..","..A..","..x..","..x.."]}],
+ title:{de:"Lernsession",tr:"Ders Çalışma"},
+ intro:{de:"Er dachte wahrscheinlich, bei seiner Abschlussprüfung durchzufallen wäre das Schlimmste, was ihm passieren könnte.",tr:"Muhtemelen bitirme sınavından kalmanın başına gelebilecek en kötü şey olduğunu düşünüyordu."},
+ rooms:["WWAASS","WWAASS","WWAASS","WWBBSS","WWBBSS","WWBBSS"],
+ roomNames:{
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#ecdcc0",b:"#d6c3a0"},
+  A:{de:"Arbeitszimmer",tr:"Çalışma odası",floor:"wood",a:"#f8efc8",b:"#e6d9a4",top:true},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"wood",a:"#f4efe2",b:"#dcd4c2"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#efe2cc",b:"#d9c6a8"}
+ },
+ objects:[
+  {t:"window",r:0,c:1,side:"top"},{t:"window",r:0,c:4,side:"top"},{t:"window",r:3,c:0,side:"left"},
+  {t:"chair",r:0,c:0,col:"#d6d4ea"},{t:"chair",r:2,c:1,col:"#d6d4ea"},{t:"tv",r:4,c:0},
+  {t:"chair",r:1,c:2,col:"#d6d4ea"},{t:"plant",r:2,c:2},
+  {t:"table",r:4,c:2,col:"#e6b07a"},{t:"chair",r:4,c:3,col:"#d6d4ea"},{t:"plant",r:5,c:2},
+  {t:"table",r:2,c:5,col:"#e6b07a"},{t:"bed",r:3,c:4,w:2,col:"#f2cc4f"},{t:"table",r:5,c:5,col:"#e6b07a"}
+ ],
+ people:[
+  {id:"aaron",name:"Aaron",look:{bg:"#e08a2a",hair:"#f6dc5c",shirt:"#1d1b1f",style:"swept",skin:"#8a6a52"},
+   de:"Er war auf dem **Bett**.",tr:"**Yatağın** üstündeydi."},
+  {id:"bruno",name:"Bruno",look:{bg:"#4aa83a",hair:"#1d1a1c",shirt:"#3f8a3a",style:"swoop",skin:"#eab486",mustache:"#1d1a1c"},
+   de:"Er war die **einzige** Person, die auf einem **Stuhl** saß.",tr:"Bir **sandalyede** oturan **tek** kişiydi."},
+  {id:"clara",name:"Clara",look:{bg:"#5cc4cf",hair:"#f4dc6a",shirt:"#1b1b1f",style:"bun",glasses:"#111"},
+   de:"Sie war die **einzige** Person vor einem **Fenster**.",tr:"Bir **pencerenin** önündeki **tek** kişiydi."},
+  {id:"donna",name:"Donna",look:{bg:"#5a6ab0",hair:"#8a4aa8",shirt:"#2a2a33",style:"long",skin:"#e2a874"},
+   de:"Sie war im **Badezimmer**.",tr:"**Banyodaydı**."},
+  {id:"evelyn",name:"Evelyn",look:{bg:"#7a4ab0",hair:"#1b1718",shirt:"#3a8ab0",style:"longStraight",headphones:"#f2a8b0"},
+   de:"Sie war **neben** dem **Fernseher**.",tr:"**Televizyonun yanındaydı**."},
+  {id:"olaf",name:"Olaf",victim:true,look:{bg:"#e5533a",hair:"#1d1a1c",shirt:"#3a3438",style:"short",skin:"#8a6a52"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld.",tr:"**Kurban.** Son kalan karedeydi."}
+ ],
+ solution:{clara:[0,4],bruno:[1,2],olaf:[2,0],aaron:[3,5],evelyn:[4,1],donna:[5,3]},
+ hintOrder:["donna","evelyn","clara","aaron","bruno","olaf"],
+ hintSteps:[[0,2],3,[1,4],[0,4],5,6],
+ steps:{
+  de:["**A** muss auf dem Bett in Zeile 4 sein. Schließe den Rest der Zeile aus.",
+      "Das eliminiert das Fenster in Zeile 4, also muss **C** vor einem der anderen Fenster sein, in Zeile 1.",
+      "**D** ist nicht auf einem Stuhl (da **B** die einzige Person auf einem Stuhl ist), also kann sie nur im Badezimmer in Zeile 6, Spalte 4 sein.",
+      "Das lokalisiert **E** neben dem Fernseher.",
+      "Das lokalisiert **C**, dann **A**.",
+      "**B** ist auf dem letzten Stuhl.",
+      "Das lokalisiert **O**, im Wohnzimmer mit **E**. Evelyn ist die Mörderin!"],
+  tr:["**A** 4. satırdaki yatakta olmalı. Satırın geri kalanını ele.",
+      "Bu, 4. satırdaki pencereyi eler; yani **C** diğer pencerelerden birinin önünde, 1. satırda olmalı.",
+      "**D** sandalyede değil (çünkü sandalyedeki tek kişi **B**), bu yüzden sadece banyoda, 6. satır 4. sütunda olabilir.",
+      "Bu, **E**'yi televizyonun yanına yerleştirir.",
+      "Bu, önce **C**'yi, sonra **A**'yı bulur.",
+      "**B** son sandalyededir.",
+      "Bu, **O**'yu oturma odasında **E** ile bulur. Katil Evelyn!"]
+ },
+ murderer:"evelyn"
+},
+{
+ id:"b1-06",book:"b1",no:6,size:6,
+ title:{de:"Der örtliche Buchladen",tr:"Mahalledeki Kitapçı"},
+ intro:{de:"Ein gebrochener Rücken ist immer furchtbar, nicht nur bei einem Buch.",tr:"Kırık bir sırt her zaman korkunçtur, sadece bir kitapta değil."},
+ info:[
+  {title:{de:"südlich von (a)",tr:"(a)'nın güneyinde"},text:{de:"in einer Zeile unter (a), aber nicht unbedingt im selben Raum",tr:"(a)'nın altındaki bir satırda, ama aynı odada olması gerekmez"},grid:[".a,","vvV","vVV"]},
+  {title:{de:"Kasse",tr:"Kasa"},text:{de:"kann nicht besetzt sein",tr:"buraya kimse konamaz"},icon:"register"}
+ ],
+ rooms:["KKKLLL","KKKLLL","SSSSLL","SSSSXX","BBBBXX","BBBBXX"],
+ roomNames:{
+  K:{de:"Krimis",tr:"Polisiye",floor:"wood",a:"#f5f0d6",b:"#e0d8b2"},
+  L:{de:"Liebesromane",tr:"Aşk romanları",floor:"wood",a:"#f7f0ef",b:"#e4d4d4"},
+  S:{de:"Sachbücher",tr:"Bilgi kitapları",floor:"wood",a:"#f6edc6",b:"#e2d49c"},
+  B:{de:"Bestseller",tr:"Çok satanlar",floor:"diamond",a:"#f8e6c8",b:"#f1c99e"},
+  X:{de:"Kasse",tr:"Kasa",floor:"wood",a:"#ebe5f4",b:"#d2c9e4"}
+ },
+ objects:[
+  {t:"shelf",r:0,c:1},{t:"table",r:0,c:2,col:"#e8c14a"},
+  {t:"shelf",r:0,c:3},{t:"shelf",r:1,c:5},{t:"shelf",r:2,c:5},
+  {t:"shelf",r:2,c:3},{t:"shelf",r:3,c:0},{t:"shelf",r:3,c:2},
+  {t:"shelf",r:4,c:1},{t:"shelf",r:4,c:3},{t:"shelf",r:5,c:0},{t:"shelf",r:5,c:1},{t:"shelf",r:5,c:3},
+  {t:"register",r:4,c:5},{t:"shelf",r:5,c:5}
+ ],
+ people:[
+  {id:"aria",name:"Aria",look:{bg:"#c48ac8",hair:"#151313",shirt:"#e4f0ea",style:"side",skin:"#6b4632"},
+   de:"Sie war in der **Bestseller**-Abteilung.",tr:"**Çok satanlar** bölümündeydi."},
+  {id:"benno",name:"Benno",look:{bg:"#f0dc3a",hair:"#b8b8bc",shirt:"#5a4a8a",style:"short",skin:"#5a3e2a"},
+   de:"Er war **neben** dem **Tisch**.",tr:"**Masanın yanındaydı**."},
+  {id:"calvin",name:"Calvin",look:{bg:"#8a5ab0",hair:"#c4c4c8",shirt:"#dcdcdc",style:"short",skin:"#e9b07a",beard:true},
+   de:"Er war **nicht neben** einem **Regal**.",tr:"Bir **rafın yanında değildi**."},
+  {id:"damian",name:"Damian",look:{bg:"#e8d48a",hair:"#4a3022",shirt:"#e0a030",style:"swept",skin:"#e2a874",beard:true,glasses:"#111"},
+   de:"Er war **südlich** von **Aria**.",tr:"**Aria**'nın **güneyindeydi**."},
+  {id:"ekaterina",name:"Ekaterina",look:{bg:"#5a4a42",hair:"#eeeeee",shirt:"#8a8ab8",style:"curly",skin:"#c99a72",glasses:"#a0522d"},
+   de:"Sie war in der **Liebesromane**-Abteilung.",tr:"**Aşk romanları** bölümündeydi."},
+  {id:"olga",name:"Olga",victim:true,look:{bg:"#b4552e",hair:"#f4e04a",shirt:"#5a2a2a",style:"wavy"},
+   de:"**Das Opfer.** Sie war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{ekaterina:[0,5],benno:[1,2],calvin:[2,1],olga:[3,3],aria:[4,0],damian:[5,4]},
+ hintOrder:["benno","aria","damian","ekaterina","calvin","olga"],
+ hintSteps:[0,1,1,2,3,[4,5]],
+ steps:{
+  de:["Es gibt nur ein Feld neben einem Tisch für **B**: Zeile 2, Spalte 3.",
+      "Das lokalisiert **A**, dann **D**.",
+      "Das lokalisiert **E** bei den Liebesromanen.",
+      "Das lokalisiert **C** im letzten Feld, das nicht neben einem Regal ist.",
+      "Das lokalisiert **O**.",
+      "**C** war allein mit der ermordeten Person im Sachbuchbereich. Calvin ist der Mörder!"],
+  tr:["**B** için masanın yanında tek bir kare var: 2. satır, 3. sütun.",
+      "Bu, önce **A**'yı, sonra **D**'yi bulur.",
+      "Bu, **E**'yi aşk romanları bölümünde bulur.",
+      "Bu, **C**'yi rafın yanında olmayan son kareye yerleştirir.",
+      "Bu, **O**'yu bulur.",
+      "**C**, bilgi kitapları bölümünde kurbanla yalnızdı. Katil Calvin!"]
+ },
+ murderer:"calvin"
+},
+{
+ id:"b1-07",book:"b1",no:7,size:6,
+ info:[{title:{de:"Zweite Spalte",tr:"İkinci sütun"},text:{de:"",tr:""},grid:[".v,",".v,",".V,"]}],
+ title:{de:"Das Café",tr:"Kafe"},
+ intro:{de:"Auf dem Kaffee des Opfers steht »Lindsey« … überlassen wir das Ausfüllen der Sterbeurkunde lieber nicht dem Barista.",tr:"Kurbanın kahvesinin üstünde »Lindsey« yazıyor … ölüm belgesini doldurmayı bariste bırakmasak iyi olur."},
+ rooms:["TTTTWW","TTTTWW","TTTTHH","HHHHHH","HHHHHH","HHHHHH"],
+ roomNames:{
+  T:{de:"Theke",tr:"Tezgâh",floor:"wood",a:"#e6e2ef",b:"#cfc8e0"},
+  W:{de:"Toilette",tr:"Tuvalet",floor:"plain",a:"#f6f4fa"},
+  H:{de:"Hauptbereich",tr:"Ana salon",floor:"diamond",a:"#ddd3ea",b:"#c9bcdc"}
+ },
+ objects:[
+  {t:"table",cells:[[0,3],[1,3],[2,3],[2,2]],col:"#a08ac0"},{t:"register",r:2,c:1},
+  {t:"chair",r:0,c:5,col:"#dcd8f0"},
+  {t:"chair",r:2,c:4,col:"#dcd8f0"},{t:"table",r:2,c:5,col:"#a08ac0"},
+  {t:"chair",r:3,c:1,col:"#dcd8f0"},{t:"table",r:3,c:2,w:2,col:"#a08ac0"},{t:"chair",r:3,c:4,col:"#dcd8f0"},
+  {t:"chair",r:4,c:2,col:"#dcd8f0"},{t:"chair",r:4,c:3,col:"#dcd8f0"},{t:"table",r:4,c:4,col:"#a08ac0"},
+  {t:"chair",r:5,c:0,col:"#dcd8f0"},{t:"plant",r:5,c:2,col:"#c46a9e"},{t:"chair",r:5,c:4,col:"#dcd8f0"},{t:"plant",r:5,c:5,col:"#c46a9e"}
+ ],
+ people:[
+  {id:"astrid",name:"Astrid",look:{bg:"#5a3e8a",hair:"#f6dc2a",shirt:"#f2f0ea",style:"bun",skin:"#e8b07a"},
+   de:"Sie war **neben** einer **Pflanze**. Sie saß **nicht** auf einem **Stuhl**.",tr:"Bir **bitkinin yanındaydı**. Bir **sandalyede** oturmuyordu."},
+  {id:"bea",name:"Bea",look:{bg:"#2e2a4a",hair:"#f2f2f2",shirt:"#151515",style:"bob",glasses:"#ffffff"},
+   de:"Sie war **neben** der **Kasse**.",tr:"**Kasanın yanındaydı**."},
+  {id:"chloe",name:"Chloe",look:{bg:"#9a6ab8",hair:"#a3402c",shirt:"#d84a3a",style:"wavy",skin:"#6b4632",necklace:"#e8c86a"},
+   de:"Sie war in der **zweiten Spalte**.",tr:"**İkinci sütundaydı**."},
+  {id:"dirk",name:"Dirk",look:{bg:"#3e3a6a",hair:"#2a2420",shirt:"#7a5aa8",style:"swept",skin:"#e2a874"},
+   de:"Er war **nördlich** von Chloe. Er war im **Hauptbereich**.",tr:"Chloe'nin **kuzeyindeydi**. **Ana salondaydı**."},
+  {id:"eberhard",name:"Eberhard",look:{bg:"#3a3a6a",hair:"#151313",shirt:"#a84a3a",style:"short",skin:"#c99a72",beard:true,cap:"#1b1b1f",sunglasses:"#111"},
+   de:"Er saß auf einem **Stuhl**. Er war **nicht neben** einem **Tisch**.",tr:"Bir **sandalyede** oturuyordu. Bir **masanın yanında değildi**."},
+  {id:"ole",name:"Ole",victim:true,look:{bg:"#8a3a2a",hair:"#3a2a22",shirt:"#2a2a30",style:"short",cap:"#7a8aa0",capType:"flat"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{eberhard:[0,5],ole:[1,2],bea:[2,0],dirk:[3,4],chloe:[4,1],astrid:[5,3]},
+ hintOrder:["bea","eberhard","astrid","chloe","dirk","ole"],
+ hintSteps:[0,1,2,[3,4],4,5],
+ steps:{
+  de:["Weil **C** in Spalte 2 ist, können wir **B** in Spalte 1 lokalisieren, neben der Kasse.",
+      "Es gibt nur einen Stuhl, auf dem **E** sein kann. Wir können **E** auf dem Stuhl in der Toilette lokalisieren.",
+      "**A** muss in Zeile 6 sein, neben einer Pflanze, in Spalte 4.",
+      "**D** ist nördlich von **C** und im Hauptbereich. Er muss irgendwo in Zeile 4 sein.",
+      "Das bedeutet, dass **C** in Zeile 5 ist. Das lokalisiert **C**, dann **D**.",
+      "Es gibt nur ein verbleibendes Feld für **O**, an der Theke. Bea ist die Mörderin!"],
+  tr:["**C** 2. sütunda olduğu için **B**'yi 1. sütunda, kasanın yanında bulabiliriz.",
+      "**E**'nin oturabileceği tek bir sandalye var. **E**'yi tuvaletteki sandalyede buluruz.",
+      "**A** 6. satırda, bir bitkinin yanında, 4. sütunda olmalı.",
+      "**D**, **C**'nin kuzeyinde ve ana salonda. 4. satırda bir yerde olmalı.",
+      "Bu, **C**'nin 5. satırda olduğu anlamına gelir. Bu önce **C**'yi, sonra **D**'yi bulur.",
+      "**O** için tezgâhta tek bir kare kalıyor. Katil Bea!"]
+ },
+ murderer:"bea"
+},
+{
+ id:"b1-08",book:"b1",no:8,size:7,
+ title:{de:"Whirlpool im Hintergarten",tr:"Arka Bahçedeki Jakuzi"},
+ intro:{de:"Sieht aus, als wären ein paar Emotionen hochgekocht.",tr:"Görünüşe göre bazı duygular kaynamış."},
+ rooms:["GGGTTTT","GGGTPPT","GGGTPPT","WWWTTTT","WWWWWKK","SSWWWKK","SSWWWKK"],
+ roomNames:{
+  G:{de:"Garten",tr:"Bahçe",floor:"grass",a:"#cfe8cf",b:"#a9d1a6"},
+  T:{de:"Terrasse",tr:"Teras",floor:"wood",a:"#f7e2cc",b:"#e2c6a8"},
+  P:{de:"Whirlpool",tr:"Jakuzi",floor:"water",a:"#bcd8f4",b:"#ffffff"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"diamond",a:"#d2ecf5",b:"#b3dcee"},
+  K:{de:"Küche",tr:"Mutfak",floor:"checker",a:"#e8f0fa",b:"#b8d0f0"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"plain",a:"#eef0ee"}
+ },
+ objects:[
+  {t:"table",r:0,c:1,w:2,col:"#7cc4bc"},{t:"plant",r:1,c:2},{t:"plant",r:2,c:0},
+  {t:"chair",r:0,c:5},{t:"chair",r:2,c:6},{t:"plant",r:3,c:4},
+  {t:"plant",r:3,c:1},{t:"tv",r:4,c:4},{t:"chair",r:5,c:2},{t:"plant",r:5,c:3},{t:"chair",r:5,c:4},{t:"table",r:6,c:3,col:"#7cc4bc"},
+  {t:"table",r:5,c:0,col:"#5f9e92"},{t:"bed",r:6,c:0,w:2,col:"#8fa89c"},
+  {t:"table",r:6,c:5,w:2,col:"#7cc4bc"}
+ ],
+ people:[
+  {id:"ahmet",name:"Ahmet",look:{bg:"#8fcbe8",hair:"#f2f2f2",shirt:"#ffffff",style:"swept",sunglasses:"#111"},
+   de:"Er war **neben** einem **Tisch**.",tr:"Bir **masanın yanındaydı**."},
+  {id:"bertie",name:"Bertie",look:{bg:"#e2ecb0",hair:"#3a2a22",shirt:"#3e4f9a",style:"short",beard:true},
+   de:"Er war in der **fünften Spalte**.",tr:"**Beşinci sütundaydı**."},
+  {id:"carly",name:"Carly",look:{bg:"#7a8ad0",hair:"#f2dc5a",shirt:"#4a5aa8",style:"wavy"},
+   de:"Sie saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"daphne",name:"Daphne",look:{bg:"#f0b06a",hair:"#c26a3a",shirt:"#8a5a4a",style:"long",glasses:"#222"},
+   de:"Sie war auf dem **Bett**.",tr:"**Yatağın** üstündeydi."},
+  {id:"ellie",name:"Ellie",look:{bg:"#b9a4dc",hair:"#9a3a2e",shirt:"#4fa8a0",style:"longStraight",sunglasses:"#111"},
+   de:"Sie war **nicht neben** einer **Pflanze**.",tr:"Bir **bitkinin yanında değildi**."},
+  {id:"friedrich",name:"Friedrich",look:{bg:"#5a6a8a",hair:"#4a3022",shirt:"#e8b48a",style:"short",sunglasses:"#111"},
+   de:"Er war im **Garten**. Er war **nicht neben** einer **Pflanze**.",tr:"**Bahçedeydi**. Bir **bitkinin yanında değildi**."},
+  {id:"ophelia",name:"Ophelia",victim:true,look:{bg:"#d89a98",hair:"#7a8ab8",shirt:"#6a4a9a",style:"bob",glasses:"#f6f2e6"},
+   de:"**Das Opfer.** Sie war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{friedrich:[0,0],bertie:[1,4],carly:[2,6],ophelia:[3,3],ellie:[4,2],ahmet:[5,5],daphne:[6,1]},
+ hintOrder:["friedrich","daphne","carly","bertie","ahmet","ellie","ophelia"],
+ hintSteps:[0,1,[2,3],4,4,5,6],
+ steps:{
+  de:["Es gibt nur ein Feld im Garten, das nicht neben einer Pflanze ist, also muss **F** dort sein: Zeile 1, Spalte 1.",
+      "Das lokalisiert **D** auf dem Bett im Schlafzimmer, in Spalte 2.",
+      "**A** kann nur in Zeile 6 sein, in einem der Felder nördlich des Küchentischs.",
+      "Das lokalisiert **C** auf dem letzten verbleibenden Stuhl.",
+      "Das lokalisiert **B** im Whirlpool und lokalisiert auch **A** in Spalte 6.",
+      "Von den vier verfügbaren Feldern sind drei neben einer Pflanze, also ist **E** im verbleibenden: Zeile 5, Spalte 3.",
+      "Das lokalisiert **O** auf der Terrasse. Carly ist die Mörderin!"],
+  tr:["Bahçede bitkinin yanında olmayan tek bir kare var, bu yüzden **F** orada olmalı: 1. satır, 1. sütun.",
+      "Bu, **D**'yi yatak odasındaki yatakta, 2. sütunda bulur.",
+      "**A** sadece 6. satırda, mutfak masasının kuzeyindeki karelerden birinde olabilir.",
+      "Bu, **C**'yi kalan son sandalyeye yerleştirir.",
+      "Bu, **B**'yi jakuzide bulur ve **A**'yı da 6. sütuna yerleştirir.",
+      "Kalan dört kareden üçü bir bitkinin yanında, bu yüzden **E** kalan karede: 5. satır, 3. sütun.",
+      "Bu, **O**'yu terasta bulur. Katil Carly!"]
+ },
+ murderer:"carly"
+},
+{
+ id:"b1-09",book:"b1",no:9,size:8,
+ title:{de:"Das Labor",tr:"Laboratuvar"},
+ intro:{de:"Eine Schutzbrille kann dich wohl nicht vor allem schützen.",tr:"Koruyucu gözlük seni galiba her şeyden koruyamıyor."},
+ rooms:["XXXKKKKK","XXXKKKKK","XXLLKKKK","XXLLDDDD","XXXDDDDD","XXXDDGGG","BBBBBGGG","BBBBBGGG"],
+ roomNames:{
+  X:{de:"Experimentierlabor",tr:"Deney laboratuvarı",floor:"plain",a:"#e6f0ee"},
+  K:{de:"Dekontamination",tr:"Dekontaminasyon",floor:"plain",a:"#e6f0ee",row:2},
+  L:{de:"Lagerraum",tr:"Depo",floor:"checker",a:"#eef4f2",b:"#dde9e6"},
+  D:{de:"Datenanalyse",tr:"Veri analizi",floor:"plain",a:"#dfe9e7",row:4},
+  G:{de:"Gefrierkammer",tr:"Soğuk oda",floor:"plain",a:"#eef4f4"},
+  B:{de:"Büro",tr:"Ofis",floor:"checker",a:"#eef4f2",b:"#d7e9e3"}
+ },
+ objects:[
+  {t:"table",r:0,c:0,w:2,col:"#c9c4d8"},{t:"shelf",r:0,c:2},{t:"table",r:0,c:3,col:"#c9c4d8"},{t:"shelf",r:0,c:5},
+  {t:"tv",r:1,c:0},{t:"chair",r:1,c:1},{t:"table",r:1,c:5,w:2,col:"#c9c4d8"},
+  {t:"shelf",r:2,c:2},
+  {t:"table",r:3,c:0,col:"#c9c4d8"},{t:"chair",r:3,c:1},{t:"shelf",r:3,c:3},{t:"tv",r:3,c:5},{t:"tv",r:3,c:6},{t:"table",r:3,c:7,col:"#c9c4d8"},
+  {t:"tv",r:4,c:0},
+  {t:"table",r:5,c:0,w:2,col:"#c9c4d8"},{t:"tv",r:5,c:4},{t:"shelf",r:5,c:7},
+  {t:"chair",r:6,c:2},{t:"table",cells:[[6,3],[7,1],[7,2],[7,3]],col:"#c9c4d8"},{t:"tv",r:6,c:4},{t:"shelf",r:6,c:6},{t:"table",r:6,c:7,col:"#c9c4d8"},
+  {t:"plant",r:7,c:0},{t:"shelf",r:7,c:7},
+  {t:"deco",r:0,c:0,k:"microscope",y:.38},{t:"deco",r:5,c:0,k:"microscope",y:.38},{t:"deco",r:7,c:2,k:"paper",y:.4},{t:"deco",r:7,c:3,k:"book",y:.4,s:.34}
+ ],
+ people:[
+  {id:"armin",name:"Armin",look:{bg:"#d6e6e4",hair:"#8a8a8e",shirt:"#cfd2d6",style:"short",skin:"#8a6448",goggles:true,mask:"#e4e6ea"},
+   de:"Er war im selben Raum wie **Estella**. Er saß auf einem **Stuhl**.",tr:"**Estella** ile aynı odadaydı. Bir **sandalyede** oturuyordu."},
+  {id:"bernhard",name:"Bernhard",look:{bg:"#e4ecea",hair:"#151313",shirt:"#cfd2d6",style:"short",skin:"#e2a874",beard:true,goggles:true},
+   de:"Er war im **Lagerraum**.",tr:"**Depodaydı**."},
+  {id:"calypso",name:"Calypso",look:{bg:"#cfe4e2",hair:"#151313",shirt:"#4a4a8a",style:"side",skin:"#e2a874"},
+   de:"Sie war **neben** einem **Tisch**. Sie war **nördlich** von **Bernhard**.",tr:"Bir **masanın yanındaydı**. **Bernhard**'ın **kuzeyindeydi**."},
+  {id:"doris",name:"Doris",look:{bg:"#d6e6e2",hair:"#8a3a2a",shirt:"#4a8ab0",style:"bob",mask:"#4a8ab8"},
+   de:"Sie war im **Büro**.",tr:"**Ofisteydi**."},
+  {id:"estella",name:"Estella",look:{bg:"#b4b0d0",hair:"#8a8a9a",shirt:"#f2f2f2",style:"wavy",skin:"#d8a070",glasses:"#111"},
+   de:"Sie war in der **ersten Spalte**.",tr:"**Birinci sütundaydı**."},
+  {id:"frank",name:"Frank",look:{bg:"#bcd8e4",hair:"#a3492c",shirt:"#f2f2f2",style:"short",goggles:true,mask:"#f2eedf"},
+   de:"Er war **neben** einem **Fernseher**.",tr:"Bir **televizyonun yanındaydı**."},
+  {id:"gil",name:"Gil",look:{bg:"#d8cce0",hair:"#151313",shirt:"#d6d6d6",style:"curly",skin:"#5a3e2a"},
+   de:"Er war **neben** einem **Regal**.",tr:"Bir **rafın yanındaydı**."},
+  {id:"oskar",name:"Oskar",victim:true,look:{bg:"#c46a5a",hair:"#f4dc4a",shirt:"#bcbcbc",style:"swept",goggles:true},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{calypso:[0,6],armin:[1,1],estella:[2,0],bernhard:[3,2],oskar:[4,7],frank:[5,3],gil:[6,5],doris:[7,4]},
+ hintOrder:["estella","bernhard","armin","doris","calypso","gil","frank","oskar"],
+ hintSteps:[0,1,2,3,4,5,6,6],
+ steps:{
+  de:["**E**, in Spalte 1, kann nur mit **A** im Experimentierlabor sein. (Wenn sie im Büro wären, müssten beide in Zeile 7 sein.) Das lokalisiert **E** in Zeile 3.",
+      "Das lokalisiert **B** im Lagerraum.",
+      "Das lokalisiert **A** auf dem letzten verbleibenden Stuhl im Experimentierlabor.",
+      "Es gibt nur ein verfügbares Feld für **D** im Büro: Zeile 8, Spalte 5.",
+      "Das lokalisiert **C** im letzten verbleibenden Feld neben einem Tisch und nördlich von **B**.",
+      "Das lokalisiert **G** im letzten verbleibenden Feld neben einem Regal.",
+      "Das lokalisiert **F** neben dem Fernseher, dann **O**. Frank ist der Mörder!"],
+  tr:["1. sütundaki **E**, ancak **A** ile birlikte deney laboratuvarında olabilir. (Ofiste olsalardı ikisi de 7. satırda olmak zorunda kalırdı.) Bu, **E**'yi 3. satırda bulur.",
+      "Bu, **B**'yi depoda bulur.",
+      "Bu, **A**'yı deney laboratuvarındaki son sandalyede bulur.",
+      "**D** için ofiste tek bir uygun kare var: 8. satır, 5. sütun.",
+      "Bu, **C**'yi bir masanın yanındaki ve **B**'nin kuzeyindeki son kareye yerleştirir.",
+      "Bu, **G**'yi bir rafın yanındaki son kareye yerleştirir.",
+      "Bu, önce **F**'yi televizyonun yanında, sonra **O**'yu bulur. Katil Frank!"]
+ },
+ murderer:"frank"
+},
+{
+ id:"b1-10",book:"b1",no:10,size:8,
+ title:{de:"Besuch bei Tante Ellen",tr:"Ellen Teyzeye Ziyaret"},
+ intro:{de:"Bei Familientreffen kochen die Gemüter immer hoch.",tr:"Aile toplantılarında ortam hep gerilir."},
+ general:[{de:"Genau eine Person war auf einem **Bett**.",tr:"Bir **yatağın** üstünde tam olarak bir kişi vardı."}],
+ rooms:["SSSSGGGG","SSBBGGGG","SSBBGGGG","SSBBEEEE","WWWWEEEE","WWWWEEEE","WWWWEEKK","WWWKKKKK"],
+ roomNames:{
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#f4e6b0",b:"#dccb8a",row:3},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"plain",a:"#f2f0f2"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"plain",a:"#f6ecee"},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"diamond",a:"#f9d6bc",b:"#f2bc9c",row:5},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#ede2c4",b:"#d6c69e"},
+  K:{de:"Küche",tr:"Mutfak",floor:"wood",a:"#f4efe2",b:"#ddd4bc"}
+ },
+ objects:[
+  {t:"window",r:1,c:0,side:"left"},{t:"window",r:2,c:0,side:"left"},{t:"window",r:5,c:0,side:"left"},{t:"window",r:6,c:0,side:"left"},
+  {t:"bed",r:0,c:0,w:2,col:"#8a6a68"},{t:"shelf",r:0,c:3},
+  {t:"bed",r:0,c:4,h:2,col:"#8a6a68"},{t:"table",r:0,c:5,h:2,col:"#c98a3a"},{t:"bed",r:0,c:6,h:2,col:"#8a6a68"},
+  {t:"table",r:1,c:3,col:"#c98a3a"},{t:"table",r:2,c:7,col:"#c98a3a"},
+  {t:"shelf",r:3,c:1},{t:"table",r:3,c:7,col:"#c98a3a"},
+  {t:"chair",r:4,c:1},{t:"chair",r:4,c:4},{t:"table",r:4,c:5,h:2,col:"#c98a3a"},
+  {t:"table",r:5,c:1,col:"#c98a3a"},{t:"tv",r:5,c:3},{t:"chair",r:5,c:4},
+  {t:"chair",r:6,c:5},{t:"table",r:6,c:7,col:"#c98a3a"},
+  {t:"shelf",r:7,c:0},{t:"shelf",r:7,c:1},{t:"plant",r:7,c:2},{t:"shelf",r:7,c:7}
+ ],
+ people:[
+  {id:"albert",name:"Albert",look:{bg:"#9a6a42",hair:"#1f1a1c",shirt:"#f2f2f2",style:"swept",beard:true},
+   de:"Er war **neben** einem **Regal**.",tr:"Bir **rafın yanındaydı**."},
+  {id:"berti",name:"Berti",look:{bg:"#3f7a3a",hair:"#5a3a26",shirt:"#a8c4d0",style:"swept",beard:true,beardColor:"#5a3a26"},
+   de:"Er war **neben** einem **Bett**.",tr:"Bir **yatağın yanındaydı**."},
+  {id:"carolina",name:"Carolina",look:{bg:"#5aa08a",hair:"#151313",shirt:"#3a5ab0",style:"bun"},
+   de:"Sie war **neben** der **Pflanze**.",tr:"**Bitkinin yanındaydı**."},
+  {id:"desiree",name:"Desiree",look:{bg:"#b8c4dc",hair:"#d8a83a",shirt:"#9a9ab0",style:"bob"},
+   de:"Sie war **allein** im **Schlafzimmer**.",tr:"**Yatak odasında yalnızdı**."},
+  {id:"ellen",name:"Ellen",look:{bg:"#3a2a6a",hair:"#f6f6f6",shirt:"#151515",style:"longStraight"},
+   de:"Sie saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"farouk",name:"Farouk",look:{bg:"#a87ab8",hair:"#151313",shirt:"#1b1b1f",style:"bald",skin:"#7a5a40",beard:true,beardColor:"#6a4a30",glasses:"#111"},
+   de:"Er war vor einem **Fenster**.",tr:"Bir **pencerenin** önündeydi."},
+  {id:"gustaf",name:"Gustaf",look:{bg:"#c06a3a",hair:"#1f1a1c",shirt:"#7a4a32",style:"short"},
+   de:"Er war in einer **Ecke** seines Raumes.",tr:"Odasının bir **köşesindeydi**."},
+  {id:"oswin",name:"Oswin",victim:true,look:{bg:"#8a3a2a",hair:"#9a9aa0",shirt:"#3a3438",style:"swept"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{desiree:[0,1],berti:[1,7],oswin:[2,5],gustaf:[3,3],ellen:[4,4],farouk:[5,0],carolina:[6,2],albert:[7,6]},
+ hintOrder:["carolina","albert","farouk","ellen","desiree","gustaf","berti","oswin"],
+ hintSteps:[0,1,2,[3,4],5,6,7,7],
+ steps:{
+  de:["Wir können **C** neben der einzigen Pflanze lokalisieren.",
+      "**D** ist allein im Schlafzimmer, also gibt es nur ein Regal für **A**. Das lokalisiert **A**.",
+      "Es gibt auch nur ein Fenster, vor dem **F** sein kann. Das lokalisiert **F**.",
+      "**D** muss in Spalte 2 sein.",
+      "Das lokalisiert **E** auf dem letzten verfügbaren Stuhl.",
+      "Jemand ist auf einem Bett. Spalten 5 und 7 sind besetzt, also muss das **D** in Zeile 1 sein.",
+      "Das lokalisiert **G** in der letzten verfügbaren Ecke, in der Toilette.",
+      "Das lokalisiert **B** neben einem Bett, dann **O**. Berti ist der Mörder!"],
+  tr:["**C**'yi tek bitkinin yanında bulabiliriz.",
+      "**D** yatak odasında yalnız, bu yüzden **A** için tek bir raf kalıyor. Bu, **A**'yı bulur.",
+      "**F**'nin önünde olabileceği de tek bir pencere var. Bu, **F**'yi bulur.",
+      "**D** 2. sütunda olmalı.",
+      "Bu, **E**'yi kalan son sandalyede bulur.",
+      "Biri bir yatakta. 5. ve 7. sütunlar dolu, bu yüzden **D** 1. satırda olmalı.",
+      "Bu, **G**'yi banyodaki kalan son köşede bulur.",
+      "Bu, önce **B**'yi bir yatağın yanında, sonra **O**'yu bulur. Katil Berti!"]
+ },
+ murderer:"berti"
+},
+{
+ id:"b1-11",book:"b1",no:11,size:9,
+ title:{de:"Abrisszone",tr:"Yıkım Alanı"},
+ intro:{de:"Mit Absperrband erwürgt? Das ist mal was Neues.",tr:"Şerit bantla boğulmak mı? Bu yeni bir şey."},
+ info:[{icons:["rock","rubble"],text:{de:"können nicht besetzt sein",tr:"buralara kimse konamaz"}}],
+ rooms:[".AAAAA...",".AAAAAAA.",".AAEEAAAA","GGGGEAAAA","GGGGEEEAA","SSSSEEEWW","SSSSSWWWW","SSSSSWWWW","SSSSSWWWW"],
+ roomNames:{
+  A:{de:"Abrisszone",tr:"Yıkım alanı",floor:"grass",a:"#c8b8a0",b:"#b4a288",row:3},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"diamond",a:"#e2eeee",b:"#c8dcdc"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#a8b0b6",b:"#8e979e"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"checker",a:"#c2c8cc",b:"#8e979c"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#e8ecee",b:"#cfd6da"}
+ },
+ objects:[
+  {t:"rubble",r:0,c:1},{t:"rubble",r:0,c:3},{t:"rubble",r:1,c:1},{t:"rock",r:1,c:5},{t:"rubble",r:2,c:7},
+  {t:"chair",r:3,c:4},{t:"table",r:4,c:5,w:2,col:"#9a9ea4"},{t:"shelf",r:5,c:5},{t:"chair",r:5,c:6},
+  {t:"chair",r:4,c:0},{t:"bed",r:4,c:2,w:2,col:"#a8c8e4"},
+  {t:"tv",r:5,c:7},
+  {t:"bed",r:6,c:0,w:2,col:"#a8c8e4"},{t:"table",r:6,c:3,col:"#9a9ea4"},{t:"rubble",r:6,c:4},{t:"table",r:7,c:1,col:"#9a9ea4"},
+  {t:"table",r:7,c:6,col:"#9a9ea4"},{t:"table",r:8,c:5,col:"#9a9ea4"},{t:"rubble",r:8,c:6}
+ ],
+ people:[
+  {id:"antonio",name:"Antonio",look:{bg:"#5a3e36",hair:"#a3532c",shirt:"#4a7ab8",style:"short"},
+   de:"Er war **neben** dem **Regal**.",tr:"**Rafın yanındaydı**."},
+  {id:"benjamin",name:"Benjamin",look:{bg:"#5a7aa0",hair:"#8a3a22",shirt:"#f2c42a",style:"short",beard:true,hardhat:"#f2c42a"},
+   de:"Der **Fernseher** war in seiner **Spalte**, in einem anderen Raum.",tr:"**Televizyon** onun **sütunundaydı**, ama başka bir odada."},
+  {id:"claus",name:"Claus",look:{bg:"#3a3a4a",hair:"#6a4a32",shirt:"#8a2a2a",style:"short",glasses:"#111"},
+   de:"Er war **südwestlich** vom **Fernseher** und im selben Raum.",tr:"**Televizyonun güneybatısındaydı** ve aynı odadaydı."},
+  {id:"dina",name:"Dina",look:{bg:"#6a8a8a",hair:"#3a2620",shirt:"#f2c42a",style:"long",skin:"#c99a72"},
+   de:"Sie war in der **dritten Spalte**.",tr:"**Üçüncü sütundaydı**."},
+  {id:"emmett",name:"Emmett",look:{bg:"#3a3a6a",hair:"#c4c4c8",shirt:"#4a6aa8",style:"swept"},
+   de:"Er war **neben** dem **Felsbrocken**.",tr:"**Kaya parçasının yanındaydı**."},
+  {id:"francisco",name:"Francisco",look:{bg:"#5a3a5a",hair:"#151313",shirt:"#f2c42a",style:"bald",skin:"#6b4632",beard:true,hardhat:"#f2c42a"},
+   de:"Er war die **einzige** Person auf einem **Stuhl**.",tr:"Bir **sandalyedeki tek** kişiydi."},
+  {id:"gemma",name:"Gemma",look:{bg:"#6a6e78",hair:"#5a3a26",shirt:"#1b1b1f",style:"longStraight",glasses:"#f6ecc8"},
+   de:"Sie war in einer **Ecke** und **südlich** von **Benjamin**.",tr:"Bir **köşedeydi** ve **Benjamin**'in **güneyindeydi**."},
+  {id:"hans",name:"Hans",look:{bg:"#2a2a3a",hair:"#d8b84a",shirt:"#f2c42a",style:"wavy",beard:true,beardColor:"#e8cc5a"},
+   de:"Er war auf einem **Bett**.",tr:"Bir **yatağın** üstündeydi."},
+  {id:"orlando",name:"Orlando",victim:true,look:{bg:"#6a3a32",hair:"#7a4a32",shirt:"#6a8ab8",style:"short"},
+   de:"**Das Opfer.** Er war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{dina:[0,2],emmett:[1,6],orlando:[2,3],benjamin:[3,7],francisco:[4,0],antonio:[5,4],hans:[6,1],claus:[7,5],gemma:[8,8]},
+ hintOrder:["antonio","francisco","hans","claus","emmett","benjamin","gemma","dina","orlando"],
+ hintSteps:[0,1,2,3,4,5,5,6,7],
+ steps:{
+  de:["Weil **F** die einzige Person auf einem Stuhl ist, lokalisiert das **A** in Spalte 5, neben dem Regal.",
+      "Das lokalisiert **F** auf dem letzten verbleibenden Stuhl im Gästezimmer.",
+      "Das eliminiert drei der vier Felder, die Teil eines Bettes sind, und lokalisiert **H** in Zeile 7, Spalte 2.",
+      "Das lokalisiert **C** im Wohnzimmer.",
+      "Das lokalisiert **E** im letzten verbleibenden Feld neben dem Felsbrocken.",
+      "Das lokalisiert **B**, dann **G**.",
+      "**D** kann nur in Zeile 1 in Spalte 3 sein.",
+      "Das lokalisiert **O**. Antonio ist der Mörder!"],
+  tr:["**F** sandalyedeki tek kişi olduğu için **A**, 5. sütunda rafın yanında olmalı.",
+      "Bu, **F**'yi misafir odasındaki kalan son sandalyede bulur.",
+      "Bu, yatağa ait dört kareden üçünü eler ve **H**'yi 7. satır, 2. sütunda bulur.",
+      "Bu, **C**'yi oturma odasında bulur.",
+      "Bu, **E**'yi kaya parçasının yanındaki kalan son karede bulur.",
+      "Bu, önce **B**'yi, sonra **G**'yi bulur.",
+      "**D** sadece 1. satırda, 3. sütunda olabilir.",
+      "Bu, **O**'yu bulur. Katil Antonio!"]
+ },
+ murderer:"antonio"
+},
+{
+ id:"b1-12",book:"b1",no:12,size:9,
+ title:{de:"Das Familienanwesen",tr:"Aile Malikânesi"},
+ intro:{de:"Nichts bringt das Schlechteste in Menschen so gut zum Vorschein wie der Streit ums Testament.",tr:"İnsanlardaki en kötüyü hiçbir şey vasiyet kavgası kadar iyi ortaya çıkaramaz."},
+ rooms:["GGGGGBBBB","GGGGGBBBB","EEEGGSSSS","EEEEESSSS","EEEECCSSS","EEEECCSSS","KKKKKKKLL","KKKKKKKLL","KKKKKKKLL"],
+ roomNames:{
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#e8e0c8",b:"#d2c8aa",row:1},
+  B:{de:"Badezimmer",tr:"Banyo",floor:"wood",a:"#c9c9cc",b:"#b2b2b6"},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"wood",a:"#ece6d0",b:"#d6ceb2"},
+  C:{de:"Küche",tr:"Mutfak",floor:"wood",a:"#e4e0de",b:"#ccc6c4"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#ece8dc",b:"#d4cebe"},
+  K:{de:"Keller",tr:"Bodrum",floor:"wood",a:"#d6cfc8",b:"#bdb4ac"},
+  L:{de:"Lagerraum",tr:"Depo",floor:"grass",a:"#9a9a9e",b:"#86868a"}
+ },
+ objects:[
+  {t:"table",r:0,c:2,col:"#5a4a44"},{t:"bed",r:0,c:3,h:2,col:"#b07a5a"},{t:"table",r:0,c:4,col:"#5a4a44"},
+  {t:"plant",r:0,c:5},{t:"chair",r:0,c:7},{t:"table",r:0,c:8,h:2,col:"#5a4a44"},
+  {t:"chair",r:2,c:0},{t:"chair",r:2,c:2},{t:"plant",r:2,c:8},
+  {t:"table",r:3,c:1,w:2,col:"#5a4a44"},{t:"bed",r:3,c:7,h:2,col:"#b07a5a"},{t:"shelf",r:3,c:8},
+  {t:"plant",r:4,c:0},{t:"chair",r:4,c:1},{t:"chair",r:4,c:3},{t:"table",r:4,c:4,col:"#5a4a44"},{t:"shelf",r:4,c:8},
+  {t:"chair",r:6,c:4},
+  {t:"shelf",r:7,c:0},{t:"chair",r:7,c:1},{t:"chair",r:7,c:3},{t:"shelf",r:7,c:8},
+  {t:"shelf",r:8,c:0},{t:"tv",r:8,c:2},{t:"table",r:8,c:4,col:"#5a4a44"},{t:"plant",r:8,c:5},{t:"chair",r:8,c:6},{t:"shelf",r:8,c:7}
+ ],
+ people:[
+  {id:"adam",name:"Adam",look:{bg:"#5a5a5e",hair:"#b08a4a",shirt:"#1b1b1f",style:"wavy",beard:true},
+   de:"Er war im **Lagerraum**. Er war **nicht neben** einem **Regal**.",tr:"**Depodaydı**. Bir **rafın yanında değildi**."},
+  {id:"belinda",name:"Belinda",look:{bg:"#d6d6d8",hair:"#151313",shirt:"#4a6ab8",style:"bun",skin:"#7a5232",glasses:"#f6f2e6"},
+   de:"Sie saß auf einem **Stuhl** im **Keller**.",tr:"**Bodrumda** bir **sandalyede** oturuyordu."},
+  {id:"clemens",name:"Clemens",look:{bg:"#2a2a2e",hair:"#151313",shirt:"#151515",style:"long",beard:true,beardColor:"#3a2a24"},
+   de:"Er war im **Badezimmer**.",tr:"**Banyodaydı**."},
+  {id:"dario",name:"Dario",look:{bg:"#5a6a5a",hair:"#4a3022",shirt:"#2a2a3a",style:"bob",glasses:"#111",beard:true},
+   de:"Er war im **Schlafzimmer**.",tr:"**Yatak odasındaydı**."},
+  {id:"edwin",name:"Edwin",look:{bg:"#8a5a4a",hair:"#151313",shirt:"#4a5a3a",style:"short",glasses:"#111"},
+   de:"Er war auf einem **Bett**.",tr:"Bir **yatağın** üstündeydi."},
+  {id:"farah",name:"Farah",look:{bg:"#c49a6a",hair:"#f2f2f2",shirt:"#6a4a3a",style:"side"},
+   de:"Sie war im **Gästezimmer**.",tr:"**Misafir odasındaydı**."},
+  {id:"greg",name:"Greg",look:{bg:"#c49a3a",hair:"#4a3022",shirt:"#f2f2f2",style:"short"},
+   de:"Er war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"helena",name:"Helena",look:{bg:"#cfc8a8",hair:"#151313",shirt:"#7a5aa8",style:"bob",skin:"#8a7a6a",glasses:"#f6f2e6"},
+   de:"Sie war im **Keller**, in einer **Ecke** des Raumes.",tr:"**Bodrumdaydı**, odanın bir **köşesinde**."},
+  {id:"osvaldo",name:"Osvaldo",victim:true,look:{bg:"#4a3a32",hair:"#7a8aa8",shirt:"#151515",style:"swept",beard:true},
+   de:"**Das Opfer.** Er war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{edwin:[0,3],clemens:[1,5],farah:[2,4],greg:[3,0],osvaldo:[4,2],dario:[5,8],adam:[6,7],belinda:[7,1],helena:[8,6]},
+ hintOrder:["adam","helena","belinda","clemens","edwin","dario","greg","farah","osvaldo"],
+ hintSteps:[0,2,3,3,[1,3],4,4,4,5],
+ steps:{
+  de:["Es gibt nur ein Feld im Lagerraum, das nicht neben einem Regal ist, also muss **A** dort sein: Zeile 7, Spalte 8.",
+      "Das platziert **E** auf dem Bett im Gästezimmer, in Spalte 4.",
+      "Das lokalisiert auch **H** in der Südostecke des Kellers.",
+      "Das lokalisiert **B** auf dem letzten Stuhl im Keller und lokalisiert auch **C** im Badezimmer, dann **E** auf dem Bett.",
+      "Das lokalisiert **D** im Schlafzimmer, dann **G** im letzten Feld neben einer Pflanze.",
+      "Das lokalisiert **O** im Esszimmer mit **G**. Greg ist der Mörder!"],
+  tr:["Depoda rafın yanında olmayan tek bir kare var, bu yüzden **A** orada olmalı: 7. satır, 8. sütun.",
+      "Bu, **E**'yi misafir odasındaki yatağa, 4. sütuna koyar.",
+      "Bu, **H**'yi de bodrumun güneydoğu köşesinde bulur.",
+      "Bu, **B**'yi bodrumdaki son sandalyede, **C**'yi banyoda ve sonra **E**'yi yatakta bulur.",
+      "Bu, **D**'yi yatak odasında, sonra **G**'yi bitkinin yanındaki son karede bulur.",
+      "Bu, **O**'yu yemek odasında **G** ile bulur. Katil Greg!"]
+ },
+ murderer:"greg"
+},
+{
+ id:"b1-13",book:"b1",no:13,size:8,
+ title:{de:"Die alte Taverne",tr:"Eski Meyhane"},
+ intro:{de:"Seit 1987 ist nichts passiert, was annähernd so aufregend war.",tr:"1987'den beri bu kadar heyecan verici bir şey olmamıştı."},
+ rooms:["AAAATTTT","AAAAATTT","AAAAATTT","AAAAAAAA","AAAAAAAA","KKKKKKLL","KKKKKKLL","KKKKKLLL"],
+ roomNames:{
+  A:{de:"Aufenthaltsraum",tr:"Dinlenme salonu",floor:"wood",a:"#d6d2c6",b:"#bcb8aa",lab:[4,3.5,4]},
+  T:{de:"Toilette",tr:"Tuvalet",floor:"checker",a:"#e6e2dc",b:"#cfc8c0"},
+  K:{de:"Theke",tr:"Bar tezgâhı",floor:"wood",a:"#d2cec2",b:"#b8b4a6"},
+  L:{de:"Lagerraum",tr:"Depo",floor:"wood",a:"#d4d6ee",b:"#b8bce0"}
+ },
+ objects:[
+  {t:"chair",r:0,c:1,col:"#d6d4ea"},{t:"table",r:0,c:2,col:"#5a5a6a"},{t:"chair",r:0,c:3,col:"#d6d4ea"},
+  {t:"chair",r:0,c:4,col:"#d6d4ea"},{t:"chair",r:0,c:6,col:"#d6d4ea"},
+  {t:"plant",r:1,c:0},{t:"table",r:1,c:5,col:"#5a5a6a"},{t:"table",r:1,c:7,col:"#5a5a6a"},
+  {t:"shelf",r:2,c:0},{t:"chair",r:2,c:2,col:"#d6d4ea"},{t:"table",r:2,c:3,col:"#5a5a6a"},
+  {t:"table",r:3,c:0,col:"#5a5a6a"},{t:"table",r:3,c:2,col:"#5a5a6a"},{t:"plant",r:3,c:6},{t:"table",r:3,c:7,col:"#5a5a6a"},
+  {t:"chair",r:4,c:2,col:"#d6d4ea"},{t:"chair",r:4,c:3,col:"#d6d4ea"},{t:"chair",r:4,c:4,col:"#d6d4ea"},{t:"chair",r:4,c:5,col:"#d6d4ea"},{t:"tv",r:4,c:7},
+  {t:"table",r:5,c:0,h:2,col:"#5a5a6a"},{t:"table",r:5,c:2,w:4,col:"#5a5a6a"},{t:"shelf",r:5,c:7},
+  {t:"tv",r:6,c:4},
+  {t:"shelf",r:7,c:0},{t:"shelf",r:7,c:1},{t:"shelf",r:7,c:6},
+  {t:"deco",r:2,c:3,k:"mug"},{t:"deco",r:3,c:0,k:"beer"},{t:"deco",r:5,c:2,k:"beer",y:.32},{t:"deco",r:5,c:5,k:"beer",y:.32},{t:"deco",r:6,c:0,k:"mug",y:.5}
+ ],
+ people:[
+  {id:"amir",name:"Amir",look:{bg:"#e8a050",hair:"#f6f6f6",shirt:"#9a9ad0",style:"swept",skin:"#8a6a52",glasses:"#111"},
+   de:"Er war in der **ersten Spalte**.",tr:"**Birinci sütundaydı**."},
+  {id:"baldur",name:"Baldur",look:{bg:"#8a7aa0",hair:"#c8c8cc",shirt:"#2a3a6a",style:"short",beard:true,beardColor:"#d6d6da"},
+   de:"Er war **neben** einem **Fernseher**.",tr:"Bir **televizyonun yanındaydı**."},
+  {id:"caleb",name:"Caleb",look:{bg:"#6a6aa8",hair:"#8a6a3a",shirt:"#4a3a2a",style:"bob",mustache:"#6a4a2a"},
+   de:"Er war **neben** einem **Regal**.",tr:"Bir **rafın yanındaydı**."},
+  {id:"damien",name:"Damien",look:{bg:"#4a9a8a",hair:"#f2f2f2",shirt:"#6a5aa8",style:"short",mustache:"#f2f2f2"},
+   de:"Er war in der **Toilette**.",tr:"**Tuvaletteydi**."},
+  {id:"eric",name:"Eric",look:{bg:"#4a4a8a",hair:"#e6e6e6",shirt:"#1b1b1f",style:"short",skin:"#6b4a32",glasses:"#111"},
+   de:"Er saß auf einem **Stuhl** in der **Toilette**.",tr:"**Tuvalette** bir **sandalyede** oturuyordu."},
+  {id:"finn",name:"Finn",look:{bg:"#6a6ac0",hair:"#e2e2e6",shirt:"#4a6aa8",style:"swept"},
+   de:"Er war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"gerhard",name:"Gerhard",look:{bg:"#4a4844",hair:"#cfcfcf",shirt:"#3a3a2a",style:"bald",beard:true,beardColor:"#e6e6e6",skin:"#c99a72"},
+   de:"Er saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"oleg",name:"Oleg",victim:true,look:{bg:"#6a4a3a",hair:"#9a9aa2",shirt:"#4a6aa8",style:"swept",glasses:"#111",beard:true,beardColor:"#8a8a92"},
+   de:"**Das Opfer.** Er war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{eric:[0,4],damien:[1,6],gerhard:[2,2],finn:[3,5],amir:[4,0],oleg:[5,1],baldur:[6,3],caleb:[7,7]},
+ hintOrder:["eric","amir","gerhard","damien","finn","baldur","caleb","oleg"],
+ hintSteps:[0,1,2,3,3,4,4,[4,5]],
+ steps:{
+  de:["**E** war in der Toilette, auf einem der Stühle in Zeile 1.",
+      "Das lokalisiert **A** in Zeile 5.",
+      "Das lokalisiert **G** auf dem Stuhl in Spalte 3.",
+      "Das lokalisiert **D** in der Toilette, dann **E** und **F** (im letzten Feld neben einer Pflanze).",
+      "Das lokalisiert **B** neben dem Fernseher in Zeile 7, dann **C** (im letzten Feld neben einem Regal) und **O**.",
+      "**O** war allein mit der Person, die den Mord beging, hinter der Theke. Baldur ist der Mörder!"],
+  tr:["**E** tuvaletteydi, 1. satırdaki sandalyelerden birinde.",
+      "Bu, **A**'yı 5. satırda bulur.",
+      "Bu, **G**'yi 3. sütundaki sandalyede bulur.",
+      "Bu, **D**'yi tuvalette, sonra **E**'yi ve **F**'yi (bitkinin yanındaki son karede) bulur.",
+      "Bu, **B**'yi 7. satırda televizyonun yanında, sonra **C**'yi (rafın yanındaki son karede) ve **O**'yu bulur.",
+      "**O**, bar tezgâhının arkasında cinayeti işleyen kişiyle yalnızdı. Katil Baldur!"]
+ },
+ murderer:"baldur"
+},
+{
+ id:"b1-14",book:"b1",no:14,size:9,
+ title:{de:"Die Geburtstagsparty",tr:"Doğum Günü Partisi"},
+ intro:{de:"Als ob ein Mord nicht schon erschreckend genug wäre – es ist auch noch ein Clown am Tatort?",tr:"Sanki cinayet yeterince korkunç değilmiş gibi – olay yerinde bir de palyaço mu var?"},
+ info:[{title:{de:"Geschenk",tr:"Hediye"},icon:"gift",text:{de:"kann nicht besetzt sein",tr:"buraya kimse konamaz"}}],
+ rooms:["BBGGGGKKK","BBGGGGKKK","BBWWWWKKK","SSWWWWKKK","SSWWWWKKK","SSWWWWEEE","SSSSEEEEE","SSSSEEEEE","SSSSEEEEE"],
+ roomNames:{
+  B:{de:"Badezimmer",tr:"Banyo",floor:"plain",a:"#dcdce6"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#f2cfc4",b:"#e2b4a6"},
+  K:{de:"Küche",tr:"Mutfak",floor:"checker",a:"#f8e8ea",b:"#ecc8cc"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"checker",a:"#e4e2ee",b:"#d2cfe0"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#f2d4cc",b:"#e0b8ae"},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"diamond",a:"#f4d4da",b:"#e8dcec"}
+ },
+ objects:[
+  {t:"table",r:0,c:0,w:2,col:"#d27a6a"},{t:"chair",r:1,c:0},
+  {t:"chair",r:0,c:4},{t:"bed",r:1,c:2,w:2,col:"#a8a8d0"},{t:"table",r:0,c:5,h:2,col:"#d27a6a"},
+  {t:"gift",r:0,c:7},{t:"table",r:0,c:8,h:3,col:"#d27a6a"},{t:"table",r:4,c:8,col:"#d27a6a"},
+  {t:"tv",r:2,c:2},{t:"table",r:3,c:4,h:2,col:"#d27a6a"},{t:"gift",r:3,c:5},{t:"chair",r:4,c:2},{t:"chair",r:4,c:3},{t:"gift",r:5,c:3},
+  {t:"gift",r:3,c:0},{t:"plant",r:4,c:0},{t:"chair",r:5,c:0},
+  {t:"table",cells:[[7,0],[8,0],[8,1]],col:"#d27a6a"},{t:"bed",r:7,c:1,w:2,col:"#a8a8d0"},{t:"tv",r:8,c:3},
+  {t:"table",r:5,c:6,col:"#d27a6a"},{t:"plant",r:5,c:8},{t:"chair",r:6,c:6},{t:"gift",r:6,c:8},
+  {t:"chair",r:7,c:5},{t:"table",r:7,c:6,w:3,col:"#d27a6a"},{t:"plant",r:8,c:6},{t:"chair",r:8,c:7},
+  {t:"deco",r:5,c:6,k:"plate",y:.36},{t:"deco",r:7,c:8,k:"pizza",y:.36},{t:"deco",r:3,c:4,k:"book",y:.3},{t:"deco",r:2,c:8,k:"glass",y:.4},{t:"deco",r:8,c:0,k:"stain",x:.6,y:.4,s:.3}
+ ],
+ people:[
+  {id:"abraham",name:"Abraham",look:{bg:"#8ac8b8",hair:"#2a201c",shirt:"#4a4a9a",style:"swept",beard:true},
+   de:"Er war in der **Küche**, **neben** einem **Tisch**.",tr:"**Mutfaktaydı**, bir **masanın yanında**."},
+  {id:"bjoern",name:"Björn",look:{bg:"#b89ad0",hair:"#a3492c",shirt:"#7a4a3a",style:"bob",partyhat:true},
+   de:"Er war im **Esszimmer** mit **Ella** und **Hopsy**.",tr:"**Ella** ve **Hopsy** ile birlikte **yemek odasındaydı**."},
+  {id:"coralie",name:"Coralie",look:{bg:"#6ab0d8",hair:"#a3492c",shirt:"#e8a0b0",style:"wavy",skin:"#6b4632"},
+   de:"Sie war **neben** einem **Fernseher**.",tr:"Bir **televizyonun yanındaydı**."},
+  {id:"diane",name:"Diane",look:{bg:"#c49ab8",hair:"#f2dc4a",shirt:"#3a7a3a",style:"curly",partyhat:true},
+   de:"Ein **Geschenk** war in ihrer **Spalte**, im selben Raum.",tr:"Onun **sütununda**, aynı odada bir **hediye** vardı."},
+  {id:"ella",name:"Ella",look:{bg:"#6a7ac0",hair:"#151313",shirt:"#f2f2f2",style:"side",skin:"#6b4632",glasses:"#f2d44a"},
+   de:"Sie saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"felix",name:"Felix",look:{bg:"#9a6ab8",hair:"#f6f6f6",shirt:"#7a5aa8",style:"swept",mustache:"#f6f6f6",partyhat:true},
+   de:"Er war auf einem **Bett**.",tr:"Bir **yatağın** üstündeydi."},
+  {id:"gerald",name:"Gerald",look:{bg:"#6a6ab0",hair:"#e2c44a",shirt:"#3a5a9a",style:"short",beard:true,beardColor:"#e8cc4a"},
+   de:"Er war **neben** einem **Geschenk**.",tr:"Bir **hediyenin yanındaydı**."},
+  {id:"hopsy",name:"Hopsy",look:{bg:"#8ac8a0",hair:"#7ac0d8",shirt:"#e87aa0",style:"curly",skin:"#f4f0ea",clown:true},
+   de:"Er war **neben** einem **Geschenk**.",tr:"Bir **hediyenin yanındaydı**."},
+  {id:"odette",name:"Odette",victim:true,look:{bg:"#b05a6a",hair:"#3a2a2a",shirt:"#d8a0a8",style:"bun"},
+   de:"**Das Opfer.** Sie war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{gerald:[0,6],felix:[1,2],coralie:[2,3],abraham:[3,8],odette:[4,1],diane:[5,0],hopsy:[6,7],ella:[7,5],bjoern:[8,4]},
+ hintOrder:["hopsy","ella","bjoern","abraham","coralie","felix","gerald","diane","odette"],
+ hintSteps:[[0,1],2,2,3,4,5,6,6,7],
+ steps:{
+  de:["**B**, **E** und **H** sind im Esszimmer.",
+      "Das lokalisiert **H** neben dem Geschenk.",
+      "Das lokalisiert **E** auf dem letzten verfügbaren Stuhl im Esszimmer, dann **B**.",
+      "Das lokalisiert auch **A** im letzten Feld neben einem Tisch in der Küche.",
+      "Das lokalisiert **C** neben dem Fernseher.",
+      "Das lokalisiert **F** auf dem Bett.",
+      "Das lokalisiert **G** in der Küche und **D** in Spalte 1.",
+      "Das lokalisiert **O**, allein im Schlafzimmer mit **D**. Diane ist die Mörderin!"],
+  tr:["**B**, **E** ve **H** yemek odasında.",
+      "Bu, **H**'yi hediyenin yanında bulur.",
+      "Bu, **E**'yi yemek odasındaki son uygun sandalyede, sonra **B**'yi bulur.",
+      "Bu, **A**'yı da mutfakta bir masanın yanındaki son karede bulur.",
+      "Bu, **C**'yi televizyonun yanında bulur.",
+      "Bu, **F**'yi yatakta bulur.",
+      "Bu, **G**'yi mutfakta ve **D**'yi 1. sütunda bulur.",
+      "Bu, **O**'yu yatak odasında **D** ile yalnız bulur. Katil Diane!"]
+ },
+ murderer:"diane"
+},
+{
+ id:"b1-15",book:"b1",no:15,size:9,
+ title:{de:"Der Supermarkt",tr:"Süpermarket"},
+ intro:{de:"Hier wirst du immer fündig … oder ermordet.",tr:"Burada her zaman aradığını bulursun … ya da öldürülürsün."},
+ rooms:["KKKKKLLLL","KKKKKLLLL","KKKKKLLRR","SSSSSGGRR","SSSSSGGRR","SSSSSGGRR","SSSSSGGRR","SSSSSGGGG","SSSSSGGGG"],
+ roomNames:{
+  K:{de:"Kasse",tr:"Kasa",floor:"checker",a:"#fbf3e8",b:"#f4dcc0"},
+  L:{de:"Lagerraum",tr:"Depo",floor:"checker",a:"#d8d2cc",b:"#c8c0b8",row:1},
+  R:{de:"Kühlregale",tr:"Soğutucu raflar",floor:"checker",a:"#bcd0ec",b:"#a8a8d8"},
+  S:{de:"Snacks",tr:"Atıştırmalıklar",floor:"diamond",a:"#f8e2b0",b:"#f2c8a0"},
+  G:{de:"Getränke",tr:"İçecekler",floor:"diamond",a:"#f8e2b0",b:"#f2c0a8"}
+ },
+ objects:[
+  {t:"window",r:4,c:0,side:"left"},{t:"window",r:5,c:0,side:"left"},{t:"window",r:7,c:0,side:"left"},{t:"window",r:8,c:0,side:"left"},
+  {t:"tv",r:0,c:1},{t:"shelf",r:0,c:2},{t:"shelf",r:0,c:3},{t:"table",r:0,c:4,col:"#a8a84a"},
+  {t:"table",r:2,c:2,col:"#a8a84a"},{t:"register",r:2,c:3},{t:"table",r:2,c:4,col:"#a8a84a"},
+  {t:"box",r:0,c:8},{t:"box",r:1,c:5},
+  {t:"shelf",r:2,c:7},{t:"shelf",r:2,c:8},{t:"shelf",r:4,c:8},{t:"shelf",r:5,c:8},{t:"shelf",r:6,c:7},
+  {t:"carpet",cells:[[3,2],[3,3],[4,3],[5,3],[6,3],[7,3]],col:"#f4ec9a"},
+  {t:"carpet",cells:[[5,5],[6,5],[7,5],[6,6]],col:"#f4ec9a"},
+  {t:"shelf",r:4,c:1},{t:"shelf",r:4,c:4},{t:"shelf",r:5,c:1},{t:"shelf",r:5,c:2},{t:"tv",r:5,c:4},
+  {t:"table",cells:[[6,1],[6,2],[7,1]],col:"#a8a84a"},
+  {t:"shelf",r:4,c:6},{t:"shelf",r:5,c:6},{t:"table",r:7,c:6,w:2,col:"#a8a84a"},{t:"shelf",r:7,c:8},{t:"box",r:8,c:8},
+  {t:"deco",r:7,c:6,k:"bottles",y:.36,s:.62},{t:"deco",r:7,c:7,k:"bottles",y:.36,s:.62},
+  {t:"deco",r:6,c:1,k:"cans",y:.38,s:.62},{t:"deco",r:6,c:2,k:"jars",y:.36,s:.62},{t:"deco",r:7,c:1,k:"cans",y:.38,s:.62}
+ ],
+ people:[
+  {id:"anton",name:"Anton",look:{bg:"#d8a83a",hair:"#2a201c",shirt:"#7a4a3a",style:"swept",beard:true},
+   de:"Er war die **einzige** Person auf einem **Teppich**.",tr:"Bir **halının** üstündeki **tek** kişiydi."},
+  {id:"baerbel",name:"Bärbel",look:{bg:"#e2e2e6",hair:"#a8b8d0",shirt:"#e8b4a0",style:"longStraight"},
+   de:"Sie war in der **Snacks**-Abteilung. Sie war **neben** einem **Tisch**.",tr:"**Atıştırmalıklar** bölümündeydi. Bir **masanın yanındaydı**."},
+  {id:"camilla",name:"Camilla",look:{bg:"#d8d04a",hair:"#9a5a3a",shirt:"#1b1b1f",style:"long"},
+   de:"Sie war in einer **Ecke**.",tr:"Bir **köşedeydi**."},
+  {id:"dylan",name:"Dylan",look:{bg:"#8a5a3a",hair:"#1a2a4a",shirt:"#f2f2f2",style:"swept",glasses:"#111"},
+   de:"Er war **nicht neben** einem **Regal**, einem **Tisch** oder einer **Kiste**.",tr:"Bir **rafın**, **masanın** ya da **kutunun yanında değildi**."},
+  {id:"eileen",name:"Eileen",look:{bg:"#f0a07a",hair:"#9a8a3a",shirt:"#f2f2e6",style:"longStraight",skin:"#6b4632"},
+   de:"Sie war in der **Getränke**-Abteilung. Sie war nicht mit **Anton** zusammen.",tr:"**İçecekler** bölümündeydi. **Anton** ile aynı yerde değildi."},
+  {id:"fred",name:"Fred",look:{bg:"#4a7ab8",hair:"#f2f2f2",shirt:"#6a9a8a",style:"short",beard:true,beardColor:"#f2f2f2",cap:"#3a8a4a"},
+   de:"Er war in der **letzten Spalte**.",tr:"**Son sütundaydı**."},
+  {id:"gwen",name:"Gwen",look:{bg:"#b8a090",hair:"#8a2a2a",shirt:"#3a5a9a",style:"long"},
+   de:"Sie war vor einem **Fenster**.",tr:"Bir **pencerenin** önündeydi."},
+  {id:"hanno",name:"Hanno",look:{bg:"#6ab08a",hair:"#151313",shirt:"#4a4a8a",style:"short",beard:true,cap:"#6a6aa8"},
+   de:"Er war **neben** der **Kasse**.",tr:"**Kasanın yanındaydı**."},
+  {id:"ottilie",name:"Ottilie",victim:true,look:{bg:"#c46a3a",hair:"#a89a4a",shirt:"#6a4a8a",style:"wavy",glasses:"#c8b0d8"},
+   de:"**Das Opfer.** Sie war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{ottilie:[0,7],hanno:[1,3],camilla:[2,6],anton:[3,2],eileen:[4,5],gwen:[5,0],fred:[6,8],dylan:[7,4],baerbel:[8,1]},
+ hintOrder:["hanno","anton","fred","baerbel","eileen","camilla","dylan","gwen","ottilie"],
+ hintSteps:[0,1,2,3,4,5,6,7,[7,8]],
+ steps:{
+  de:["Es gibt nur ein Feld neben der Kasse; das lokalisiert **H**.",
+      "**A** ist nicht mit **E** bei den Getränken. Das lokalisiert **A** auf dem Teppich in Zeile 4, Spalte 3. Schließe alle anderen Teppichfelder aus.",
+      "Das lokalisiert **F** in Zeile 7, Spalte 9.",
+      "Dies und die Tatsache, dass **G** irgendwo in Spalte 1 sein muss, lokalisiert **B** unter dem Tisch in Spalte 2.",
+      "Das lokalisiert **E** im letzten verfügbaren Feld im Getränkebereich.",
+      "Das lokalisiert **C** in der letzten Ecke, im Lagerraum.",
+      "Es gibt nur ein Feld für **D**: Zeile 8, Spalte 5.",
+      "Das lokalisiert **G**, dann **O**.",
+      "**C** war allein mit **O** im Lagerraum. Camilla ist die Mörderin!"],
+  tr:["Kasanın yanında tek bir kare var; bu, **H**'yi bulur.",
+      "**A**, **E** ile birlikte içeceklerde değil. Bu, **A**'yı 4. satır 3. sütundaki halıda bulur. Diğer tüm halı karelerini ele.",
+      "Bu, **F**'yi 7. satır, 9. sütunda bulur.",
+      "Bu ve **G**'nin 1. sütunda bir yerde olması gerektiği, **B**'yi 2. sütunda masanın altında bulur.",
+      "Bu, **E**'yi içecekler bölümündeki son uygun karede bulur.",
+      "Bu, **C**'yi depodaki son köşede bulur.",
+      "**D** için tek bir kare var: 8. satır, 5. sütun.",
+      "Bu, önce **G**'yi, sonra **O**'yu bulur.",
+      "**C**, depoda **O** ile yalnızdı. Katil Camilla!"]
+ },
+ murderer:"camilla"
+},
+{
+ id:"b1-16",book:"b1",no:16,size:9,
+ title:{de:"Kingsize-Betten",tr:"King Size Yataklar"},
+ intro:{de:"Das könnte unser erster Fall von Königsmord sein.",tr:"Bu, ilk kral cinayeti vakamız olabilir."},
+ rooms:["BBKKKGGGG","BBKKKGGGG","BBKKKGGGG","BBKKKEEEE","SSSSEEEEE","SSSSEEEEE","SSSSWWWWW","SSSSWWWWW","SSSSWWWWW"],
+ roomNames:{
+  B:{de:"Badezimmer",tr:"Banyo",floor:"plain",a:"#f2dede"},
+  K:{de:"Küche",tr:"Mutfak",floor:"diamond",a:"#c8c4e0",b:"#ecebf4"},
+  G:{de:"Gästezimmer",tr:"Misafir odası",floor:"wood",a:"#9a6a72",b:"#86585e"},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"checker",a:"#e8ccd6",b:"#d2a8b6"},
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"wood",a:"#8a6068",b:"#76505a"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"checker",a:"#f2e2e8",b:"#dcc0cc"}
+ },
+ objects:[
+  {t:"window",r:1,c:8,side:"right"},{t:"window",r:4,c:8,side:"right"},{t:"window",r:7,c:8,side:"right"},
+  {t:"window",r:6,c:0,side:"left"},{t:"window",r:8,c:0,side:"left"},
+  {t:"table",r:0,c:1,col:"#7a3a48"},{t:"table",r:2,c:0,col:"#7a3a48"},{t:"chair",r:3,c:0,col:"#f4e2b0"},
+  {t:"table",r:0,c:2,col:"#7a3a48"},{t:"plant",r:1,c:2},{t:"table",cells:[[1,4],[2,4],[3,4],[3,3]],col:"#7a3a48"},
+  {t:"table",r:0,c:5,col:"#7a3a48"},{t:"bed",r:0,c:6,h:2,col:"#d47a98"},{t:"bed",r:0,c:7,h:2,col:"#d47a98"},{t:"shelf",r:2,c:5},{t:"table",r:2,c:7,col:"#7a3a48"},
+  {t:"chair",r:3,c:6,col:"#f4e2b0"},{t:"plant",r:3,c:8},{t:"chair",r:4,c:4,col:"#f4e2b0"},{t:"table",r:4,c:5,w:3,col:"#7a3a48"},
+  {t:"chair",r:5,c:5,col:"#f4e2b0"},{t:"chair",r:5,c:8,col:"#f4e2b0"},
+  {t:"bed",r:5,c:1,w:2,col:"#c47a9a"},{t:"bed",r:6,c:1,w:2,col:"#c47a9a"},
+  {t:"table",r:7,c:0,col:"#7a3a48"},{t:"table",r:7,c:3,col:"#7a3a48"},{t:"plant",r:8,c:1},{t:"shelf",r:8,c:3},
+  {t:"table",r:6,c:4,col:"#7a3a48"},{t:"shelf",r:6,c:5},{t:"tv",r:6,c:6},{t:"plant",r:7,c:4},{t:"chair",r:7,c:8,col:"#f4e2b0"},
+  {t:"chair",r:8,c:5,col:"#f4e2b0"},{t:"chair",r:8,c:6,col:"#f4e2b0"},{t:"chair",r:8,c:8,col:"#f4e2b0"}
+ ],
+ people:[
+  {id:"ashton",name:"Ashton",look:{bg:"#5a2a2a",hair:"#1f1a1c",shirt:"#7a5aa8",style:"short",skin:"#a07a5a"},
+   de:"Er war auf einem **Bett**.",tr:"Bir **yatağın** üstündeydi."},
+  {id:"bruce",name:"Bruce",look:{bg:"#4a8ad0",hair:"#f6dc2a",shirt:"#bfe4f0",style:"swept",mustache:"#f2d43a",beard:true,beardColor:"#f2d43a"},
+   de:"Er war direkt vor einem **Fenster**.",tr:"Bir **pencerenin** tam önündeydi."},
+  {id:"charlotte",name:"Charlotte",look:{bg:"#9a2a5a",hair:"#151313",shirt:"#e8b0c8",style:"bob"},
+   de:"Sie saß auf einem **Stuhl** im **Wohnzimmer**.",tr:"**Oturma odasında** bir **sandalyede** oturuyordu."},
+  {id:"dakota",name:"Dakota",look:{bg:"#5aa88a",hair:"#e2e2e6",shirt:"#4a6aa8",style:"wavy"},
+   de:"Sie war **allein** im **Gästezimmer** mit **Bruce**.",tr:"**Misafir odasında Bruce** ile **yalnızdı**."},
+  {id:"emilio",name:"Emilio",look:{bg:"#3a2a5a",hair:"#6a6a6e",shirt:"#7a4a6a",style:"short"},
+   de:"Er war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"fata",name:"Fata",look:{bg:"#e8c8d8",hair:"#3a2a24",shirt:"#d84a6a",style:"longStraight",glasses:"#f6f2e6"},
+   de:"Sie war **neben** einem **Regal**.",tr:"Bir **rafın yanındaydı**."},
+  {id:"gloria",name:"Gloria",look:{bg:"#9a2a3a",hair:"#3a2a24",shirt:"#1b1b1f",style:"short",skin:"#a07a5a"},
+   de:"Sie war **neben** einem **Tisch**.",tr:"Bir **masanın yanındaydı**."},
+  {id:"hazel",name:"Hazel",look:{bg:"#4a4a8a",hair:"#151313",shirt:"#c48ab8",style:"wavy",skin:"#6b4632",glasses:"#f6f2e6"},
+   de:"Sie saß **nicht** auf einem **Stuhl**. Sie war **nicht** im **Schlafzimmer**.",tr:"Bir **sandalyede** oturmuyordu. **Yatak odasında değildi**."},
+  {id:"otis",name:"Otis",victim:true,look:{bg:"#5a2a2a",hair:"#151313",shirt:"#4a4a8a",style:"swept",glasses:"#111",mustache:"#151313"},
+   de:"**Das Opfer.** Er war im letzten verbleibenden Feld, allein mit der Person, die den Mord beging.",tr:"**Kurban.** Son kalan karedeydi, cinayeti işleyen kişiyle yalnız."}
+ ],
+ solution:{dakota:[0,7],bruce:[1,8],emilio:[2,2],gloria:[3,0],otis:[4,3],hazel:[5,4],ashton:[6,1],fata:[7,5],charlotte:[8,6]},
+ hintOrder:["bruce","fata","charlotte","dakota","emilio","hazel","ashton","gloria","otis"],
+ hintSteps:[0,2,3,3,4,5,5,6,7],
+ steps:{
+  de:["**B** und **D** sind im Gästezimmer; das lokalisiert **B** vor dem Fenster.",
+      "Das lokalisiert **C** in Zeile 9 auf einen der beiden verbleibenden Stühle. Schließe den Rest von Zeile 9 aus.",
+      "Das lokalisiert **F** (die laut **D**s Hinweis nicht im Gästezimmer ist) neben dem Regal im Wohnzimmer.",
+      "Das lokalisiert **C** in Spalte 7, was **D** auf dem Bett im Gästezimmer lokalisiert.",
+      "Das lokalisiert **E** im letzten Feld neben einer Pflanze, was **A** auf eines der Bettfelder in Spalte 2 setzt.",
+      "Das lokalisiert **H** im Esszimmer, was **A** in Zeile 7 lokalisiert.",
+      "Das lokalisiert **G** auf dem Stuhl im Badezimmer, dann **O**.",
+      "**A** war allein mit **O** im Schlafzimmer. Ashton ist der Mörder!"],
+  tr:["**B** ve **D** misafir odasında; bu, **B**'yi pencerenin önünde bulur.",
+      "Bu, **C**'yi 9. satırda kalan iki sandalyeden birine yerleştirir. 9. satırın geri kalanını ele.",
+      "Bu, **F**'yi (**D**'nin ipucuna göre misafir odasında değil) oturma odasındaki rafın yanında bulur.",
+      "Bu, **C**'yi 7. sütunda bulur; bu da **D**'yi misafir odasındaki yatakta bulur.",
+      "Bu, **E**'yi bitkinin yanındaki son karede bulur; bu da **A**'yı 2. sütundaki yatak karelerinden birine koyar.",
+      "Bu, **H**'yi yemek odasında bulur; bu da **A**'yı 7. satırda bulur.",
+      "Bu, **G**'yi banyodaki sandalyede, sonra **O**'yu bulur.",
+      "**A**, yatak odasında **O** ile yalnızdı. Katil Ashton!"]
+ },
+ murderer:"ashton"
+},
+{
+ id:"b1-17",book:"b1",no:17,size:9,
+ title:{de:"Ein umwerfendes Herrenhaus",tr:"Göz Kamaştırıcı Bir Malikâne"},
+ intro:{de:"Ich werde zu solchen Partys nicht eingeladen. Wenn das dort so abgeht, ist das vielleicht auch besser so.",tr:"Böyle partilere davet edilmiyorum. Orada işler böyle gidiyorsa, belki de böylesi daha iyi."},
+ info:[{title:{de:"Statue",tr:"Heykel"},icon:"statue",text:{de:"kann nicht besetzt sein",tr:"buraya kimse konamaz"}}],
+ rooms:["SSSSEEEEE","SSSSEEEEE","SSSSEEEEE","AAAAEEEEE","AAAAKKKKK","AAAAKKKKK","GGGHHHWWW","GGGHHHWWW","GGGHHHWWW"],
+ roomNames:{
+  S:{de:"Schlafzimmer",tr:"Yatak odası",floor:"diamond",a:"#fbf6e6",b:"#f2e6b8"},
+  E:{de:"Esszimmer",tr:"Yemek odası",floor:"checker",a:"#f6f0fa",b:"#d8c4ec"},
+  A:{de:"Arbeitszimmer",tr:"Çalışma odası",floor:"diamond",a:"#eef4fa",b:"#c4d8f0"},
+  K:{de:"Küche",tr:"Mutfak",floor:"wood",a:"#f8f0c8",b:"#e6dca4"},
+  G:{de:"Galerie",tr:"Galeri",floor:"checker",a:"#fbf2d8",b:"#f4cc7a"},
+  H:{de:"Eingangshalle",tr:"Giriş holü",floor:"diamond",a:"#c8b4e0",b:"#ddd0ee"},
+  W:{de:"Wohnzimmer",tr:"Oturma odası",floor:"wood",a:"#f8f0d4",b:"#e6dcb4"}
+ },
+ objects:[
+  {t:"tv",r:0,c:0},{t:"bed",r:1,c:1,w:2,col:"#d8b4dc"},{t:"chair",r:2,c:0},{t:"plant",r:2,c:3},
+  {t:"chair",r:0,c:5},{t:"chair",r:0,c:6},{t:"plant",r:0,c:8},{t:"chair",r:1,c:4},
+  {t:"table",cells:[[1,5],[1,6],[1,7],[2,5],[2,6],[2,7]],col:"#7a5aa8"},{t:"chair",r:2,c:8},{t:"plant",r:3,c:4},{t:"chair",r:3,c:5},
+  {t:"table",r:3,c:1,col:"#7a5aa8"},{t:"chair",r:3,c:2},
+  {t:"shelf",r:4,c:0},{t:"shelf",r:4,c:3},{t:"shelf",r:5,c:0},{t:"shelf",r:5,c:1},{t:"shelf",r:5,c:3},
+  {t:"table",r:4,c:4,h:2,col:"#7a5aa8"},{t:"table",cells:[[4,8],[5,8],[5,6],[5,7]],col:"#7a5aa8"},
+  {t:"statue",r:6,c:0},{t:"statue",r:7,c:0},{t:"table",r:7,c:2,col:"#7a5aa8"},{t:"statue",r:8,c:2},
+  {t:"plant",r:6,c:5},{t:"plant",r:8,c:3},
+  {t:"chair",r:6,c:6},{t:"tv",r:6,c:7},{t:"table",r:7,c:6,col:"#7a5aa8"},{t:"plant",r:7,c:8},{t:"chair",r:8,c:7}
+ ],
+ people:[
+  {id:"amara",name:"Amara",look:{bg:"#e8dc5a",hair:"#8a6a3a",shirt:"#3a3a3a",style:"bun",necklace:"#e8dcc8"},
+   de:"Sie war in der **Küche**.",tr:"**Mutfaktaydı**."},
+  {id:"barbara",name:"Barbara",look:{bg:"#8a4ab0",hair:"#d8d8dc",shirt:"#b8b8d8",style:"wavy",skin:"#6b4632",glasses:"#f6ecc8"},
+   de:"Sie war im **Arbeitszimmer**.",tr:"**Çalışma odasındaydı**."},
+  {id:"cindy",name:"Cindy",look:{bg:"#e8d44a",hair:"#151313",shirt:"#1b1b1f",style:"wavy"},
+   de:"Sie war in der **Galerie**.",tr:"**Galerideydi**."},
+  {id:"dennis",name:"Dennis",look:{bg:"#b07ac8",hair:"#151313",shirt:"#1b1b1f",style:"swept",skin:"#6b4632",bowtie:true},
+   de:"Er saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"emmett",name:"Emmett",look:{bg:"#e8a830",hair:"#4a3a32",shirt:"#1b1b1f",style:"short",bowtie:true},
+   de:"Er war auf dem **Bett**.",tr:"**Yatağın** üstündeydi."},
+  {id:"fiona",name:"Fiona",look:{bg:"#6a4a9a",hair:"#f6f6f6",shirt:"#4a3a6a",style:"bun",necklace:"#f2e6b0"},
+   de:"Sie saß auf einem **Stuhl** **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaki** bir **sandalyede** oturuyordu."},
+  {id:"griffin",name:"Griffin",look:{bg:"#e8dca0",hair:"#2a2424",shirt:"#1b1b1f",style:"short",bowtie:true},
+   de:"Er war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"hermine",name:"Hermine",look:{bg:"#7a3a8a",hair:"#151313",shirt:"#f2f2f2",style:"bob",skin:"#7a5232",necklace:"#e8dcc8"},
+   de:"Sie war im selben Raum wie ein **Fernseher**, in derselben **Spalte**.",tr:"Bir **televizyonla** aynı odada ve aynı **sütundaydı**."},
+  {id:"owen",name:"Owen",victim:true,look:{bg:"#e2643a",hair:"#3a3434",shirt:"#1b1b1f",style:"short",bowtie:true},
+   de:"**Das Opfer.** Er war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{owen:[0,3],emmett:[1,1],dennis:[2,8],fiona:[3,5],amara:[4,6],barbara:[5,2],griffin:[6,4],hermine:[7,7],cindy:[8,0]},
+ hintOrder:["emmett","fiona","barbara","cindy","hermine","amara","dennis","griffin","owen"],
+ hintSteps:[0,1,2,3,4,4,5,6,7],
+ steps:{
+  de:["**E** ist auf dem Bett in Zeile 2. Schließe alle anderen Felder in Zeile 2 aus.",
+      "Es gibt nur einen Stuhl, der neben einer Pflanze ist. Das lokalisiert **F**.",
+      "Das setzt **A** in Zeile 5 in der Küche, was **B** im Arbeitszimmer lokalisiert.",
+      "Das lokalisiert **E** in Spalte 2, was **C** in der Galerie lokalisiert.",
+      "Das lokalisiert **H** im Wohnzimmer, dann **A** in Spalte 7.",
+      "**D** ist auf dem letzten verbleibenden Stuhl, in Zeile 3, Spalte 9.",
+      "**G** muss im letzten Feld neben einer Pflanze sein, in der Eingangshalle.",
+      "Das lokalisiert **O** im Schlafzimmer. Emmett ist der Mörder!"],
+  tr:["**E**, 2. satırdaki yatakta. 2. satırdaki diğer tüm kareleri ele.",
+      "Bitkinin yanında tek bir sandalye var. Bu, **F**'yi bulur.",
+      "Bu, **A**'yı mutfakta 5. satıra koyar; bu da **B**'yi çalışma odasında bulur.",
+      "Bu, **E**'yi 2. sütunda bulur; bu da **C**'yi galeride bulur.",
+      "Bu, **H**'yi oturma odasında, sonra **A**'yı 7. sütunda bulur.",
+      "**D**, kalan son sandalyede: 3. satır, 9. sütun.",
+      "**G**, bitkinin yanındaki son karede olmalı: giriş holünde.",
+      "Bu, **O**'yu yatak odasında bulur. Katil Emmett!"]
+ },
+ murderer:"emmett"
+},
+{
+ id:"b1-18",book:"b1",no:18,size:9,
+ title:{de:"Die Polizeistation",tr:"Polis Karakolu"},
+ intro:{de:"Immerhin mussten wir für die Ermittlungen nicht weit fahren.",tr:"En azından soruşturma için uzağa gitmemiz gerekmedi."},
+ general:[{de:"Es gab keinen **leeren** Raum.",tr:"**Boş** oda yoktu."}],
+ rooms:["XXXXGGZZZ","XXGGGGZZZ","GGGGGVZZZ","GGGGGVVVV","GGGGGVVVV","EEEEEVVVV","EEEEECCCC","EEEEECCCC","EEEEECCCC"],
+ roomNames:{
+  X:{de:"Asservatenkammer",tr:"Delil odası",floor:"plain",a:"#9a98ac",top:true},
+  G:{de:"Großraumbüro",tr:"Açık ofis",floor:"checker",a:"#b4b2c4",b:"#9c9aae"},
+  Z:{de:"Gefängniszelle",tr:"Nezarethane",floor:"plain",a:"#9aaca4"},
+  V:{de:"Verhörraum",tr:"Sorgu odası",floor:"plain",a:"#b6bcb6"},
+  E:{de:"Empfangsbereich",tr:"Resepsiyon",floor:"checker",a:"#8a8894",b:"#7a7884"},
+  C:{de:"Büro des Chiefs",tr:"Şefin ofisi",floor:"checker",a:"#c8c8dc",b:"#aeb6c8"}
+ },
+ objects:[
+  {t:"shelf",r:0,c:0},{t:"shelf",r:0,c:1},{t:"shelf",r:0,c:2},
+  {t:"table",r:0,c:4,h:2,col:"#6a6a78"},{t:"chair",r:0,c:5},{t:"table",r:0,c:8,col:"#6a6a78"},
+  {t:"chair",r:1,c:2},{t:"bed",r:1,c:6,w:2,col:"#a8dcdc"},
+  {t:"table",r:2,c:0,col:"#6a6a78"},{t:"table",r:2,c:2,col:"#6a6a78"},{t:"tv",r:2,c:3},
+  {t:"tv",r:3,c:0},{t:"chair",r:3,c:1},{t:"table",r:4,c:0,w:2,col:"#6a6a78"},{t:"plant",r:4,c:4},
+  {t:"table",cells:[[3,6],[4,6],[4,5]],col:"#6a6a78"},{t:"chair",r:3,c:7},
+  {t:"table",cells:[[6,1],[7,1],[7,2]],col:"#6a6a78"},{t:"chair",r:6,c:2},{t:"plant",r:7,c:3},
+  {t:"table",cells:[[6,7],[6,8],[7,7],[8,7]],col:"#6a6a78"},{t:"chair",r:7,c:6},{t:"chair",r:7,c:8},{t:"plant",r:8,c:5},{t:"tv",r:8,c:8}
+ ],
+ people:[
+  {id:"annika",name:"Annika",look:{bg:"#3a5a6a",hair:"#1f1a1c",shirt:"#2a3450",style:"curly",police:true},
+   de:"Sie war in der **Asservatenkammer**.",tr:"**Delil odasındaydı**."},
+  {id:"bertie",name:"Bertie",look:{bg:"#4a6a64",hair:"#8a3a2a",shirt:"#1b1b1f",style:"swept"},
+   de:"Er war im **Empfangsbereich**.",tr:"**Resepsiyondaydı**."},
+  {id:"charlie",name:"Charlie",look:{bg:"#4a5a9a",hair:"#d8d8dc",shirt:"#7a9ad8",style:"swept",glasses:"#111"},
+   de:"Er war **neben** einer **Pflanze**.",tr:"Bir **bitkinin yanındaydı**."},
+  {id:"donovan",name:"Donovan",look:{bg:"#4a6a6a",hair:"#151313",shirt:"#2a3450",style:"short",skin:"#7a5232",beard:true,cap:"#2a3048",police:true},
+   de:"Er war **neben** einem **Fernseher**.",tr:"Bir **televizyonun yanındaydı**."},
+  {id:"ernst",name:"Ernst",look:{bg:"#3a3a7a",hair:"#3a2a22",shirt:"#1b1b1f",style:"bald"},
+   de:"Er war auf dem **Bett**.",tr:"**Yatağın** üstündeydi."},
+  {id:"filipa",name:"Filipa",look:{bg:"#3a3a5a",hair:"#c48a4a",shirt:"#2a3450",style:"bun",police:true},
+   de:"Sie saß auf einem **Stuhl**.",tr:"Bir **sandalyede** oturuyordu."},
+  {id:"gregor",name:"Gregor",look:{bg:"#5a5a42",hair:"#2a2420",shirt:"#2a2a30",style:"short",skin:"#6b5040"},
+   de:"Er war **allein** im **Büro des Chiefs**.",tr:"**Şefin ofisinde yalnızdı**."},
+  {id:"harrison",name:"Harrison",look:{bg:"#3a3a6a",hair:"#3a2a22",shirt:"#2a3450",style:"bald",beard:true,police:true},
+   de:"Er war in einer **Ecke** seines Raumes.",tr:"Odasının bir **köşesindeydi**."},
+  {id:"odin",name:"Odin",victim:true,look:{bg:"#6a2a2a",hair:"#151313",shirt:"#2a3450",style:"short",beard:true,sunglasses:"#111",cap:"#2a3048",police:true},
+   de:"**Das Opfer.** Er war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
+ ],
+ solution:{annika:[0,3],ernst:[1,7],harrison:[2,5],donovan:[3,1],odin:[4,8],bertie:[5,0],filipa:[6,2],charlie:[7,4],gregor:[8,6]},
+ hintOrder:["ernst","annika","charlie","donovan","filipa","gregor","bertie","harrison","odin"],
+ hintSteps:[0,1,2,3,4,5,5,6,6],
+ steps:{
+  de:["**E** muss in Zeile 2 sein, auf dem Bett.",
+      "Das lokalisiert **A** in der Asservatenkammer.",
+      "Laut **G**s Hinweis kann **C** nicht im Büro des Chiefs sein, also kann er nur in Spalte 5 sein (in Zeile 4 oder 8).",
+      "**D** ist auch nicht im Büro des Chiefs, was nur ein Feld neben einem Fernseher für ihn lässt: Zeile 4, Spalte 2.",
+      "Das lokalisiert **C**, dann **F** auf dem letzten verfügbaren Stuhl.",
+      "Das lokalisiert **G**, dann **B** und **E**.",
+      "**H** muss dann im Verhörraum mit **O** sein. **H** ist in der Ecke, was **O** lokalisiert. Harrison ist der Mörder!"],
+  tr:["**E** 2. satırda, yatakta olmalı.",
+      "Bu, **A**'yı delil odasında bulur.",
+      "**G**'nin ipucuna göre **C** şefin ofisinde olamaz, bu yüzden sadece 5. sütunda olabilir (4. ya da 8. satırda).",
+      "**D** de şefin ofisinde değil; bu ona televizyonun yanında tek bir kare bırakır: 4. satır, 2. sütun.",
+      "Bu, **C**'yi, sonra **F**'yi kalan son sandalyede bulur.",
+      "Bu, **G**'yi, sonra **B**'yi ve **E**'yi bulur.",
+      "O zaman **H**, sorgu odasında **O** ile olmalı. **H** köşede; bu da **O**'yu bulur. Katil Harrison!"]
+ },
+ murderer:"harrison"
+}
+];
+
+/* ============ TEXTE ============ */
+const T={
+ de:{pill:"80 <b>Logikrätsel</b> rund um mysteriöse Mordfälle",welcome:"Willkommen, Detektiv!",welcomeTxt:"Wähle einen Band und einen Fall. Platziere alle Personen und finde den Mörder.",player:"Spieler:",
+  undo:"↶ Zurück",reset:"Neu",hint:"💡 Tipp",auto:"Hilfs-✕",rules:"Regeln",toolPlace:"✏️ Person",toolX:"✕ setzen",howto:"1× tippen = Vermutung in die Ecke · 2× tippen = ✕ setzen/entfernen · Gedrückt halten = sicher setzen (nochmal halten = entfernen)",compass:["N","O","S","W"],sol:"🔑 Lösung",solQ:"Lösung anzeigen?",solQTxt:"Achtung: Damit wird die komplette Lösung des Falls angezeigt – alle Schritte und der Mörder.",solTitle:"Lösung",solBoard:"Auf dem Brett zeigen",stepT:"Schritt",hintQ:"Tipp anzeigen?",hintQTxt:"Bist du sicher? Die nächste Person, die man logisch finden kann, wird automatisch auf ihr Feld gesetzt.",maxNotes:"Maximal 4 Vermutungen pro Feld.",xBlocked:"Hier kann niemand mehr stehen (Zeile/Spalte belegt).",check:"Prüfen",
+  verdict:"Der Mord wurde begangen von …",noCases:"Noch keine Fälle – schick mir Fotos!",cases:"Fälle",
+  pickFirst:"Tippe zuerst oben auf eine Person.",cantSit:"Dieses Feld kann nicht besetzt werden.",notFull:"Es sind noch nicht alle Personen platziert.",
+  wrong:"Da stimmt etwas nicht.",wrongTxt:"Mindestens eine Person steht falsch.",showErr:"Fehler zeigen",close:"Weiter",
+  who:"Wer ist der Mörder?",whoTxt:"Alle stehen richtig! Wer war allein mit dem Opfer im selben Raum?",
+  right:"Fall gelöst! 🎉",rightTxt:(n,t)=>`${n} war es! Zeit: ${t}`,wrongM:"Falsch verdächtigt!",wrongMTxt:"Der Mörder war im selben Raum wie das Opfer.",
+  back:"Zur Übersicht",resetQ:"Fall neu starten?",yes:"Ja",no:"Nein",local:"lokal",online:"synchron",
+  occ:"Können besetzt sein",noocc:"Können nicht besetzt sein",noRules:"Die Regeln dieses Bandes folgen, sobald du sie schickst.",
+  hintFix:n=>`${n} stand falsch und wurde entfernt.`,hintSet:n=>`${n} wurde platziert.`},
+ tr:{pill:"Gizemli cinayetler üzerine 80 <b>mantık bulmacası</b>",welcome:"Hoş geldin, dedektif!",welcomeTxt:"Bir cilt ve bir vaka seç. Herkesi yerleştir ve katili bul.",player:"Oyuncu:",
+  undo:"↶ Geri",reset:"Yeni",hint:"💡 İpucu",auto:"Yardım-✕",rules:"Kurallar",toolPlace:"✏️ Kişi",toolX:"✕ koy",howto:"1× dokun = köşeye tahmin · 2× dokun = ✕ koy/kaldır · Basılı tut = kesin yerleştir (tekrar basılı tut = kaldır)",compass:["K","D","G","B"],sol:"🔑 Çözüm",solQ:"Çözüm gösterilsin mi?",solQTxt:"Dikkat: Vakanın bütün çözümü gösterilecek – tüm adımlar ve katil.",solTitle:"Çözüm",solBoard:"Tahtada göster",stepT:"Adım",hintQ:"İpucu gösterilsin mi?",hintQTxt:"Emin misin? Mantıkla bulunabilecek sıradaki kişi otomatik olarak yerine konacak.",maxNotes:"Bir karede en fazla 4 tahmin.",xBlocked:"Buraya artık kimse konamaz (satır/sütun dolu).",check:"Kontrol",
+  verdict:"Cinayeti işleyen …",noCases:"Henüz vaka yok – fotoğraf gönder!",cases:"vaka",
+  pickFirst:"Önce yukarıdan bir kişiye dokun.",cantSit:"Bu kareye kimse konamaz.",notFull:"Henüz herkes yerleştirilmedi.",
+  wrong:"Bir şeyler yanlış.",wrongTxt:"En az bir kişi yanlış yerde.",showErr:"Hataları göster",close:"Devam",
+  who:"Katil kim?",whoTxt:"Herkes doğru yerde! Kurbanla aynı odada yalnız olan kimdi?",
+  right:"Vaka çözüldü! 🎉",rightTxt:(n,t)=>`Katil ${n}! Süre: ${t}`,wrongM:"Yanlış şüpheli!",wrongMTxt:"Katil, kurbanla aynı odadaydı.",
+  back:"Genel bakış",resetQ:"Vaka baştan başlasın mı?",yes:"Evet",no:"Hayır",local:"yerel",online:"senkron",
+  occ:"Kullanılabilir",noocc:"Kullanılamaz",noRules:"Bu cildin kuralları, sen gönderince eklenecek.",
+  hintFix:n=>`${n} yanlış yerdeydi, kaldırıldı.`,hintSet:n=>`${n} yerleştirildi.`}
+};
+
+/* ============ STATE ============ */
+let lang=localStorage.getItem("mk_lang")||"de";
+let player=localStorage.getItem("mk_name")||"";
+let solved=JSON.parse(localStorage.getItem("mk_solved")||"{}");
+let L=null,BK=null,board=null,sel=null,tool="place",hist=[],showErr=false,tStart=0,tAcc=0,tInt=null,accused=null;
+let db=null,fbOn=false;
+const $=id=>document.getElementById(id);
+const tt=k=>T[lang][k];
+const loc=o=>o?(o[lang]||o.de):"";
+const bold=s=>s.replace(/\*\*(.+?)\*\*/g,(m,t)=>{
+  const p=L&&t.length===1&&L.people.find(p=>letter(p)===t);
+  if(p)return `<span class="badge${p.victim?" vic":""}" style="background:${pColor(p)}">${t}</span>`;
+  return `<b>${t}</b>`;});
+
+/* ============ FIREBASE ============ */
+function fbInit(){
+  if(!firebaseConfig.apiKey||!firebaseConfig.databaseURL||typeof firebase==="undefined"){updSync();return;}
+  try{firebase.initializeApp(firebaseConfig);
+    firebase.auth().signInAnonymously().then(()=>{db=firebase.database();fbOn=true;updSync();pullSolved();}).catch(updSync);
+  }catch(e){updSync();}
+}
+const pkey=()=>player.trim().toLowerCase().replace(/[.#$\[\]\/]/g,"_");
+function updSync(){$("syncSt").textContent=(fbOn&&player)?"☁️ "+tt("online"):"📱 "+tt("local");}
+function pullSolved(){if(!fbOn||!player)return;
+  db.ref("murdoku/players/"+pkey()+"/solved").once("value").then(s=>{Object.assign(solved,s.val()||{});localStorage.setItem("mk_solved",JSON.stringify(solved));renderHome();});}
+function pushSolved(id){localStorage.setItem("mk_solved",JSON.stringify(solved));
+  if(fbOn&&player)db.ref("murdoku/players/"+pkey()+"/solved/"+id).set(solved[id]);}
+
+/* ============ SPRACHE ============ */
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll(".langs button").forEach(b=>b.classList.toggle("on",b.dataset.l===lang));
+  document.querySelectorAll("[data-t]").forEach(e=>e.textContent=tt(e.dataset.t));
+  $("pillT").innerHTML=tt("pill");
+  updSync(); renderHome(); if(L)renderGame();
+}
+document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>{lang=b.dataset.l;localStorage.setItem("mk_lang",lang);applyLang();});
+
+/* ============ START ============ */
+function caseColor(l){if(l.glow)return l.glow;const h=Math.round((l.no*137.508+(l.book.charCodeAt(1)||0)*40)%360);return `hsl(${h} 95% 66%)`;}
+function renderHome(){
+  const box=$("bookList");box.innerHTML="";
+  BOOKS.forEach(bk=>{
+    const ls=LEVELS.filter(l=>l.book===bk.id).sort((a,b)=>a.no-b.no);
+    const h=document.createElement("div");h.className="book";
+    h.innerHTML=`${loc(bk)} <small>${loc(bk.sub)}</small><button class="rb">${tt("rules")}</button>`;
+    h.querySelector(".rb").onclick=()=>showRules(bk);
+    box.appendChild(h);
+    if(!ls.length){const e=document.createElement("div");e.className="empty";e.textContent=tt("noCases");box.appendChild(e);return;}
+    const g=document.createElement("div");g.className="cases";
+    ls.forEach(l=>{const b=document.createElement("button");b.className="case"+(solved[l.id]?" done":"");b.style.setProperty("--cc",caseColor(l));
+      b.innerHTML=`<span class="cn">${l.no}</span><span class="ct">${loc(l.title)}</span>${solved[l.id]?`<span class="ck">✓ ${fmt(solved[l.id].time)}</span>`:""}`;
+      b.onclick=()=>openLevel(l.id);g.appendChild(b);});
+    box.appendChild(g);
+  });
+}
+$("nameIn").value=player;
+$("nameIn").onchange=e=>{player=e.target.value.trim();localStorage.setItem("mk_name",player);updSync();pullSolved();};
+
+function showRules(bk){
+  const objRow=(list,cls)=>`<div class="objs ${cls}">${list.map(k=>`<div>${k==="bed"?bedSVG(2,1):SVG[k]}${loc(OBJ[k])}</div>`).join("")}</div>`;
+  modal(`<h2>${loc(bk)} – ${tt("rules")}</h2>${bk.rules?loc(bk.rules):`<p>${tt("noRules")}</p>`}
+   <h3>${tt("occ")}</h3>${objRow(bk.occ,"ok")}<h3>${tt("noocc")}</h3>${objRow(bk.noocc,"no")}
+   <div class="objs"><div>${WINDOW_SVG(false)}${loc(OBJ.window)}</div></div>
+   <div style="text-align:center"><button class="btn" id="mN">OK</button></div>`,()=>$("mN").onclick=hideModal,"rules");
+}
+
+/* ============ SPIEL ============ */
+function openLevel(id){
+  L=LEVELS.find(l=>l.id===id); BK=BOOKS.find(b=>b.id===L.book);
+  const s=JSON.parse(localStorage.getItem("mk_b_"+id)||"null");
+  board=s?s.b:{pos:{},x:{},n:{}};board.n=board.n||{}; tAcc=s?s.t:0; accused=null;
+  hist=[];sel=L.people.find(p=>!board.pos[p.id])?.id||null;tool="place";showErr=false;
+  document.documentElement.style.setProperty("--case",caseColor(L));
+  $("home").classList.add("hidden");$("game").classList.remove("hidden");$("backBtn").classList.remove("hidden");
+  startTimer();renderGame();window.scrollTo(0,0);
+}
+ function siblings(){return LEVELS.filter(l=>l.book===L.book).sort((a,b)=>a.no-b.no);}
+function goCase(d){const ls=siblings(),i=ls.findIndex(l=>l.id===L.id),t=ls[i+d];if(!t)return;saveBoard();stopTimer();openLevel(t.id);}
+$("prevBtn").onclick=()=>goCase(-1);$("nextBtn").onclick=()=>goCase(1);
+function closeLevel(){saveBoard();stopTimer();L=null;
+  document.documentElement.style.setProperty("--case","#b69cff");
+  $("game").classList.add("hidden");$("home").classList.remove("hidden");$("backBtn").classList.add("hidden");$("brand").textContent="";renderHome();}
+$("backBtn").onclick=closeLevel;
+function saveBoard(){if(L)localStorage.setItem("mk_b_"+L.id,JSON.stringify({b:board,t:elapsed()}));}
+
+function cellsOf(o){if(o.cells)return o.cells;const a=[];for(let i=0;i<(o.h||1);i++)for(let j=0;j<(o.w||1);j++)a.push([o.r+i,o.c+j]);return a;}
+function objAt(r,c){return L.objects.find(o=>o.t!=="window"&&o.t!=="deco"&&cellsOf(o).some(([a,b])=>a===r&&b===c));}
+function isBlocked(r,c){const o=objAt(r,c);return !!o&&(BK.noocc.includes(o.t)||(OBJ[o.t]&&OBJ[o.t].occ===false));}
+function whoAt(r,c){return Object.keys(board.pos).find(k=>board.pos[k][0]===r&&board.pos[k][1]===c);}
+function letter(p){return p.k||p.name[0];}
+
+function renderGame(){
+  $("brand").textContent=`${loc(BK)} · ${L.no}`;
+  $("cTitle").textContent=`${L.no}. ${loc(L.title)}`;
+  {const ls=siblings(),i=ls.findIndex(l=>l.id===L.id);$("prevBtn").disabled=i<=0;$("nextBtn").disabled=i>=ls.length-1;$("navNo").textContent=`${L.no} / ${ls.length}`;}
+  $("cIntro").innerHTML=loc(L.intro)+(L.note?`<br><span style="color:var(--yel);font-weight:600">${loc(L.note)}</span>`:"");
+  renderInfos();
+  $("general").innerHTML=(L.general||[]).map(g=>`<div class="gen"><i>🔍</i><div>${bold(loc(g)).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>")}</div></div>`).join("");
+  // Verdächtige
+  const sp=$("suspects");sp.innerHTML="";
+  L.people.forEach(p=>{
+    const d=document.createElement("button");
+    d.className="sus"+(p.victim?" victim":"")+(sel===p.id?" on":"")+(board.pos[p.id]?" placed":"");
+    d.innerHTML=`<div class="pol">${avatar(p)}<div class="nm" style="font-size:${p.name.length>8?17:p.name.length>6?19:22}px">${p.name}</div></div><div class="clue">${bold(loc(p))}</div>`;
+    d.onclick=()=>{sel=p.id;tool="place";renderGame();};
+    sp.appendChild(d);
+  });
+  drawBoard($("board"),Math.min(stableW()-28,532),false);
+  $("toolPlace").classList.toggle("on",tool==="place");$("toolX").classList.toggle("on",tool==="x");
+  $("howto").textContent=tool==="x"?"":tt("howto");
+  $("verdictName").textContent=accused?L.people.find(p=>p.id===accused).name:"";
+}
+
+function drawBoard(B,W,sol){
+  const n=L.size, cb=20, lw=24, th=18;
+  const cs=Math.floor((W-2*cb-lw-10)/n), bs=cs*n+10, W2=cb+lw+bs+cb, H2=cb+th+bs+cb;
+  B.style.width=W2+"px";B.style.height=H2+"px";B.innerHTML="";
+  const G=document.createElement("div");G.className="board";G.style.cssText=`left:${cb+lw}px;top:${cb+th}px;width:${bs}px;height:${bs}px`;B.appendChild(G);
+  const inner=document.createElement("div");inner.style.cssText=`position:absolute;left:0;top:0;width:${cs*n}px;height:${cs*n}px`;G.appendChild(inner);
+  const lab=(cls,css,html)=>{const e=document.createElement("div");e.className=cls;e.style.cssText=css;e.innerHTML=html;B.appendChild(e);};
+  const RL=lang==="tr"?"S":"Z", CL=lang==="tr"?"Sü":"S";
+  for(let i=0;i<n;i++){
+    lab("axl",`left:${cb}px;top:${cb+th+5+i*cs}px;width:${lw}px;height:${cs}px;font-size:${Math.min(12,cs*.32)}px`,RL+(i+1));
+    lab("axl",`left:${cb+lw+5+i*cs}px;top:${cb}px;width:${cs}px;height:${th}px;font-size:${Math.min(12,cs*(CL.length>1?.26:.32))}px;white-space:nowrap`,CL+(i+1));
+  }
+  const cp=tt("compass"), lineH=w=>`<i style="width:${w}px;height:1.5px"></i>`, lineV=h=>`<i style="height:${h}px;width:1.5px"></i>`;
+  const midX=cb+lw+bs/2, midY=cb+th+bs/2, ll=bs*0.3;
+  lab("cmp",`left:${cb+lw}px;top:0;width:${bs}px;height:${cb}px`,lineH(ll)+cp[0]+lineH(ll));
+  lab("cmp",`left:${cb+lw}px;top:${H2-cb}px;width:${bs}px;height:${cb}px`,lineH(ll)+cp[2]+lineH(ll));
+  lab("cmp",`left:0;top:${cb+th}px;width:${cb}px;height:${bs}px;flex-direction:column`,lineV(ll)+cp[3]+lineV(ll));
+  lab("cmp",`left:${W2-cb}px;top:${cb+th}px;width:${cb}px;height:${bs}px;flex-direction:column`,lineV(ll)+cp[1]+lineV(ll));
+  const add=(cls,css,html)=>{const e=document.createElement("div");e.className=cls;e.style.cssText=css;if(html)e.innerHTML=html;inner.appendChild(e);return e;};
+  const P=sol?L.solution:board.pos;
+  const rows={},cols={};Object.values(P).forEach(([r,c])=>{rows[r]=(rows[r]||0)+1;cols[c]=(cols[c]||0)+1;});
+  const hasVoid=L.rooms.some(x=>x.includes("."));
+  if(hasVoid){G.style.background="transparent";G.style.borderColor="transparent";G.style.boxShadow="none";}
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){
+    if(L.rooms[r][c]===".")continue;
+    const rn=L.roomNames[L.rooms[r][c]],f=FLOORS[rn.floor]||FLOORS.plain;
+    const e=add("cell",`left:${c*cs}px;top:${r*cs}px;width:${cs}px;height:${cs}px;${f(rn.a,rn.b)}`);
+    if(!sol)bindCell(e,r,c);
+  }
+  // Wände
+  const wt=Math.max(4,Math.round(cs*.07));
+  if(hasVoid){const ow=5,isV=(r,c)=>r<0||c<0||r>=n||c>=n||L.rooms[r][c]===".";
+    inner.style.filter="drop-shadow(0 0 2px var(--case)) drop-shadow(0 0 12px var(--case))";
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++){if(isV(r,c))continue;
+      const xl=isV(r,c-1)?ow:0,xr=isV(r,c+1)?ow:0,yt=isV(r-1,c)?ow:0,yb=isV(r+1,c)?ow:0;
+      if(isV(r-1,c))add("wall",`left:${c*cs-xl}px;top:${r*cs-ow}px;width:${cs+xl+xr}px;height:${ow}px`);
+      if(isV(r+1,c))add("wall",`left:${c*cs-xl}px;top:${(r+1)*cs}px;width:${cs+xl+xr}px;height:${ow}px`);
+      if(isV(r,c-1))add("wall",`left:${c*cs-ow}px;top:${r*cs-yt}px;width:${ow}px;height:${cs+yt+yb}px`);
+      if(isV(r,c+1))add("wall",`left:${(c+1)*cs}px;top:${r*cs-yt}px;width:${ow}px;height:${cs+yt+yb}px`);}}
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){
+    if(L.rooms[r][c]==="."||(c<n-1&&L.rooms[r][c+1]==="."))continue;
+    if(c<n-1&&L.rooms[r][c]!==L.rooms[r][c+1])add("wall",`left:${(c+1)*cs-wt/2}px;top:${r*cs-wt/2}px;width:${wt}px;height:${cs+wt}px`);
+    if(r<n-1&&L.rooms[r+1][c]!=="."&&L.rooms[r][c]!==L.rooms[r+1][c])add("wall",`left:${c*cs-wt/2}px;top:${(r+1)*cs-wt/2}px;width:${cs+wt}px;height:${wt}px`);
+  }
+  // Objekte
+  L.objects.forEach(o=>{
+    if(o.t==="deco"){
+      const sz=cs*(o.s||.5),x=o.c*cs+cs*(o.x!=null?o.x:.5)-sz/2,y=o.r*cs+cs*(o.y!=null?o.y:.42)-sz/2;
+      const e=add("ov",`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;z-index:4`,DECO[o.k]||"");
+      e.firstChild?.setAttribute("style","width:100%;height:100%;display:block");return;
+    }
+    if(o.t==="window"){
+      const horiz=o.side==="top"||o.side==="bottom", L1=cs*.66, T1=cs*.24;
+      // Mittellinie der Wand: Außenrand = Mitte des 5px-Rahmens, innen = Wandlinie
+      const edge=(o.side==="top"&&o.r===0)?-2.5:(o.side==="bottom"&&o.r===n-1)?n*cs+2.5:(o.side==="left"&&o.c===0)?-2.5:(o.side==="right"&&o.c===n-1)?n*cs+2.5:null;
+      let x,y,w,h;
+      if(horiz){w=L1;h=T1;x=o.c*cs+(cs-w)/2;const ly=edge!==null?edge:(o.side==="top"?o.r*cs:(o.r+1)*cs);y=ly-h/2;}
+      else{w=T1;h=L1;y=o.r*cs+(cs-h)/2;const lx=edge!==null?edge:(o.side==="left"?o.c*cs:(o.c+1)*cs);x=lx-w/2;}
+      add("win",`left:${x}px;top:${y}px;width:${w}px;height:${h}px`,WINDOW_SVG(horiz)).firstChild.setAttribute("style","width:100%;height:100%;display:block");return;
+    }
+    if(o.cells){
+      const r0=Math.min(...o.cells.map(c=>c[0])),c0=Math.min(...o.cells.map(c=>c[1]));
+      const w=Math.max(...o.cells.map(c=>c[1]))-c0+1,h=Math.max(...o.cells.map(c=>c[0]))-r0+1;
+      add("ov",`left:${c0*cs}px;top:${r0*cs}px;width:${w*cs}px;height:${h*cs}px`,(o.t==="carpet"?polyCarpetSVG(o.cells,o.col):polyTableSVG(o.cells,o.col))).firstChild?.setAttribute("style","width:100%;height:100%;display:block");
+      return;
+    }
+    const w=(o.w||1),h=(o.h||1);
+    const multi=w>1||h>1;
+    const html=o.t==="bed"?(o.col?bigBedSVG(w,h,o.col):bedSVG(w,h)):(o.t==="table"&&(multi||o.col))?tableSVG(w,h,o.col):(multi&&o.t==="carpet")?carpetSVG(w,h):o.t==="chair"?chairSVG(o.col):(o.t==="plant"&&o.col)?SVG.plant.replace(/#5fae4f/g,o.col).replace(/#2f5d2a/g,shade(o.col,-45)):SVG[o.t]||"";
+    add("ov",`left:${o.c*cs}px;top:${o.r*cs}px;width:${w*cs}px;height:${h*cs}px`,html).firstChild?.setAttribute("style","width:100%;height:100%;display:block");
+  });
+  // Raumschilder (unten mittig im Raum)
+  Object.keys(L.roomNames).forEach(k=>{
+    let r0=99,r1=-1,c0=99,c1=-1;
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(L.rooms[r][c]===k){r0=Math.min(r0,r);r1=Math.max(r1,r);c0=Math.min(c0,c);c1=Math.max(c1,c);}
+    if(r1<0)return;
+    const rn=L.roomNames[k], txt=loc(rn);
+    // Breite der untersten Zeile des Raums (für Schriftgröße)
+    if(L.roomNames[k].row!=null)r1=L.roomNames[k].row;
+    let bc0=99,bc1=-1;for(let c=0;c<n;c++)if(L.rooms[r1][c]===k){bc0=Math.min(bc0,c);bc1=Math.max(bc1,c);}
+    // freien Platz in der untersten Zeile suchen (Felder ohne Objekt), längste Strecke, bei Gleichstand links
+    let best=null,run=null;
+    for(let c=bc0;c<=bc1+1;c++){
+      const free=c<=bc1&&L.rooms[r1][c]===k&&!objAt(r1,c);
+      if(free){if(!run)run=[c,c];else run[1]=c;}
+      else if(run){if(!best||run[1]-run[0]>best[1]-best[0])best=run;run=null;}
+    }
+    const roomW=bc1-bc0+1;
+    let lc,lw2;
+    if(best&&(best[1]-best[0]+1)>=2){lw2=Math.min(roomW,best[1]-best[0]+2);lc=(best[0]+best[1]+1)/2;}
+    else{lw2=roomW;lc=(bc0+bc1+1)/2;}
+    let top=rn.top;
+    if(rn.lab)lw2=rn.lab[2];
+    if(top){ // Schild oben im Raum (wie im Buch)
+      let tc0=99,tc1=-1;for(let c=0;c<n;c++)if(L.rooms[r0][c]===k){tc0=Math.min(tc0,c);tc1=Math.max(tc1,c);}
+      lc=(tc0+tc1+1)/2;lw2=tc1-tc0+1;
+    }
+    const fs=Math.max(7,Math.min(14,cs*.2,(lw2*cs*.94-20)/(txt.length*.68)));
+    const estW=(txt.length*.68*fs+20)/cs;
+    if(!top&&!rn.lab)lc=Math.max(bc0+estW/2,Math.min(bc1+1-estW/2,lc));
+    if(rn.lab){r1=rn.lab[0];lc=rn.lab[1];}
+    const ty=top?r0*cs+fs*.5:(r1+1)*cs-fs*1.9;
+    const e=add("rlab",`left:${lc*cs}px;top:${ty}px;font-size:${fs}px;padding:1px ${Math.max(4,fs*.6)}px`);e.textContent=txt;
+  });
+  // Markierungen
+  if(sol){
+    Object.entries(L.solution).forEach(([id,[r,c]])=>{
+      const p=L.people.find(p=>p.id===id);
+      add("mark",`left:${c*cs}px;top:${r*cs-cs*.08}px;width:${cs}px;height:${cs}px`,pawnSVG(p,id===L.murderer));
+    });
+    return;
+  }
+  // Markierungen
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++){
+    if(L.rooms[r][c]===".")continue;
+    const who=whoAt(r,c),css=`left:${c*cs}px;top:${r*cs}px;width:${cs}px;height:${cs}px`,key=r+","+c;
+    if(who){
+      const p=L.people.find(p=>p.id===who);
+      const bad=(rows[r]>1||cols[c]>1)||(showErr&&(L.solution[who][0]!==r||L.solution[who][1]!==c));
+      add("mark",css,`<div class="tok${p.victim?" vic":""}${bad?" bad":""}" style="font-size:${cs*.42}px">${letter(p)}</div>`);
+    }else if(board.x[key]) add("mark",css,XSVG);
+    else if((rows[r]||cols[c])&&!isBlocked(r,c)) add("mark auto",css,XSVG);
+    else if(board.n[key]&&board.n[key].length){
+      const pos=[["3%","3%"],["3%","59%"],["59%","3%"],["59%","59%"]];
+      add("notes",css,board.n[key].slice(0,4).map((id,i)=>{const p=L.people.find(p=>p.id===id);
+        return `<span class="${p.victim?"vic":""}" style="top:${pos[i][0]};left:${pos[i][1]};font-size:${cs*.22}px">${letter(p)}</span>`;}).join(""));
+    }
+  }
+}
+function infoDiagram(rows){
+  const cs=26,R=rows.length,C=Math.max(...rows.map(r=>r.length)),pad=3;
+  const ch=(r,c)=>(r<0||r>=R||c<0||c>=(rows[r]||"").length)?" ":rows[r][c];
+  const reg=x=>x===" "?"x":(",V".includes(x)?"g":"w");
+  let o="";
+  for(let r=0;r<R;r++)for(let c=0;c<C;c++){const x=ch(r,c);if(x===" ")continue;
+    const X=pad+c*cs,Y=pad+r*cs;
+    o+=`<rect x="${X}" y="${Y}" width="${cs}" height="${cs}" fill="${reg(x)==="g"?"#b9d99c":"#f4f1e6"}" stroke="#555" stroke-width="1"/>`;
+    if("vV".includes(x))o+=`<path d="M${X+6} ${Y+13} L${X+11} ${Y+19} L${X+20} ${Y+7}" stroke="#3f8a3a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(x==="x")o+=`<path d="M${X+7} ${Y+7} L${X+cs-7} ${Y+cs-7} M${X+cs-7} ${Y+7} L${X+7} ${Y+cs-7}" stroke="#1b1a20" stroke-width="4" stroke-linecap="round"/>`;
+    if(x==="A")o+=`<rect x="${X+3}" y="${Y+2}" width="${cs-6}" height="${cs-4}" rx="3" fill="#efe3c4" stroke="#555" stroke-width="1"/><text x="${X+cs/2}" y="${Y+cs*.72}" font-size="17" font-weight="700" text-anchor="middle" font-family="Kalam,cursive" fill="#1b1a20">A</text>`;
+    if(x==="a")o+=`<text x="${X+cs/2}" y="${Y+cs*.72}" font-size="19" font-weight="700" text-anchor="middle" font-family="Zilla Slab,Georgia,serif" fill="#1b1a20">a</text>`;
+  }
+  for(let r=0;r<R;r++)for(let c=0;c<C;c++){const x=ch(r,c);if(x===" ")continue;const X=pad+c*cs,Y=pad+r*cs,me=reg(x);
+    if(reg(ch(r-1,c))!==me)o+=`<line x1="${X}" y1="${Y}" x2="${X+cs}" y2="${Y}" stroke="#1b1a20" stroke-width="3.5" stroke-linecap="square"/>`;
+    if(reg(ch(r+1,c))!==me)o+=`<line x1="${X}" y1="${Y+cs}" x2="${X+cs}" y2="${Y+cs}" stroke="#1b1a20" stroke-width="3.5" stroke-linecap="square"/>`;
+    if(reg(ch(r,c-1))!==me)o+=`<line x1="${X}" y1="${Y}" x2="${X}" y2="${Y+cs}" stroke="#1b1a20" stroke-width="3.5" stroke-linecap="square"/>`;
+    if(reg(ch(r,c+1))!==me)o+=`<line x1="${X+cs}" y1="${Y}" x2="${X+cs}" y2="${Y+cs}" stroke="#1b1a20" stroke-width="3.5" stroke-linecap="square"/>`;
+  }
+  return `<svg width="${C*cs+pad*2}" height="${R*cs+pad*2}" viewBox="0 0 ${C*cs+pad*2} ${R*cs+pad*2}">${o}</svg>`;
+}
+function renderInfos(){
+  const box=$("infos");box.innerHTML="";
+  (L.info||[]).forEach(i=>{const d=document.createElement("div");d.className="info";
+    const pic=i.icons?`<div style="display:flex;gap:18px;justify-content:center">${i.icons.map(k=>`<div><div style="font-weight:700;font-size:16px">${loc(OBJ[k])}</div><div style="width:58px;height:58px;margin:0 auto">${SVG[k].replace("<svg",'<svg style="width:100%;height:100%"')}</div></div>`).join("")}</div>`:i.icon?`<div style="width:64px;height:64px;margin:0 auto">${SVG[i.icon].replace("<svg",'<svg style="width:100%;height:100%"')}</div>`:i.grid?infoDiagram(i.grid):"";
+    d.innerHTML=`${i.title?`<b>${loc(i.title)}</b>`:""}${(i.icon||i.icons)?pic+`<span>${loc(i.text)}</span>`:(loc(i.text)?`<span>${loc(i.text)}</span>`:"")+pic}`;box.appendChild(d);});
+}
+function snap(){hist.push(JSON.stringify(board));if(hist.length>300)hist.shift();}
+function lineBlocked(r,c){return Object.values(board.pos).some(([a,b])=>a===r||b===c);}
+function tap(r,c){ // kurzer Tipp
+  const who=whoAt(r,c),key=r+","+c;
+  if(tool==="x"){if(who)return;snap();board.x[key]?delete board.x[key]:board.x[key]=1;}
+  else{
+    if(who){toast(tt("howto"));return;}
+    if(!sel){toast(tt("pickFirst"));return;}
+    if(isBlocked(r,c)){toast(tt("cantSit"));return;}
+    if(lineBlocked(r,c)){toast(tt("xBlocked"));return;}
+    const a=board.n[key]||[];
+    snap();
+    if(a.includes(sel))board.n[key]=a.filter(x=>x!==sel);
+    else{if(a.length>=4){hist.pop();toast(tt("maxNotes"));return;}board.n[key]=[...a,sel];delete board.x[key];}
+    if(!board.n[key].length)delete board.n[key];
+  }
+  showErr=false;accused=null;saveBoard();renderGame();
+}
+function placeSure(id,r,c){ // sicher setzen
+  board.pos[id]=[r,c];
+  const key=r+","+c;delete board.x[key];delete board.n[key];
+  for(const k of Object.keys(board.n)){ // Vermutungen dieser Person + in Zeile/Spalte löschen
+    const [a,b]=k.split(",").map(Number);
+    board.n[k]=board.n[k].filter(x=>x!==id);
+    if(a===r||b===c||!board.n[k].length)delete board.n[k];
+  }
+}
+function hold(r,c){ // gedrückt halten
+  if(tool==="x")return;
+  const who=whoAt(r,c);
+  if(who){snap();delete board.pos[who];sel=who;}
+  else{
+    if(!sel){toast(tt("pickFirst"));return;}
+    if(isBlocked(r,c)){toast(tt("cantSit"));return;}
+    snap();if(board.pos[sel])delete board.pos[sel];
+    placeSure(sel,r,c);
+    sel=L.people.find(p=>!board.pos[p.id])?.id||null;
+  }
+  if(navigator.vibrate)navigator.vibrate(30);
+  showErr=false;accused=null;saveBoard();renderGame();
+}
+let _tapCell=null,_tapTimer=null;
+function tapOrDouble(r,c){ // 1x tippen = Vermutung, 2x tippen = ✕
+  const k=r+","+c;
+  if(_tapTimer&&_tapCell===k){clearTimeout(_tapTimer);_tapTimer=null;_tapCell=null;toggleX(r,c);return;}
+  if(_tapTimer){clearTimeout(_tapTimer);const [pr,pc]=_tapCell.split(",").map(Number);_tapTimer=null;tap(pr,pc);}
+  _tapCell=k;_tapTimer=setTimeout(()=>{_tapTimer=null;_tapCell=null;tap(r,c);},260);
+}
+function toggleX(r,c){
+  if(whoAt(r,c))return;
+  const key=r+","+c;snap();
+  if(board.x[key])delete board.x[key];else{board.x[key]=1;delete board.n[key];}
+  if(navigator.vibrate)navigator.vibrate(15);
+  showErr=false;accused=null;saveBoard();renderGame();
+}
+function bindCell(e,r,c){
+  let t=null,fired=false,sx=0,sy=0;
+  e.addEventListener("pointerdown",ev=>{fired=false;sx=ev.clientX;sy=ev.clientY;clearTimeout(t);t=setTimeout(()=>{fired=true;t=null;hold(r,c);},450);});
+  e.addEventListener("pointermove",ev=>{if(t&&(Math.abs(ev.clientX-sx)>10||Math.abs(ev.clientY-sy)>10)){clearTimeout(t);t=null;fired=true;}});
+  e.addEventListener("pointerup",ev=>{if(t){clearTimeout(t);t=null;if(!fired)tapOrDouble(r,c);}});
+  e.addEventListener("pointercancel",()=>{clearTimeout(t);t=null;});
+  e.addEventListener("contextmenu",ev=>ev.preventDefault());
+}
+$("toolPlace").onclick=()=>{tool="place";renderGame();};
+$("toolX").onclick=()=>{tool="x";renderGame();};
+$("rulesBtn").onclick=()=>showRules(BK);
+$("undoBtn").onclick=()=>{if(!hist.length)return;board=JSON.parse(hist.pop());saveBoard();renderGame();};
+$("resetBtn").onclick=()=>modal(`<h2>${tt("resetQ")}</h2><button class="btn" id="mY">${tt("yes")}</button><button class="btn sec" id="mN">${tt("no")}</button>`,
+  ()=>{$("mY").onclick=()=>{board={pos:{},x:{},n:{}};hist=[];tAcc=0;accused=null;sel=L.people[0].id;startTimer();hideModal();saveBoard();renderGame();};$("mN").onclick=hideModal;});
+$("hintBtn").onclick=()=>modal(`<h2>${tt("hintQ")}</h2><p>${tt("hintQTxt")}</p><button class="btn" id="mY">${tt("yes")}</button><button class="btn sec" id="mN">${tt("no")}</button>`,
+  ()=>{$("mY").onclick=()=>{hideModal();doHint();};$("mN").onclick=hideModal;});
+function doHint(){
+  const wrong=Object.keys(board.pos).find(k=>board.pos[k][0]!==L.solution[k][0]||board.pos[k][1]!==L.solution[k][1]);
+  snap();
+  if(wrong){delete board.pos[wrong];toast(tt("hintFix")(L.people.find(p=>p.id===wrong).name));}
+  else{
+    const order=L.hintOrder||L.people.map(p=>p.id);
+    const id=order.find(id=>!board.pos[id]);if(!id){hist.pop();return;}
+    placeSure(id,...L.solution[id]);
+    sel=L.people.find(p=>!board.pos[p.id])?.id||null;
+    saveBoard();renderGame();
+    const i=order.indexOf(id), si=[].concat(L.hintSteps?L.hintSteps[i]:i), stA=L.steps&&L.steps[lang]||[];
+    const st=si.filter(k=>stA[k]).map(k=>`<p style="color:var(--ink);font-size:16px;text-align:left"><b>${k+1}.</b> ${bold(stA[k])}</p>`).join("");
+    if(st)modal(`<h2>${tt("stepT")} ${si.map(k=>k+1).join(" + ")}</h2>${st}<button class="btn" id="mN">OK</button>`,()=>$("mN").onclick=hideModal);
+    else toast(tt("hintSet")(L.people.find(p=>p.id===id).name));
+    return;
+  }
+  saveBoard();renderGame();
+}
+$("solBtn").onclick=()=>modal(`<h2>${tt("solQ")}</h2><p>${tt("solQTxt")}</p><button class="btn" id="mY">${tt("yes")}</button><button class="btn sec" id="mN">${tt("no")}</button>`,
+  ()=>{$("mY").onclick=showSolution;$("mN").onclick=hideModal;});
+function showSolution(){
+  const st=(L.steps&&L.steps[lang])||[];
+  const m=L.people.find(p=>p.id===L.murderer);
+  modal(`<h2>${loc(L.title)}</h2>
+   <div class="verdict" style="margin:0 auto 14px;cursor:default"><div class="l">${tt("verdict")}</div><div class="v">${m.name}</div></div>
+   <div class="bwrap" id="solBoard" style="margin:0 auto 12px"></div>
+   <ol style="text-align:left;padding-left:22px;line-height:1.5;font-size:15px;margin:0 0 12px">${st.map(x=>`<li style="margin-bottom:6px">${bold(x)}</li>`).join("")}</ol>
+   <button class="btn" id="mN">${tt("close")}</button>`,
+   ()=>{$("mN").onclick=hideModal;const bx=$("mbox");drawBoard($("solBoard"),Math.min(bx.clientWidth-44,500),true);},"wide");
+}
+function gridOk(){return L.people.every(p=>board.pos[p.id]&&board.pos[p.id][0]===L.solution[p.id][0]&&board.pos[p.id][1]===L.solution[p.id][1]);}
+function check(){
+  if(Object.keys(board.pos).length<L.people.length){toast(tt("notFull"));return;}
+  if(!gridOk()){modal(`<h2>${tt("wrong")}</h2><p>${tt("wrongTxt")}</p><button class="btn" id="mE">${tt("showErr")}</button><button class="btn sec" id="mN">${tt("close")}</button>`,
+    ()=>{$("mE").onclick=()=>{showErr=true;hideModal();renderGame();};$("mN").onclick=hideModal;});return;}
+  const sus=L.people.filter(p=>!p.victim);
+  modal(`<h2>${tt("who")}</h2><p>${tt("whoTxt")}</p><div class="choices">${sus.map(p=>`<button data-p="${p.id}">${avatar(p)}${p.name}</button>`).join("")}</div>`,
+    ()=>document.querySelectorAll(".choices button").forEach(b=>b.onclick=()=>accuse(b.dataset.p)));
+}
+$("checkBtn").onclick=check;$("verdict").onclick=check;
+function accuse(id){
+  if(id===L.murderer){
+    accused=id;stopTimer();const t=elapsed(),p=L.people.find(p=>p.id===id);
+    const prev=solved[L.id];if(!prev||t<prev.time){solved[L.id]={time:t,date:new Date().toISOString().slice(0,10)};pushSolved(L.id);}
+    renderGame();
+    modal(`<h2>${tt("right")}</h2><p>${tt("rightTxt")(p.name,fmt(t))}</p><button class="btn" id="mB">${tt("back")}</button><button class="btn sec" id="mN">${tt("close")}</button>`,
+      ()=>{$("mB").onclick=()=>{hideModal();closeLevel();};$("mN").onclick=hideModal;});
+  }else modal(`<h2>${tt("wrongM")}</h2><p>${tt("wrongMTxt")}</p><button class="btn sec" id="mN">${tt("close")}</button>`,()=>$("mN").onclick=hideModal);
+}
+
+/* ============ HELFER ============ */
+ let _sy=0,_locked=false;
+function lockScroll(on){
+  if(on&&!_locked){_sy=window.scrollY;document.body.style.cssText+=`;position:fixed;top:-${_sy}px;left:0;right:0;overflow:hidden`;_locked=true;}
+  else if(!on&&_locked){document.body.style.position="";document.body.style.top="";document.body.style.left="";document.body.style.right="";document.body.style.overflow="";window.scrollTo(0,_sy);_locked=false;}
+}
+function modal(html,bind,cls){lockScroll(true);$("mbox").className="box"+(cls?" "+cls:"");$("mbox").innerHTML=html;$("modal").classList.remove("hidden");bind&&bind();}
+function hideModal(){lockScroll(false);$("modal").classList.add("hidden");}
+$("modal").onclick=e=>{if(e.target.id==="modal")hideModal();};
+let toastT;function toast(m){let d=document.querySelector(".toast");if(!d){d=document.createElement("div");d.className="toast";document.body.appendChild(d);}d.textContent=m;clearTimeout(toastT);toastT=setTimeout(()=>d.remove(),2000);}
+function elapsed(){return tAcc+(tStart?Math.floor((Date.now()-tStart)/1000):0);}
+function fmt(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");}
+function startTimer(){stopTimer();tStart=Date.now();tInt=setInterval(()=>$("timer").textContent=fmt(elapsed()),1000);$("timer").textContent=fmt(elapsed());}
+function stopTimer(){if(tStart){tAcc=elapsed();tStart=0;}clearInterval(tInt);}
+document.addEventListener("visibilitychange",()=>{if(!L||accused)return;if(document.hidden){stopTimer();saveBoard();}else startTimer();});
+function stableW(){return Math.min(document.documentElement.clientWidth||screen.width,screen.width||9999);}
+let _lastW=stableW();
+window.addEventListener("resize",()=>{const w=stableW();if(Math.abs(w-_lastW)<2)return;_lastW=w;if(L)renderGame();});
+// Doppeltipp-Zoom verhindern: der 2. Tipp startet schon im touchstart gesperrt (iOS)
+let _lastEnd=0;
+document.addEventListener("touchstart",e=>{
+  if(e.touches.length===1&&Date.now()-_lastEnd<400&&!e.target.closest("input,textarea"))e.preventDefault();
+},{passive:false});
+document.addEventListener("touchend",e=>{if(!e.touches.length)_lastEnd=Date.now();},{passive:true});
+// (alt) Doppeltipp-Zoom verhindern (Pinch-Zoom bleibt erlaubt)
+let _lastTap=0;
+document.addEventListener("touchend",e=>{
+  if(e.touches&&e.touches.length)return;
+  const t=Date.now();
+  if(t-_lastTap<350&&!e.target.closest("input,textarea")){
+    e.preventDefault();
+    const b=e.target.closest("button");if(b)b.click();
+  }
+  _lastTap=t;
+},{passive:false});
+window.addEventListener("orientationchange",()=>setTimeout(()=>{_lastW=stableW();if(L)renderGame();},300));
+
+
+fbInit();applyLang();
+</script>
+</body>
+</html>
