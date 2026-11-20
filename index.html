@@ -21307,7 +21307,7 @@ function wetSVG(svg,sink){const m=svg.match(/^<svg([^>]*)>([\s\S]*)<\/svg>$/);if
 function drawBoard(B,W,sol,ro){if(L.protos)protoApply(sol?L.protos.answer:board.proto);
   const GR=sol||ro||showGrid;
   const NR=L.rooms.length, NC=L.rooms[0].length, cb=GR?20:3, lw=GR?24:0, th=GR?18:0;
-  const cs=Math.floor(Math.min((W-2*cb-lw-10)/(NC+(L.padR||0)), NR>NC?(W*1.25)/NR:999)), bsW=cs*NC+10, bsH=cs*NR+10, W2=cb+lw+bsW+cb, H2=cb+th+bsH+cb;
+  const cs=Math.floor(Math.min((W-2*cb-lw-10)/(NC+(L.padR||0)), NR>NC?(W*1.0)/NR:999)), bsW=cs*NC+10, bsH=cs*NR+10, W2=cb+lw+bsW+cb, H2=cb+th+bsH+cb;
   B.style.width=W2+"px";B.style.height=H2+"px";B.style.marginBottom=L.padB?(L.padB*cs)+"px":"";B.style.marginTop=L.padT?(L.padT*cs)+"px":"";B.style.overflowX=L.padR?"visible":"";B.style.left=L.padR?(-L.padR*cs/2)+"px":"";B.innerHTML="";
   const G=document.createElement("div");G.className="board";G.style.cssText=`left:${(W2-bsW-2*cb-lw)/2+cb+lw}px;top:${cb+th}px;width:${bsW}px;height:${bsH}px`;B.appendChild(G);
   const inner=document.createElement("div");inner.style.cssText=`position:absolute;left:0;top:0;width:${cs*NC}px;height:${cs*NR}px`;G.appendChild(inner);
