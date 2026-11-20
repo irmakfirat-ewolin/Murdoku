@@ -21613,14 +21613,17 @@ function pzApply(){const on=!!L.pinch;PZ.on=on;$("stickB").classList.toggle("pz"
  ["gesturestart","gesturechange"].forEach(t=>A.addEventListener(t,e=>{if(PZ.on)e.preventDefault();},{passive:false}));
  A.addEventListener("wheel",e=>{if(!PZ.on||!e.ctrlKey)return;e.preventDefault();const r=A.getBoundingClientRect(),x=e.clientX-r.left-$("board").offsetLeft,y=e.clientY-r.top-$("board").offsetTop,ns=Math.max(1,Math.min(4,PZ.s*(e.deltaY<0?1.12:1/1.12)));PZ.x=x-(x-PZ.x)*ns/PZ.s;PZ.y=y-(y-PZ.y)*ns/PZ.s;PZ.s=ns;pzSet();},{passive:false});
 })();
+// Druck-Zustand global: überlebt das Neuzeichnen des Bretts (schnelles Tippen auf mehrere Felder)
+let PRS=null;
+function prsEnd(tap){if(!PRS)return;const p=PRS;PRS=null;if(p.t){clearTimeout(p.t);if(tap&&!p.fired&&!PZ.block)tapOrDouble(p.r,p.c);}}
 function bindCell(e,r,c){
-  let t=null,fired=false,sx=0,sy=0;
-  e.addEventListener("pointerdown",ev=>{fired=false;sx=ev.clientX;sy=ev.clientY;clearTimeout(t);t=setTimeout(()=>{fired=true;t=null;if(!PZ.block)hold(r,c);},450);});
-  e.addEventListener("pointermove",ev=>{if(t&&(Math.abs(ev.clientX-sx)>10||Math.abs(ev.clientY-sy)>10)){clearTimeout(t);t=null;fired=true;}});
-  e.addEventListener("pointerup",ev=>{if(t){clearTimeout(t);t=null;if(!fired&&!PZ.block)tapOrDouble(r,c);}});
-  e.addEventListener("pointercancel",()=>{clearTimeout(t);t=null;});
+  e.addEventListener("pointerdown",ev=>{prsEnd(false);const p=PRS={id:ev.pointerId,r,c,sx:ev.clientX,sy:ev.clientY,fired:false,t:null};
+    p.t=setTimeout(()=>{if(PRS!==p)return;p.t=null;p.fired=true;PRS=null;if(!PZ.block)hold(r,c);},450);});
   e.addEventListener("contextmenu",ev=>ev.preventDefault());
 }
+document.addEventListener("pointermove",ev=>{const p=PRS;if(p&&p.id===ev.pointerId&&p.t&&(Math.abs(ev.clientX-p.sx)>10||Math.abs(ev.clientY-p.sy)>10)){clearTimeout(p.t);p.t=null;p.fired=true;PRS=null;}},true);
+document.addEventListener("pointerup",ev=>{if(PRS&&PRS.id===ev.pointerId)prsEnd(true);},true);
+document.addEventListener("pointercancel",ev=>{if(PRS&&PRS.id===ev.pointerId)prsEnd(false);},true);
 $("toolPlace").onclick=()=>$("undoBtn").onclick();
 $("toolX").onclick=()=>{tool=tool==="x"?"place":"x";renderGame();};
 $("rulesBtn").onclick=()=>showRules(BK,L);
