@@ -60,6 +60,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .choices button.whoX{opacity:.35;text-decoration:line-through;filter:grayscale(1);pointer-events:none}
 .tk svg{filter:drop-shadow(0 0 2px #5dff86)}.tk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#0e3317;border:1.5px solid #5dff86;box-shadow:0 0 6px #5dff86,0 0 12px #2fe36088;vertical-align:middle;margin-right:2px;animation:tkG 2.4s ease-in-out infinite}
 @keyframes tkG{50%{box-shadow:0 0 9px #5dff86,0 0 18px #2fe360aa}}
+.stRow{text-align:right;margin:-4px 0 8px}.stBtn{background:#2a2140;color:#e8dcff;border:1.5px solid #8a63ff;border-radius:16px;padding:5px 12px;font:700 13px sans-serif}
+.stList button{display:block;width:100%;text-align:left;background:#fff;color:#2a2230;border:2px solid var(--line);border-radius:12px;padding:8px 11px;margin:6px 0}.stList b{display:block;font-size:14px}.stList span{font-size:12px;color:#5d5368}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -358,7 +360,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   </div>
   <div class="stats" id="stats"></div>
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
-  <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div>
+  <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
   <div class="adminF"><button id="adminBtn">🔒 Admin</button></div>
 </div>
@@ -20383,8 +20385,19 @@ document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>{lang=b.data
 
 /* ============ START ============ */
 function caseColor(l){if(l.glow)return l.glow;const h=Math.round((l.no*137.508+(l.book.charCodeAt(1)||0)*40)%360);return `hsl(${h} 95% 66%)`;}
+function startedList(){if(!curUser)return [];const out=[];
+  LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
+    const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
+    if(np+nx+nn>0)out.push({id:l.id,np,tot:l.people.length,t:d.t||0});});return out;}
+function renderStarted(){const b=$("startedBtn");if(!b)return;const ls=startedList();b.classList.toggle("hidden",!ls.length);
+  b.textContent="⏸ "+A("Begonnene Rätsel","Yarım kalanlar")+" ("+ls.length+")";b.onclick=showStarted;}
+function showStarted(){const ls=startedList();const f=t=>fmt(Math.floor(t||0));
+  modal(`<h2>⏸ ${A("Begonnene Rätsel","Yarım kalan bulmacalar")}</h2><p class="anote">${A("Tippe ein Rätsel an, um weiterzuspielen. Es verschwindet aus der Liste, wenn du es löst oder mit „Neu“ leerst.","Devam etmek için bir bulmacaya dokun. Çözünce veya „Yeni“ ile sıfırlayınca listeden çıkar.")}</p>
+   <div class="stList">${ls.map(x=>`<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")} · ⏱ ${f(x.t)}</span></button>`).join("")||"<p>–</p>"}</div>
+   <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
+   ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});}
 function renderHome(){
-  renderStats();const box=$("bookList");box.innerHTML="";
+  renderStats();renderStarted();const box=$("bookList");box.innerHTML="";
   $("searchIn").placeholder=tt("search");$("searchX").classList.toggle("hidden",!$("searchIn").value);
   BOOKS.forEach(bk=>{
     const q=($("searchIn").value||"").trim().toLocaleLowerCase("de");
