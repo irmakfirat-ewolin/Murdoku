@@ -63,13 +63,24 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .stRow{text-align:right;margin:-4px 0 8px}.stBtn{background:#2a2140;color:#e8dcff;border:1.5px solid #8a63ff;border-radius:16px;padding:5px 12px;font:700 13px sans-serif}
 .stList button{display:block;width:100%;text-align:left;background:#fff;color:#2a2230;border:2px solid var(--line);border-radius:12px;padding:8px 11px;margin:6px 0}.stList b{display:block;font-size:14px}.stList span{font-size:12px;color:#5d5368}
 .whoHide{text-align:center;margin-top:10px}.whoHide small{display:block;font-size:11.5px;opacity:.75;margin-top:4px}
-.starShow{position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(circle,#2a1a0088,#000a 70%);animation:ssBg 3s ease forwards}
-.ssRays{position:absolute;width:150vmax;height:150vmax;background:repeating-conic-gradient(from 0deg,#ffd24d33 0 8deg,transparent 8deg 20deg);animation:ssSpin 3s linear;border-radius:50%;-webkit-mask:radial-gradient(circle,#000 0,transparent 60%);mask:radial-gradient(circle,#000 0,transparent 60%)}
-.ssStars{position:relative;display:flex;gap:2vw}
-.ssStars span{font-size:min(17vw,84px);line-height:1;color:#ffd24d;text-shadow:0 0 12px #fff6,0 0 28px #ffd24d,0 0 60px #ffae00;opacity:0;transform:translateY(60vh) scale(.2) rotate(-200deg);animation:ssFly .7s cubic-bezier(.2,1.4,.4,1) forwards,ssGlow 1s ease-in-out infinite alternate;animation-delay:calc(var(--i)*.15s),calc(.7s + var(--i)*.15s)}
-.ssTxt{position:relative;margin-top:18px;font:800 clamp(20px,6.5vw,34px) "Baloo 2",sans-serif;color:#fff;text-shadow:0 0 14px #ffd24d,0 2px 0 #7a5200;opacity:0;animation:ssIn .5s .9s forwards}
-@keyframes ssFly{to{opacity:1;transform:none}}@keyframes ssGlow{to{text-shadow:0 0 18px #fff,0 0 40px #ffd24d,0 0 90px #ffae00;filter:brightness(1.25)}}
-@keyframes ssIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}@keyframes ssSpin{to{transform:rotate(90deg)}}@keyframes ssBg{0%{opacity:0}10%,85%{opacity:1}100%{opacity:0}}
+.starShow{position:fixed;inset:0;z-index:9990;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;background:radial-gradient(circle,#3a2400cc 0,#000b 75%);animation:ssBg 3.2s ease forwards;overflow:hidden}
+.ssRays{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;background:repeating-conic-gradient(from 0deg,#ffd24d40 0 7deg,transparent 7deg 18deg);border-radius:50%;opacity:.9;animation:ssSpin 3.2s linear}
+.ssRays::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,transparent 0,transparent 25%,#000a 55%)}
+.ssStars{position:relative;display:flex;align-items:flex-end;gap:0}
+.ssStars span{display:block;font-size:min(16.5vw,110px);line-height:1;color:#ffd24d;margin:0 -.6vw;text-shadow:0 0 10px #fff,0 0 30px #ffd24d,0 0 70px #ffae00,0 0 110px #ff8a00;opacity:0;transform:translateY(70vh) scale(.2) rotate(-260deg);
+  animation:ssFly .75s cubic-bezier(.2,1.5,.4,1) forwards,ssHop .55s ease-in-out infinite alternate;animation-delay:calc(var(--i)*.14s),calc(.8s + var(--i)*.11s)}
+.ssStars span:nth-child(2),.ssStars span:nth-child(4){--y:-5vw}.ssStars span:nth-child(3){--y:-9vw;font-size:min(23vw,150px)}
+.ssTxt{position:relative;margin-top:26px;font:900 clamp(26px,8.5vw,44px) "Baloo 2",sans-serif;color:#fff;text-align:center;text-shadow:0 0 16px #ffd24d,0 0 34px #ffae00,0 3px 0 #7a5200;opacity:0;animation:ssIn .5s .9s forwards,ssPulse .7s 1.4s ease-in-out infinite alternate}
+@keyframes ssFly{to{opacity:1;transform:translateY(var(--y,0)) scale(1) rotate(0)}}
+@keyframes ssHop{from{opacity:1;transform:translateY(var(--y,0)) scale(1) rotate(-6deg);filter:brightness(1)}to{opacity:1;transform:translateY(calc(var(--y,0px) - 7vw)) scale(1.15) rotate(6deg);filter:brightness(1.35)}}
+@keyframes ssIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}@keyframes ssPulse{to{transform:scale(1.08)}}
+@keyframes ssSpin{to{transform:rotate(120deg)}}@keyframes ssBg{0%{opacity:0}8%,88%{opacity:1}100%{opacity:0}}
+.cl>.clh{cursor:pointer;user-select:none;-webkit-user-select:none;text-align:left}.clv{display:inline-block;width:18px;font-size:14px;transition:transform .15s}.cl.coll>.clh .clv{transform:rotate(-90deg)}.cl.coll>.clb{display:none}
+.clc{display:inline-block;min-width:20px;padding:0 6px;border-radius:9px;background:#8a63ff33;font-size:11.5px;text-align:center}
+.pzT .pzS{width:100%;box-sizing:border-box;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:#2a2230;font-size:15px;margin:4px 0 8px}
+.pzT>.cl{border:1.5px solid var(--line);border-radius:12px;padding:7px 10px;margin:6px 0}.pzT>.cl>.clb{padding-top:4px}.pzT>.cl>.clb>.cl{padding:5px 0 3px 10px;border-top:1px dashed #ffffff22}
+.pzT .hid{display:none!important}.pzT.srch .cl.coll>.clb{display:block}.pzT.srch .cl .clv{transform:none}
+.appVer{font-size:11px;opacity:.45;text-align:center;margin-top:6px}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -96,7 +107,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .stats{grid-template-columns:repeat(6,1fr)!important}.stats .st{grid-column:span 2}.stats .st:nth-child(-n+2){grid-column:span 3}.stats .st b{font-size:clamp(18px,5.2vw,26px)!important;white-space:nowrap}.stats .st span{font-size:12px}
 .bigX{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;pointer-events:none;animation:bxIn .25s ease-out}.bigX svg{width:min(80vw,80vh);height:min(80vw,80vh);filter:drop-shadow(0 0 30px #ff2d4a)}
 @keyframes bxIn{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
-.confC{position:fixed;inset:0;width:100vw;height:100vh;z-index:10000;pointer-events:none}
+.confC{position:fixed;inset:0;width:100vw;height:100vh;z-index:10001;pointer-events:none;transform:translateZ(0)}
 
 .acct{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:16px 0 4px;font-size:14px;color:var(--soft);background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:10px 12px}
 .acct .who{font-weight:700;color:var(--ink);font-size:16px}.acct .btns{display:flex;gap:6px;flex-wrap:nowrap;width:100%}.acct .btns button{flex:1 1 auto;white-space:nowrap;font-size:13px;padding:8px 6px}.acct button{background:var(--panel2);color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:7px 12px;font-weight:700}.acct button.pri{background:var(--lav);color:#1a1033;border-color:transparent}
@@ -370,7 +381,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 00:05</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21489,7 +21500,7 @@ function drawBoard(B,W,sol,ro){if(L.protos)protoApply(sol?L.protos.answer:board.
       const p=L.people.find(p=>p.id===who);
       const bad=(rows[rk(r,c)]>1||cols[ck(r,c)]>1)||(showErr&&(L.solution[who][0]!==r||L.solution[who][1]!==c));
       add("mark",css,`<div class="tok${p.victim?" vic":""}${bad?" bad":""}" style="font-size:${cs*.42}px">${letter(p)}</div>`);
-    }else if(board.x[key]) add("mark xm",css,XSVG);
+    }else if(board.x[key]&&!isBlocked(r,c)) add("mark xm",css,XSVG);
     else if((rows[rk(r,c)]||cols[ck(r,c)])&&!isBlocked(r,c)) add("mark auto xm",css,XSVG);
     else if(board.n[key]&&board.n[key].length){
       const pos=[["3%","3%"],["3%","59%"],["59%","3%"],["59%","59%"]];
@@ -21564,7 +21575,7 @@ const gRk=(r,c)=>L.wagGrid?L.wagGrid[r][c]+r:r, gCk=(r,c)=>L.wagGrid?L.wagGrid[r
 function lineBlocked(r,c){return Object.values(board.pos).some(([a,b])=>a>=0&&(gRk(a,b)===gRk(r,c)||gCk(a,b)===gCk(r,c)));}
 function tap(r,c){ // kurzer Tipp
   const who=whoAt(r,c),key=r+","+c;
-  if(tool==="x"){if(who)return;snap();board.x[key]?delete board.x[key]:board.x[key]=1;}
+  if(tool==="x"){if(who||isBlocked(r,c))return;snap();board.x[key]?delete board.x[key]:board.x[key]=1;}
   else{
     if(who){toast(tt("howto"));return;}
     if(!sel){toast(tt("pickFirst"));return;}
@@ -21610,7 +21621,7 @@ function tapOrDouble(r,c){ // 1x tippen = Vermutung, 2x tippen = ✕
   _tapCell=k;_tapTimer=setTimeout(()=>{_tapTimer=null;_tapCell=null;tap(r,c);},260);
 }
 function toggleX(r,c){
-  if(whoAt(r,c))return;
+  if(whoAt(r,c)||isBlocked(r,c))return;
   const key=r+","+c;snap();
   if(board.x[key])delete board.x[key];else{board.x[key]=1;delete board.n[key];}
   if(navigator.vibrate)navigator.vibrate(15);
@@ -21743,7 +21754,7 @@ function stepHint(){
   const i=Math.min(board.hs||0,sents.length-1);
   const xa=board.hxa===k+"."+i;
   let nx=0;const gk=[];
-  if(!xa){xKeys(sents[i]).forEach(key=>{const [r,c]=key.split(",").map(Number);if(Object.values(board.pos).some(([a,b])=>a===r&&b===c)||board.x[key])return;board.x[key]=1;delete board.n[key];nx++;gk.push(key);});board.hxa=k+"."+i;}
+  if(!xa){xKeys(sents[i]).forEach(key=>{const [r,c]=key.split(",").map(Number);if(Object.values(board.pos).some(([a,b])=>a===r&&b===c)||board.x[key]||isBlocked(r,c))return;board.x[key]=1;delete board.n[key];nx++;gk.push(key);});board.hxa=k+"."+i;}
   const todo=ps[i].filter(id=>!board.pos[id]);
   const put=todo.length?todo[0]:null;
   if(put){placeSure(put,...L.solution[put]);gk.push(L.solution[put].join(","));}
@@ -21906,9 +21917,9 @@ function bigX(after){const d=document.createElement("div");d.className="bigX";d.
   setTimeout(()=>{d.remove();after&&after();},3000);}
 function starShow(after){const o=document.createElement("div");o.className="starShow";
   o.innerHTML=`<div class="ssRays"></div><div class="ssStars">${[0,1,2,3,4].map(i=>`<span style="--i:${i}">★</span>`).join("")}</div><div class="ssTxt">${A("5 Sterne – perfekt gelöst!","5 yıldız – kusursuz çözüldü!")}</div>`;
-  document.body.appendChild(o);confetti(()=>{o.remove();after&&after();});}
-function confetti(after){const c=document.createElement("canvas");c.className="confC";document.body.appendChild(c);const dp=devicePixelRatio||1,W=c.width=innerWidth*dp,H=c.height=innerHeight*dp,x=c.getContext("2d");
-  const cols=["#ff2d6f","#ffe14d","#3ef07a","#4ab8ff","#b69cff","#ff8a3a"],P=[];for(let i=0;i<220;i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6,vx:(Math.random()-.5)*4*dp,vy:(2+Math.random()*4)*dp,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,w:(6+Math.random()*7)*dp,h:(4+Math.random()*5)*dp,c:cols[i%cols.length]});
+  document.body.appendChild(o);confetti(()=>{o.remove();after&&after();},1);}
+function confetti(after,big){const c=document.createElement("canvas");c.className="confC";document.body.appendChild(c);const dp=devicePixelRatio||1,W=c.width=innerWidth*dp,H=c.height=innerHeight*dp,x=c.getContext("2d");
+  const cols=["#ff2d6f","#ffe14d","#3ef07a","#4ab8ff","#b69cff","#ff8a3a"],P=[];for(let i=0;i<(big?380:220);i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6,vx:(Math.random()-.5)*4*dp,vy:(2+Math.random()*4)*dp,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,w:(6+Math.random()*7)*dp,h:(4+Math.random()*5)*dp,c:cols[i%cols.length]});
   const t0=performance.now();(function f(t){x.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.05*dp;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore();});
     if(t-t0<3000)requestAnimationFrame(f);else{c.remove();after&&after();}})(t0);}
 /* ============ KONTEN / ZUGANG / ADMIN ============ */
@@ -21988,11 +21999,11 @@ $("adminBtn").onclick=()=>{if(adminOn)return showAdmin();modal(`<h2>🔒 ${A("Ad
 async function showAdmin(D){if(adminTab!=="req"&&adminTab!=="users")return showAdmin2();if(!D){D=await loadAll();D.reps={};Object.values(D.reports).forEach(r=>{if(r.status!=="done")D.reps[r.user]=1;});}const users=D.users;const list=Object.entries(users).sort((a,b)=>(b[1].reg||0)-(a[1].reg||0));
   const pend=list.filter(([,u])=>u.status==="pending");
   let body="";
-  if(adminTab==="req"){body=pend.length?pend.map(([k,u])=>`<div class="arow"><b>${u.vn}${u.nn?" "+u.nn:""}</b><span class="stt pending">${statusTxt(u.status)}</span><br>${A("Registriert","Kayıt")}: ${fmtD(u.reg)}<br>${A("Passwort","Şifre")}: ${pwShow(u)}
-    <div class="acts"><button class="g" data-a="ok" data-k="${k}">✓ ${A("Zugang genehmigen","Erişimi onayla")}</button><button class="r" data-a="rejected" data-k="${k}">✕ ${A("Zugang ablehnen","Erişimi reddet")}</button></div></div>`).join(""):`<p>${A("Keine offenen Anfragen.","Bekleyen talep yok.")}</p>`;}
-  else{body=list.length?list.map(([k,u])=>`<div class="arow"><b>${u.vn}${u.nn?" "+u.nn:""}</b>${D.reps[k]?` <span class="bang">!</span>`:""}<span class="stt ${u.status}">${statusTxt(u.status)}</span><br>${A("Anzeigename","Görünen ad")}: ${u.vn} · ${A("Registriert","Kayıt")}: ${fmtD(u.reg)}<br>${A("Passwort","Şifre")}: ${pwShow(u)}
+  if(adminTab==="req"){body=pend.length?pend.map(([k,u])=>`<div class="arow">${cl("rq:"+k,`<b>${u.vn}${u.nn?" "+u.nn:""}</b><span class="stt pending">${statusTxt(u.status)}</span>`,`${A("Registriert","Kayıt")}: ${fmtD(u.reg)}<br>${A("Passwort","Şifre")}: ${pwShow(u)}
+    <div class="acts"><button class="g" data-a="ok" data-k="${k}">✓ ${A("Zugang genehmigen","Erişimi onayla")}</button><button class="r" data-a="rejected" data-k="${k}">✕ ${A("Zugang ablehnen","Erişimi reddet")}</button></div>`,true)}</div>`).join(""):`<p>${A("Keine offenen Anfragen.","Bekleyen talep yok.")}</p>`;}
+  else{body=list.length?list.map(([k,u])=>`<div class="arow">${cl("us:"+k,`<b>${u.vn}${u.nn?" "+u.nn:""}</b>${D.reps[k]?` <span class="bang">!</span>`:""}<span class="stt ${u.status}">${statusTxt(u.status)}</span>`,`${A("Anzeigename","Görünen ad")}: ${u.vn} · ${A("Registriert","Kayıt")}: ${fmtD(u.reg)}<br>${A("Passwort","Şifre")}: ${pwShow(u)}
     <div class="acts">${u.status==="ok"?`<button class="r" data-a="blocked" data-k="${k}">${A("Sperren","Engelle")}</button>`:`<button class="g" data-a="ok" data-k="${k}">${A("Freischalten","Onayla")}</button>`}
-    <button data-a="pw" data-k="${k}">🔑 ${A("Neues Passwort vergeben","Yeni şifre ver")}</button><button data-a="reset1" data-k="${k}">↺ ${A("Einzelnes Rätsel zurücksetzen","Tek bulmacayı sıfırla")}</button><button data-a="resetAll" data-k="${k}">↺ ${A("Ganzen Spielstand zurücksetzen","Tüm ilerlemeyi sıfırla")}</button><button class="r" data-a="del" data-k="${k}">🗑 ${A("Löschen","Sil")}</button></div></div>`).join(""):`<p>${A("Noch keine Benutzer.","Henüz kullanıcı yok.")}</p>`;}
+    <button data-a="pw" data-k="${k}">🔑 ${A("Neues Passwort vergeben","Yeni şifre ver")}</button><button data-a="reset1" data-k="${k}">↺ ${A("Einzelnes Rätsel zurücksetzen","Tek bulmacayı sıfırla")}</button><button data-a="resetAll" data-k="${k}">↺ ${A("Ganzen Spielstand zurücksetzen","Tüm ilerlemeyi sıfırla")}</button><button class="r" data-a="del" data-k="${k}">🗑 ${A("Löschen","Sil")}</button></div>`)}</div>`).join(""):`<p>${A("Noch keine Benutzer.","Henüz kullanıcı yok.")}</p>`;}
   const openR=Object.values(D.reports).filter(r=>r.status!=="done").length,newR=Object.values(D.reports).filter(r=>r.status==="open").length;
   modal(adminHead(pend.length,openR,newR,list.length)+`<div id="aBody">${body}</div><div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,()=>{
     bindAdminHead();
@@ -22007,10 +22018,10 @@ async function adminAct(a,k,u){const name=u?u.vn+(u.nn?" "+u.nn:""):k;
   if(a==="pw"){const pw=await askText(A(`Neues Passwort für ${name}:`,`${name} için yeni şifre:`));if(!pw)return;if(pw.length<4)return showMsg(A("Mindestens 4 Zeichen.","En az 4 karakter."));await sSet("murdoku/users/"+k+"/pw",await pwHash(k,pw));await sSet("murdoku/users/"+k+"/pwv",pw);await showMsg(A(`Neues Passwort gesetzt. ${u.vn} kann sich jetzt mit »${pw}« anmelden.`,`Yeni şifre ayarlandı. ${u.vn} artık »${pw}« ile giriş yapabilir.`));return;}
   if(a==="reset1"){const pl=await sGet("murdoku/players/"+k)||{};const ids=[...new Set([...Object.keys(pl.solved||{}),...Object.keys(pl.seen||{}),...Object.keys(pl.ev||{})])];
     if(!ids.length)return showMsg(A(`${name} hat noch kein Rätsel gespielt.`,`${name} henüz bulmaca oynamadı.`));
-    const lv=id=>{const l=LEVELS.find(x=>x.id===id);return l?(BOOKS.find(b=>b.id===l.book)?loc(BOOKS.find(b=>b.id===l.book)):l.book)+" · "+(l.no||"P")+" "+loc(l.title):id;};
-    modal(`<h2>↺ ${A("Rätsel zurücksetzen","Bulmacayı sıfırla")}</h2><p>${name}</p><div class="afrm"><select id="rsSel">${ids.map(i=>`<option value="${i}">${lv(i)}</option>`).join("")}</select></div><button class="btn" id="rsGo">${A("Zurücksetzen","Sıfırla")}</button> <button class="btn sec" id="rsNo">${A("Abbrechen","İptal")}</button>`,()=>{
-      $("rsNo").onclick=showAdmin;$("rsGo").onclick=async()=>{const id=$("rsSel").value;if(!await askYes(A(`»${lv(id)}« für ${name} wirklich zurücksetzen?`,`»${lv(id)}« ${name} için sıfırlansın mı?`)))return;
-        await sDel("murdoku/players/"+k+"/solved/"+id);await sDel("murdoku/players/"+k+"/seen/"+id);await sDel("murdoku/players/"+k+"/ev/"+id);try{localStorage.removeItem("mk_b_"+k+"_"+id);}catch(e){}if(curUser&&curUser.key===k)setUser(curUser);showAdmin();};},"wide");}}
+    const st=id=>pl.solved&&pl.solved[id]?`<span class="stt ok">${A("gelöst","çözüldü")}</span>`:`<span class="stt pending">${A("begonnen","başlandı")}</span>`;
+    modal(`<h2>↺ ${A("Rätsel zurücksetzen","Bulmacayı sıfırla")}</h2><p>${name}</p>${pzTree("r1:"+k,ids.filter(i=>lvById(i)).map(i=>({id:i,html:`<div class="prow"><b>${lvName(i)}</b> ${st(i)}<div class="acts"><button data-r1="${i}">↺ ${A("Zurücksetzen","Sıfırla")}</button></div></div>`})))}<div style="text-align:center"><button class="btn sec" id="rsNo">${A("Zurück","Geri")}</button></div>`,()=>{
+      bindPzTree();$("rsNo").onclick=()=>showAdmin();document.querySelectorAll("[data-r1]").forEach(b=>b.onclick=async()=>{const id=b.dataset.r1;if(!await askYes(A(`»${lvName(id)}« für ${name} wirklich zurücksetzen?`,`»${lvName(id)}« ${name} için sıfırlansın mı?`)))return adminAct("reset1",k,u);
+        await resetPuzzle(k,id);adminAct("reset1",k,u);});},"wide");}}
 
 /* ============ ETAPPE 3: STATISTIK, RANGLISTE, FEHLER, INFO ============ */
 const lvById=id=>LEVELS.find(l=>l.id===id);
@@ -22062,9 +22073,28 @@ function userDetailHTML(D,k){const u=D.users[k]||{},s=calcStats(D.players[k],adm
    `<div class="kpis"><div><b>${s.n}</b>${A("gelöst","çözüldü")}</div><div><b>${s.g}</b>${A("ohne Hilfe","yardımsız")}</div><div><b>${s.y}</b>${A("mit Hinweis","ipuçlu")}</div><div><b>${s.r}</b>${A("mit Lösung","çözümlü")}</div><div><b>${s.hints}</b>${A("Hinweise","ipucu")}</div><div><b>${s.sols}</b>${A("Lösungen","çözüm")}</div><div><b>${s.stars}</b>${A("Sterne","yıldız")}</div><div><b>${s.avgAtt}</b>${A("Ø Versuche","ort. deneme")}</div><div><b>${fmt(s.avgT)}</b>${A("Ø Zeit","ort. süre")}</div></div>
    <p style="text-align:center">${A("Gesamt","Toplam")}: <b>${s.solvedAll} / ${s.N}</b> (${s.pct} %) · ⭐ <b>${s.stAll} / ${s.maxSt.toLocaleString("de-DE")}</b></p>
    ${bars([{name:A("ohne Hilfe","yardımsız"),v:s.g},{name:A("mit Hinweis","ipuçlu"),v:s.y},{name:A("mit Lösung","çözümlü"),v:s.r}],"n")}
-   <h3>${A("Gelöste Rätsel","Çözülen bulmacalar")}</h3><div class="ptab">${s.list.filter(v=>adm.per==="all"||(v.ts||0)>=perStart(adm.per)).map(v=>`<div class="prow pc-${v.c||(v.h?"y":"g")}"><b>${lvName(v.id)}</b><br>${A("Start","Başlangıç")}: ${fmtD(v.start||v.ev.open)} · ${A("Fertig","Bitiş")}: ${fmtD(v.ts)}<br>⏱ ${fmt(v.time||0)} · ${A("Versuche","Deneme")}: ${v.att||"–"} · 💡 ${v.hint||v.ev.hint?A("ja","evet")+" ("+(v.ev.hint||v.hint)+")":A("nein","hayır")} · 🔑 ${v.sol||v.ev.sol?A("ja","evet"):A("nein","hayır")} · ${stars(v.s||0)} · ${cn[v.c||(v.h?"y":"g")]}
-     <div class="acts"><button data-rs="${v.id}">↺ ${A("Zurücksetzen","Sıfırla")}</button></div></div>`).join("")||"<p>–</p>"}</div>
-   ${s.open.length?`<h3>${A("Begonnen, noch nicht gelöst","Başlanmış, çözülmemiş")}</h3><div class="ptab">${s.open.map(e=>`<div class="prow"><b>${lvName(e.id)}</b><br>${A("Geöffnet","Açıldı")}: ${fmtD(e.open)} · ⏱ ${fmt(e.t||0)} · ${A("Versuche","Deneme")}: ${e.att||0} · 💡 ${e.hint||0} · 🔑 ${e.sol?A("ja","evet"):A("nein","hayır")}<div class="acts"><button data-rs="${e.id}">↺ ${A("Zurücksetzen","Sıfırla")}</button></div></div>`).join("")}</div>`:""}`;}
+   <h3>${A("Rätsel dieses Benutzers","Bu kullanıcının bulmacaları")}</h3>${pzTree("ud:"+k,[
+     ...s.list.filter(v=>adm.per==="all"||(v.ts||0)>=perStart(adm.per)).map(v=>({id:v.id,html:`<div class="prow pc-${v.c||(v.h?"y":"g")}"><b>${lvName(v.id)}</b><br>${A("Start","Başlangıç")}: ${fmtD(v.start||v.ev.open)} · ${A("Fertig","Bitiş")}: ${fmtD(v.ts)}<br>⏱ ${fmt(v.time||0)} · ${A("Versuche","Deneme")}: ${v.att||"–"} · 💡 ${v.hint||v.ev.hint?A("ja","evet")+" ("+(v.ev.hint||v.hint)+")":A("nein","hayır")} · 🔑 ${v.sol||v.ev.sol?A("ja","evet"):A("nein","hayır")} · ${stars(v.s||0)} · ${cn[v.c||(v.h?"y":"g")]}
+     <div class="acts"><button data-rs="${v.id}">↺ ${A("Zurücksetzen","Sıfırla")}</button></div></div>`})),
+     ...s.open.map(e=>({id:e.id,html:`<div class="prow"><b>${lvName(e.id)}</b> <span class="stt pending">${A("begonnen","başlandı")}</span><br>${A("Geöffnet","Açıldı")}: ${fmtD(e.open)} · ⏱ ${fmt(e.t||0)} · ${A("Versuche","Deneme")}: ${e.att||0} · 💡 ${e.hint||0} · 🔑 ${e.sol?A("ja","evet"):A("nein","hayır")}<div class="acts"><button data-rs="${e.id}">↺ ${A("Zurücksetzen","Sıfırla")}</button></div></div>`}))])}`;}
+// ---- Aufklappbare Bereiche + Rätsel-Baum (Admin) ----
+const CLO={};
+function cl(key,head,body,def){const open=CLO[key]!=null?CLO[key]:!!def;return `<div class="cl${open?"":" coll"}" data-ck="${key}"><div class="clh"><span class="clv">▾</span>${head}</div><div class="clb">${body}</div></div>`;}
+document.addEventListener("click",e=>{const h=e.target.closest(".clh");if(!h||e.target.closest("button,input,select,a"))return;const c=h.parentElement;const coll=c.classList.toggle("coll");CLO[c.dataset.ck]=!coll;});
+function lvGroupKey(l){const bk=BOOKS.find(b=>b.id===l.book);if(bk&&bk.chapters&&bk.chapters.length&&l.chap!=null){const ch=bk.chapters.find(c=>c.no===l.chap);return [String(l.chap).padStart(3,"0"),ch?loc(ch):"–"];}
+  const n=l.no||0,a=Math.floor((Math.max(n,1)-1)/10)*10+1;return [String(a).padStart(3,"0"),A("Rätsel","Bulmaca")+" "+a+"–"+(a+9)];}
+function pzTree(pre,items){
+  const byB={};items.forEach(it=>{const l=lvById(it.id);if(!l)return;(byB[l.book]=byB[l.book]||{});const [gk,gn]=lvGroupKey(l);(byB[l.book][gk]=byB[l.book][gk]||{n:gn,a:[]}).a.push(it);});
+  const books=BOOKS.filter(b=>byB[b.id]);if(!books.length)return "<p>–</p>";
+  return `<div class="pzT" data-pre="${pre}"><input class="pzS" type="search" placeholder="🔍 ${A("Rätsel suchen (Name oder Nummer)","Bulmaca ara (ad veya numara)")}" autocomplete="off">`+
+   books.map(b=>{const gs=Object.keys(byB[b.id]).sort();const cnt=gs.reduce((a,g)=>a+byB[b.id][g].a.length,0);
+     return cl(pre+":"+b.id,`<b>${loc(b)}</b> <span class="clc">${cnt}</span>`,gs.map(g=>{const G=byB[b.id][g];G.a.sort((x,y)=>(lvById(x.id).no||0)-(lvById(y.id).no||0));
+       return cl(pre+":"+b.id+":"+g,`${G.n} <span class="clc">${G.a.length}</span>`,G.a.map(it=>{const l=lvById(it.id);return `<div class="pzr" data-q="${((l.no||0)+" "+l.title.de+" "+l.title.tr).toLocaleLowerCase("de").replace(/"/g,"")}">${it.html}</div>`;}).join(""));}).join(""));}).join("")+`</div>`;}
+function bindPzTree(){document.querySelectorAll(".pzT").forEach(T=>{const inp=T.querySelector(".pzS");if(!inp)return;
+  const run=()=>{const q=inp.value.trim().toLocaleLowerCase("de").replace(/^#/,"");T.classList.toggle("srch",!!q);
+    T.querySelectorAll(".pzr").forEach(r=>r.classList.toggle("hid",!!q&&!(r.dataset.q.split(" ")[0]===q||r.dataset.q.includes(q))));
+    T.querySelectorAll(".cl").forEach(c=>c.classList.toggle("hid",!!q&&!c.querySelector(".pzr:not(.hid)")));};
+  inp.oninput=run;run();});}
 async function resetPuzzle(k,id){await sDel("murdoku/players/"+k+"/solved/"+id);await sDel("murdoku/players/"+k+"/seen/"+id);await sDel("murdoku/players/"+k+"/ev/"+id);try{localStorage.removeItem("mk_b_"+k+"_"+id);}catch(e){}if(curUser&&curUser.key===k)setUser(curUser);}
 // Admin-Ansicht erweitern
 async function showAdmin2(){const D=await loadAll();D.reps={};Object.values(D.reports).forEach(r=>{if(r.status!=="done")D.reps[r.user]=1;});
@@ -22081,7 +22111,7 @@ async function showAdmin2(){const D=await loadAll();D.reps={};Object.values(D.re
     document.querySelectorAll("[data-rs]").forEach(b=>b.onclick=async()=>{const id=b.dataset.rs,u=D.users[adm.user];if(!await askYes(A(`»${lvName(id)}« für ${u.vn} wirklich zurücksetzen?`,`»${lvName(id)}« ${u.vn} için sıfırlansın mı?`)))return showAdmin2();await resetPuzzle(adm.user,id);showAdmin2();});
     if($("cmpM"))$("cmpM").onchange=e=>{adm.met=e.target.value;showAdmin2();};
     document.querySelectorAll("[data-cu]").forEach(c=>c.onchange=()=>{adm.sel=[...document.querySelectorAll("[data-cu]:checked")].map(x=>x.dataset.cu);showAdmin2();});
-    bindBugs(D);},"wide");}
+    bindBugs(D);bindPzTree();},"wide");}
 function adminHead(pend,openR,newR,nu){return `<h2>🛠 ${A("Admin Bereich","Yönetici Alanı")}</h2>${pend?`<div class="abell">🔔 ${pend} ${A(pend===1?"neue Zugangsanfrage":"neue Zugangsanfragen","yeni erişim talebi")}</div>`:""}${newR?`<div class="abell red">❗ ${newR} ${A(newR===1?"neuer Fehlerbericht":"neue Fehlerberichte","yeni hata bildirimi")}</div>`:""}
   <div class="atab"><button data-t2="req" class="${adminTab==="req"?"on":""}">${A("Anfragen","Talepler")} (${pend})</button><button data-t2="users" class="${adminTab==="users"?"on":""}">${A("Benutzer","Kullanıcılar")} (${nu})</button><button data-t2="stats" class="${adminTab==="stats"?"on":""}">📊 ${A("Statistik","İstatistik")}</button><button data-t2="cmp" class="${adminTab==="cmp"?"on":""}">⚖️ ${A("Vergleich","Karşılaştırma")}</button><button data-t2="bugs" class="${adminTab==="bugs"?"on":""}">❗ ${A("Fehler","Hatalar")} (${openR})</button><button id="aOut" class="aOut">🚪 ${A("Admin abmelden","Yönetici çıkışı")}</button></div>`;}
 function bindAdminHead(){$("mN").onclick=hideModal;$("aOut").onclick=()=>{adminOn=false;sessionStorage.removeItem("mk_admin");hideModal();};
@@ -22089,12 +22119,12 @@ function bindAdminHead(){$("mN").onclick=hideModal;$("aOut").onclick=()=>{adminO
 // Fehlerberichte
 const RST=()=>({open:A("offen","açık"),work:A("in Bearbeitung","işlemde"),done:A("erledigt","tamamlandı")});
 function bugsHTML(D){const L2=Object.entries(D.reports).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
-  return L2.length?L2.map(([id,r])=>`<div class="arow brep${r.status!=="open"&&!bugOpen[id]?" coll":""}" data-bid="${id}"><div class="bhead"><span class="bchev">${r.status!=="open"&&!bugOpen[id]?"▸":"▾"}</span> <b>${(D.users[r.user]||{}).vn||r.vn||r.user}</b> <span class="stt ${r.status==="done"?"ok":r.status==="work"?"pending":"rejected"}">${RST()[r.status]||r.status}</span><br>🧩 ${lvName(r.level)}<br>🕒 ${fmtD(r.ts)}</div><div class="bbody"><p class="btxt">${(r.text||"").replace(/</g,"&lt;")}</p>${(r.imgs||[]).map(s=>`<img class="bimg zimg" src="${s}">`).join("")}${r.resetFor?`<div class="anote">↺ ${A("Zurückgesetzt","Sıfırlandı")}: ${r.resetFor==="all"?A("für alle Benutzer","tüm kullanıcılar için"):A("für den Melder","bildiren için")} (${fmtD(r.resetTs)})</div>`:""}
-    <div class="acts"><button data-bs="open" data-b="${id}">${RST().open}</button><button data-bs="work" data-b="${id}">${RST().work}</button><button class="g" data-bs="done" data-b="${id}">✓ ${RST().done}</button><button data-br="me" data-b="${id}">↺ ${A("Rätsel für Melder zurücksetzen","Bildiren için sıfırla")}</button><button class="r" data-br="all" data-b="${id}">↺ ${A("Rätsel für alle zurücksetzen","Herkes için sıfırla")}</button></div></div></div>`).join(""):`<p>${A("Keine Fehlerberichte.","Hata bildirimi yok.")}</p>`;}
+  return L2.length?L2.map(([id,r])=>`<div class="arow brep">${cl("bg:"+id,`<b>${(D.users[r.user]||{}).vn||r.vn||r.user}</b> <span class="stt ${r.status==="done"?"ok":r.status==="work"?"pending":"rejected"}">${RST()[r.status]||r.status}</span><br>🧩 ${lvName(r.level)}<br>🕒 ${fmtD(r.ts)}`,`<p class="btxt">${(r.text||"").replace(/</g,"&lt;")}</p>${(r.imgs||[]).map(s=>`<img class="bimg zimg" src="${s}">`).join("")}${r.resetFor?`<div class="anote">↺ ${A("Zurückgesetzt","Sıfırlandı")}: ${r.resetFor==="all"?A("für alle Benutzer","tüm kullanıcılar için"):A("für den Melder","bildiren için")} (${fmtD(r.resetTs)})</div>`:""}
+    <div class="acts"><button data-bs="open" data-b="${id}">${RST().open}</button><button data-bs="work" data-b="${id}">${RST().work}</button><button class="g" data-bs="done" data-b="${id}">✓ ${RST().done}</button><button data-br="me" data-b="${id}">↺ ${A("Rätsel für Melder zurücksetzen","Bildiren için sıfırla")}</button><button class="r" data-br="all" data-b="${id}">↺ ${A("Rätsel für alle zurücksetzen","Herkes için sıfırla")}</button></div>`,r.status==="open")}</div>`).join(""):`<p>${A("Keine Fehlerberichte.","Hata bildirimi yok.")}</p>`;}
 let bugOpen={};
 function imgZoom(src){const o=document.createElement("div");o.className="zoomImg";o.innerHTML=`<div class="ziBar"><span>${A("Mit zwei Fingern zoomen","İki parmakla yakınlaştır")}</span><button>✕</button></div><div class="ziA"><img src="${src}"></div>`;document.body.appendChild(o);
   o.querySelector("button").onclick=()=>o.remove();o.querySelector(".ziA").onclick=e=>{if(e.target.classList.contains("ziA"))o.remove();};makePinch(o.querySelector(".ziA"),o.querySelector("img"));}
-function bindBugs(D){document.querySelectorAll(".brep .bhead").forEach(h=>h.onclick=()=>{const id=h.parentElement.dataset.bid,r=D.reports[id];const coll=h.parentElement.classList.toggle("coll");bugOpen[id]=!coll;h.querySelector(".bchev").textContent=coll?"▸":"▾";});
+function bindBugs(D){
   document.querySelectorAll(".zimg").forEach(i=>i.onclick=()=>imgZoom(i.src));
 document.querySelectorAll("[data-bs]").forEach(b=>b.onclick=async()=>{await sSet("murdoku/reports/"+b.dataset.b+"/status",b.dataset.bs);showAdmin2();});
   document.querySelectorAll("[data-br]").forEach(b=>b.onclick=async()=>{const r=D.reports[b.dataset.b],all=b.dataset.br==="all";
