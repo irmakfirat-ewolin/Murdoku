@@ -182,7 +182,7 @@ body.guest .stats{display:none}
 .clue b{font-weight:700;color:var(--yel)}
 .sus.victim{background:#3a1d33}
 .sus.on{background:#ff2d6f22;box-shadow:0 0 0 2.5px var(--pink),0 0 18px #ff2d6f88}
-.sus.placed{opacity:.5}
+.sus.placed{opacity:.4;filter:grayscale(1) brightness(.8);border-left-color:#555;box-shadow:none}.sus.placed.on{opacity:.7;filter:grayscale(.4)}.sus.placed::after{content:"✓";position:absolute;right:6px;top:4px;font:900 15px sans-serif;color:#5dff86}
 .stickB{position:sticky;top:0;z-index:20;margin:8px -14px 0;padding:4px 14px 6px;background:var(--bg);box-shadow:0 8px 14px -8px #000c}
 #game{padding-bottom:90px}
 #game .tools{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;padding:8px 12px calc(env(safe-area-inset-bottom) + 8px);background:#120b22ee;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1.5px solid var(--line);max-width:560px;margin:0 auto}
