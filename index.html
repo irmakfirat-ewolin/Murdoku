@@ -84,6 +84,14 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .gen.genT{background:color-mix(in srgb,var(--tc) 50%,#fff);border:3px solid var(--tb,var(--tc));box-shadow:0 3px 0 #0005,inset 0 0 0 2px #fff6}
 .genIc{display:inline-block;vertical-align:-6px}.genB{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;background:#fff;border:3px solid var(--tb,var(--tc));box-shadow:0 2px 0 #0004;align-self:flex-start}
 .gIc{position:relative}.gIc .gTk{position:absolute;right:-6px;bottom:-5px;width:18px;height:18px;margin:0;animation:none}.gIc.got>svg{opacity:.55}
+body.noHow #howto{display:none}
+#taskBar{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;padding:5px 4px 2px}
+.tbC{display:inline-flex;align-items:center;gap:4px;padding:2px 9px 2px 5px;border-radius:14px;background:color-mix(in srgb,var(--tc) 45%,#fff);border:2px solid var(--tc);color:#1b1a20;font:800 13px sans-serif;box-shadow:0 2px 0 #0004}
+.tbC.ok{opacity:.8}.tbC .tk{width:17px;height:17px;margin-left:2px;animation:none}
+#miniBar{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 10px;padding:4px 4px 0}
+.mbI{display:flex;align-items:center;gap:5px;font:12.5px/1.2 "Zilla Slab",Georgia,serif;color:#f0e6dc;max-width:100%}.mbI b{color:#ffd27a}
+.mbB span{background:#c88a72;color:#2a160c;border:1.5px solid #7a4a32;border-radius:4px;padding:3px 8px}.mbB span b{color:#2a160c}
+.mbG{position:relative;display:inline-block;width:26px;height:26px;flex:none}.mbG i{position:absolute;left:16%;top:16%;width:74%;height:74%;box-sizing:border-box;border:3px solid var(--tc)}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -384,7 +392,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 01:45</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 02:00</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -398,9 +406,10 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
     <button id="solBtn" data-t="sol"></button>
     <button id="rulesBtn" data-t="rules"></button>
     <button id="gridBtn" data-t="grid"></button>
+    <button id="howBtn"></button>
     <span class="timer" id="timer">0:00</span>
   </div>
-  <div class="stickB" id="stickB"><div class="bwrap" id="board"></div></div>
+  <div class="stickB" id="stickB"><div class="bwrap" id="board"></div><div id="taskBar"></div><div id="miniBar"></div></div>
   <div class="howto" id="howto"></div>
   <div class="suspects" id="suspects"></div>
   <div id="general"></div>
@@ -20407,6 +20416,8 @@ document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>{lang=b.data
 
 /* ============ START ============ */
 function caseColor(l){if(l.glow)return l.glow;const h=Math.round((l.no*137.508+(l.book.charCodeAt(1)||0)*40)%360);return `hsl(${h} 95% 66%)`;}
+function applyHow(){const off=localStorage.getItem("mk_noHow")==="1";document.body.classList.toggle("noHow",off);const b=$("howBtn");if(b){b.textContent=(off?"ℹ️ ":"✕ ")+A("Anleitung","Kılavuz");b.classList.toggle("on",!off);}}
+document.addEventListener("click",e=>{if(e.target.closest("#howBtn")){localStorage.setItem("mk_noHow",localStorage.getItem("mk_noHow")==="1"?"0":"1");applyHow();}});
 function startedList(){if(!curUser)return [];const out=[];
   LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
     const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
@@ -20419,7 +20430,7 @@ function showStarted(){const ls=startedList();const f=t=>fmt(Math.floor(t||0));
    <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
    ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});}
 function renderHome(){
-  renderStats();renderStarted();const box=$("bookList");box.innerHTML="";
+  renderStats();renderStarted();applyHow();const box=$("bookList");box.innerHTML="";
   $("searchIn").placeholder=tt("search");$("searchX").classList.toggle("hidden",!$("searchIn").value);
   BOOKS.forEach(bk=>{
     const q=($("searchIn").value||"").trim().toLocaleLowerCase("de");
@@ -21279,7 +21290,7 @@ function isBlocked(r,c){if(L.protos)protoApply(board.proto);const o=objAt(r,c);r
 function whoAt(r,c){return Object.keys(board.pos).find(k=>board.pos[k][0]===r&&board.pos[k][1]===c);}
 function letter(p){return p.k||p.name[0];}
 
-function renderGame(){
+function renderGame(){applyHow();
   $("brand").textContent=`${loc(BK)} · ${L.no||(lang==="tr"?"Önsöz":"Prolog")}`;
   $("cTitle").textContent=L.no?`${L.no}. ${loc(L.title)}`:loc(L.title);
   {const ls=siblings(),i=ls.findIndex(l=>l.id===L.id);$("prevBtn").disabled=i<=0;$("nextBtn").disabled=i>=ls.length-1;$("navNo").textContent=L.no?`${L.no} / ${ls.filter(l=>l.no).length}`:(lang==="tr"?"Önsöz":"Prolog");}
@@ -21298,6 +21309,10 @@ function renderGame(){
     if(T)txt=txt.replace(/^(<b>)?[\p{Extended_Pictographic}\u{1F300}-\u{1FAFF}][\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u,(m,b)=>(b||"")+ic(T.ic,24)+" ");
     return `<div class="gen${T?" genT":""}"${T?` style="--tc:${T.c}${/^#f[0-9a-f]{5}$/i.test(T.c)&&T.c.toLowerCase()==="#ffffff"?";--tb:#9aa4b0":""}"`:""}>${T?`<i class="genB">${ic(T.ic,30)}</i>`:"<i>🔍</i>"}<div>${txt}${g.icons?(()=>{const got=T?(L.tasks||[]).filter(t=>t.t===T.key&&Object.values(board.pos).some(([r,c])=>r===t.r&&c===t.c)).length:0;
       return `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${g.icons.map((k,i)=>`<div class="gIc${i<got?" got":""}" style="width:34px;height:34px">${(SVG[k]||"").replace("<svg",'<svg style="width:100%;height:100%"')}${i<got?'<b class="tk gTk"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b>':""}</div>`).join("")}</div>`;})():""}</div></div>`;}).join("");
+  {const need=[...chapRule,...(L.general||[])].map(tkOf).filter(Boolean);const tb=$("taskBar");
+   if(tb){if(!need.length||!(L.tasks||[]).length){tb.innerHTML="";tb.style.display="none";}else{tb.style.display="";
+     tb.innerHTML=need.map(T=>{const n=(L.general||[]).find(g=>tkOf(g)&&tkOf(g).key===T.key).icons.length;const got=(L.tasks||[]).filter(t=>t.t===T.key&&Object.values(board.pos).some(([r,c])=>r===t.r&&c===t.c)).length;
+       return `<span class="tbC${got>=n?" ok":""}" style="--tc:${T.c}">${ic(T.ic,22)}<b>${got}/${n}</b>${got>=n?'<i class="tk"><svg viewBox="0 0 16 16" width="11" height="11"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></i>':""}</span>`;}).join("");}}}
   if(L.book==="b2"&&(L.chap===5||(L.xr||[]).includes(5))&&(L.tasks||[]).length){
     const T=(d,t)=>lang==="tr"?t:d,fc="font-family:'Zilla Slab',Georgia,serif";
     const glyph=(k,s)=>{const t=TASKS[k],bw=s*.12;return `<div style="position:relative;width:${s}px;height:${s}px;margin:0 auto"><div style="position:absolute;left:${s*.16}px;top:${s*.16}px;width:${s*.74}px;height:${s*.74}px;box-sizing:border-box;border:${bw}px solid ${t.c}"></div><div style="position:absolute;left:0;top:0;width:${s*.52}px;height:${s*.52}px">${SVG[t.ic].replace("<svg",'<svg style="width:100%;height:100%"')}</div></div>`;};
@@ -21307,6 +21322,12 @@ function renderGame(){
     if(has("anubis")||has("ra"))h+=`<div style="display:flex;justify-content:center;gap:10px;background:#f4b49a;border-radius:22px;padding:12px 10px;margin:6px auto 8px;max-width:420px">`+(has("anubis")?box("anubis",T("Glyphe des Anubis","Anubis glifi"),T("Wer auf diesem Feld ist, <b>muss allein</b> in dem Bereich sein.","Bu karede olan kişi alanda <b>yalnız olmak zorunda</b>.")):"")+(has("ra")?box("ra",T("Glyphe des Ra","Ra glifi"),T("Wer auf diesem Feld ist, <b>darf nicht allein</b> in dem Bereich sein.","Bu karede olan kişi alanda <b>yalnız olamaz</b>.")):"")+`</div>`;
     $("general").insertAdjacentHTML("afterbegin",h);
   }
+  {const mb=$("miniBar");let h="";const B=x=>bold(x).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>");
+   if(L.bandits)h+=`<div class="mbI mbB">${banditStar(L.bandits.n,34)}<span>${B(loc(L.bandits))}</span></div>`;
+   if(L.book==="b2"&&(L.tasks||[]).some(t=>t.t==="anubis"||t.t==="ra")){const g=k=>{const t=TASKS[k];return `<span class="mbG" style="--tc:${t.c}"><i></i>${SVG[t.ic].replace("<svg",'<svg style="position:absolute;left:0;top:0;width:58%;height:58%"')}</span>`;};
+     if((L.tasks||[]).some(t=>t.t==="anubis"))h+=`<div class="mbI">${g("anubis")}<span>${A("<b>Anubis:</b> muss <b>allein</b> im Bereich sein","<b>Anubis:</b> alanda <b>yalnız olmalı</b>")}</span></div>`;
+     if((L.tasks||[]).some(t=>t.t==="ra"))h+=`<div class="mbI">${g("ra")}<span>${A("<b>Ra:</b> darf <b>nicht allein</b> im Bereich sein","<b>Ra:</b> alanda <b>yalnız olamaz</b>")}</span></div>`;}
+   if(mb){mb.innerHTML=h;mb.style.display=h?"":"none";}}
   if(L.bandits)$("general").insertAdjacentHTML("afterbegin",`<div style="display:flex;align-items:center;justify-content:center;gap:0;margin:8px auto 10px;max-width:360px">${banditStar(L.bandits.n,92)}<div style="flex:1;margin-left:-10px;background:repeating-linear-gradient(180deg,#c88a72 0 14px,#b87a62 14px 15px);border:2px solid #7a4a32;border-radius:4px;padding:10px 12px 10px 18px;font-family:'Zilla Slab',Georgia,serif;font-size:16px;line-height:1.3;color:#2a160c;text-align:center;box-shadow:0 3px 0 #0004">${bold(loc(L.bandits)).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>")}</div></div>`);
   if(L.rankAssign){const ps=L.people,tm=board.tm||{};
     $("general").innerHTML+=`<div class="rkl"><div class="rkh">${lang==="tr"?"Sıralama":"Rangliste"}</div>${[...Array(L.rankAssign)].map((_,ri)=>{const pid=Object.keys(tm).find(k=>tm[k]===ri),pp=ps.find(x=>x.id===pid);
