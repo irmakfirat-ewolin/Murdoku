@@ -83,6 +83,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .appVer{font-size:11px;opacity:.45;text-align:center;margin-top:6px}
 .gen.genT{background:color-mix(in srgb,var(--tc) 50%,#fff);border:3px solid var(--tb,var(--tc));box-shadow:0 3px 0 #0005,inset 0 0 0 2px #fff6}
 .genIc{display:inline-block;vertical-align:-6px}.genB{display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:50%;background:#fff;border:3px solid var(--tb,var(--tc));box-shadow:0 2px 0 #0004;align-self:flex-start}
+.gIc{position:relative}.gIc .gTk{position:absolute;right:-6px;bottom:-5px;width:18px;height:18px;margin:0;animation:none}.gIc.got>svg{opacity:.55}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -383,7 +384,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 01:35</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 01:45</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21291,11 +21292,12 @@ function renderGame(){
   if(L.book==="b2"&&L.chap===3)chapRule.push({de:"🏴‍☠️ **Spezialregel Schiffe:** Jedes Schiff (Schaluppe, Fregatte, Galeone) ist ein **eigener Bereich**. **Auf See** = auf einem Schiff oder im Wasser, **an Land** = überall sonst. Das Wasser zählt immer als **ein** Bereich, auch wenn Schiffe es unterbrechen.",tr:"🏴‍☠️ **Özel kural – Gemiler:** Her gemi (şalopa, firkateyn, kalyon) **ayrı bir alandır**. **Denizde** = bir gemide ya da suda, **karada** = başka her yerde. Su, gemiler onu bölse bile her zaman **tek** alan sayılır."});
   if(L.book==="b2"&&(L.chap===2||(L.xr||[]).includes(2)))chapRule.push({de:"🤠 **Spezialregel Banditen:** Unter den Verdächtigen verstecken sich **Banditen**. **Das Opfer ist nie ein*e Bandit*in.** Der oder die Mörder*in kann Bandit*in sein – oder auch nicht.",tr:"🤠 **Özel kural – Haydutlar:** Şüphelilerin arasında **haydutlar** saklanıyor. **Kurban asla haydut değildir.** Katil haydut olabilir – ya da olmayabilir."});
 
-  const tkOf=g=>{if(!g.icons||!g.icons.length)return null;const k=Object.keys(TASKS).find(t=>TASKS[t].ic===g.icons[0]);return k&&g.icons.every(i=>i===TASKS[k].ic)?TASKS[k]:null;};
+  const tkOf=g=>{if(!g.icons||!g.icons.length)return null;const k=Object.keys(TASKS).find(t=>TASKS[t].ic===g.icons[0]);return k&&g.icons.every(i=>i===TASKS[k].ic)?Object.assign({key:k},TASKS[k]):null;};
   const ic=(k,sz)=>`<span class="genIc" style="width:${sz}px;height:${sz}px">${(SVG[k]||"").replace("<svg",'<svg style="width:100%;height:100%"')}</span>`;
   $("general").innerHTML=([...chapRule,...(L.general||[])]).map(g=>{const T=tkOf(g);let txt=bold(loc(g)).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>");
     if(T)txt=txt.replace(/^(<b>)?[\p{Extended_Pictographic}\u{1F300}-\u{1FAFF}][\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u,(m,b)=>(b||"")+ic(T.ic,24)+" ");
-    return `<div class="gen${T?" genT":""}"${T?` style="--tc:${T.c}${/^#f[0-9a-f]{5}$/i.test(T.c)&&T.c.toLowerCase()==="#ffffff"?";--tb:#9aa4b0":""}"`:""}>${T?`<i class="genB">${ic(T.ic,30)}</i>`:"<i>🔍</i>"}<div>${txt}${g.icons?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${g.icons.map(k=>`<div style="width:34px;height:34px">${(SVG[k]||"").replace("<svg",'<svg style="width:100%;height:100%"')}</div>`).join("")}</div>`:""}</div></div>`;}).join("");
+    return `<div class="gen${T?" genT":""}"${T?` style="--tc:${T.c}${/^#f[0-9a-f]{5}$/i.test(T.c)&&T.c.toLowerCase()==="#ffffff"?";--tb:#9aa4b0":""}"`:""}>${T?`<i class="genB">${ic(T.ic,30)}</i>`:"<i>🔍</i>"}<div>${txt}${g.icons?(()=>{const got=T?(L.tasks||[]).filter(t=>t.t===T.key&&Object.values(board.pos).some(([r,c])=>r===t.r&&c===t.c)).length:0;
+      return `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${g.icons.map((k,i)=>`<div class="gIc${i<got?" got":""}" style="width:34px;height:34px">${(SVG[k]||"").replace("<svg",'<svg style="width:100%;height:100%"')}${i<got?'<b class="tk gTk"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b>':""}</div>`).join("")}</div>`;})():""}</div></div>`;}).join("");
   if(L.book==="b2"&&(L.chap===5||(L.xr||[]).includes(5))&&(L.tasks||[]).length){
     const T=(d,t)=>lang==="tr"?t:d,fc="font-family:'Zilla Slab',Georgia,serif";
     const glyph=(k,s)=>{const t=TASKS[k],bw=s*.12;return `<div style="position:relative;width:${s}px;height:${s}px;margin:0 auto"><div style="position:absolute;left:${s*.16}px;top:${s*.16}px;width:${s*.74}px;height:${s*.74}px;box-sizing:border-box;border:${bw}px solid ${t.c}"></div><div style="position:absolute;left:0;top:0;width:${s*.52}px;height:${s*.52}px">${SVG[t.ic].replace("<svg",'<svg style="width:100%;height:100%"')}</div></div>`;};
