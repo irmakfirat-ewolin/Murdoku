@@ -392,7 +392,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 21.11.2026 · 16:25</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 22.11.2026 · 02:30</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20349,7 +20349,7 @@ return `<svg width="${W(NC)}" height="${W(NR)}" style="position:absolute;left:0;
 /* ============ TEXTE ============ */
 const T={
  de:{pill:"<b>Logikrätsel</b> rund um mysteriöse Mordfälle",welcome:"Willkommen, Detektiv!",welcomeTxt:"Wähle einen Band und einen Fall. Platziere alle Personen und finde den Mörder.",search:"Fall suchen: Nummer, Titel, Name…",noHits:"Keine Treffer.",player:"Spieler:",
-  undo:"↶ Zurück",grid:"# Raster",reset:"Neu",hint:"💡 Tipp",auto:"Hilfs-✕",rules:"Regeln",toolPlace:"✏️ Person",toolX:"✕ setzen",howto:"1× tippen = Vermutung in die Ecke · 2× tippen = ✕ setzen/entfernen · Gedrückt halten = sicher setzen (nochmal halten = entfernen)",compass:["N","O","S","W"],zoom:"🔍 Brett vergrößern",zoomHint:"Mit zwei Fingern zoomen, mit einem verschieben",sol:"🔑 Lösung",solQ:"Lösung anzeigen?",solQTxt:"Achtung: Damit wird die komplette Lösung des Falls angezeigt – alle Schritte und der Mörder.",solTitle:"Lösung",solBoard:"Auf dem Brett zeigen",stepT:"Schritt",hintQ:"Tipp anzeigen?",hintQTxt:"Bist du sicher? Die nächste Person, die man logisch finden kann, wird automatisch auf ihr Feld gesetzt.",maxNotes:"Maximal 4 Vermutungen pro Feld.",xBlocked:"Hier kann niemand mehr stehen (Zeile/Spalte belegt).",check:"Prüfen",
+  undo:"↶ Zurück",grid:"# Raster",reset:"Neu",hint:"💡 Tipp",auto:"Hilfs-✕",rules:"Regeln",toolPlace:"✏️ Person",toolX:"✕ setzen",howto:"1× tippen = Vermutung in die Ecke · 2× tippen = ✕ setzen/entfernen · Gedrückt halten = sicher setzen (nochmal halten = entfernen) · Person unten gedrückt halten = ihre Vermutungen löschen",compass:["N","O","S","W"],zoom:"🔍 Brett vergrößern",zoomHint:"Mit zwei Fingern zoomen, mit einem verschieben",sol:"🔑 Lösung",solQ:"Lösung anzeigen?",solQTxt:"Achtung: Damit wird die komplette Lösung des Falls angezeigt – alle Schritte und der Mörder.",solTitle:"Lösung",solBoard:"Auf dem Brett zeigen",stepT:"Schritt",hintQ:"Tipp anzeigen?",hintQTxt:"Bist du sicher? Die nächste Person, die man logisch finden kann, wird automatisch auf ihr Feld gesetzt.",maxNotes:"Maximal 4 Vermutungen pro Feld.",xBlocked:"Hier kann niemand mehr stehen (Zeile/Spalte belegt).",check:"Prüfen",
   verdict:"Der Mord wurde begangen von …",noCases:"Noch keine Fälle – schick mir Fotos!",cases:"Fälle",
   pickFirst:"Tippe zuerst oben auf eine Person.",cantSit:"Dieses Feld kann nicht besetzt werden.",notFull:"Es sind noch nicht alle Personen platziert.",
   wrong:"Da stimmt etwas nicht.",wrongTxt:"Mindestens eine Person steht falsch.",showErr:"Fehler zeigen",close:"Weiter",
@@ -20359,7 +20359,7 @@ const T={
   occ:"Können besetzt sein",noocc:"Können nicht besetzt sein",noRules:"Die Regeln dieses Bandes folgen, sobald du sie schickst.",
   hintFix:n=>`${n} stand falsch und wurde entfernt.`,hintSet:n=>`${n} wurde platziert.`},
  tr:{pill:"Gizemli cinayetler üzerine <b>mantık bulmacaları</b>",welcome:"Hoş geldin, dedektif!",welcomeTxt:"Bir cilt ve bir vaka seç. Herkesi yerleştir ve katili bul.",player:"Oyuncu:",search:"Vaka ara: numara, başlık, isim…",noHits:"Sonuç bulunamadı.",
-  undo:"↶ Geri",grid:"# Izgara",reset:"Yeni",hint:"💡 İpucu",auto:"Yardım-✕",rules:"Kurallar",toolPlace:"✏️ Kişi",toolX:"✕ koy",howto:"1× dokun = köşeye tahmin · 2× dokun = ✕ koy/kaldır · Basılı tut = kesin yerleştir (tekrar basılı tut = kaldır)",compass:["K","D","G","B"],zoom:"🔍 Tahtayı büyüt",zoomHint:"İki parmakla büyüt, tek parmakla kaydır",sol:"🔑 Çözüm",solQ:"Çözüm gösterilsin mi?",solQTxt:"Dikkat: Vakanın bütün çözümü gösterilecek – tüm adımlar ve katil.",solTitle:"Çözüm",solBoard:"Tahtada göster",stepT:"Adım",hintQ:"İpucu gösterilsin mi?",hintQTxt:"Emin misin? Mantıkla bulunabilecek sıradaki kişi otomatik olarak yerine konacak.",maxNotes:"Bir karede en fazla 4 tahmin.",xBlocked:"Buraya artık kimse konamaz (satır/sütun dolu).",check:"Kontrol",
+  undo:"↶ Geri",grid:"# Izgara",reset:"Yeni",hint:"💡 İpucu",auto:"Yardım-✕",rules:"Kurallar",toolPlace:"✏️ Kişi",toolX:"✕ koy",howto:"1× dokun = köşeye tahmin · 2× dokun = ✕ koy/kaldır · Basılı tut = kesin yerleştir (tekrar basılı tut = kaldır) · Aşağıda kişiye basılı tut = tahminlerini sil",compass:["K","D","G","B"],zoom:"🔍 Tahtayı büyüt",zoomHint:"İki parmakla büyüt, tek parmakla kaydır",sol:"🔑 Çözüm",solQ:"Çözüm gösterilsin mi?",solQTxt:"Dikkat: Vakanın bütün çözümü gösterilecek – tüm adımlar ve katil.",solTitle:"Çözüm",solBoard:"Tahtada göster",stepT:"Adım",hintQ:"İpucu gösterilsin mi?",hintQTxt:"Emin misin? Mantıkla bulunabilecek sıradaki kişi otomatik olarak yerine konacak.",maxNotes:"Bir karede en fazla 4 tahmin.",xBlocked:"Buraya artık kimse konamaz (satır/sütun dolu).",check:"Kontrol",
   verdict:"Cinayeti işleyen …",noCases:"Henüz vaka yok – fotoğraf gönder!",cases:"vaka",
   pickFirst:"Önce yukarıdan bir kişiye dokun.",cantSit:"Bu kareye kimse konamaz.",notFull:"Henüz herkes yerleştirilmedi.",
   wrong:"Bir şeyler yanlış.",wrongTxt:"En az bir kişi yanlış yerde.",showErr:"Hataları göster",close:"Devam",
@@ -21325,7 +21325,7 @@ function renderGame(){applyHow();
     $("general").insertAdjacentHTML("afterbegin",h);
   }
   {const mb=$("miniBar");let h="";const B=x=>bold(x).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>");
-   if(L.bandits)h+=`<div class="mbI mbB">${banditStar(L.bandits.n,34)}<span>${B(loc(L.bandits))}</span></div>`;
+   if(L.bandits)h+=`<div class="mbI mbB">${banditStar(L.bandits.n,44).replace(/<text[\s\S]*?<\/text>/g,"").replace("</svg>",`<text x="50" y="66" font-size="44" text-anchor="middle" fill="#2a1a0a" font-family="Georgia,serif" font-weight="700" style="font-variant-numeric:lining-nums">${L.bandits.n}</text></svg>`)}<span>${B(loc(L.bandits))}</span></div>`;
    if(L.book==="b2"&&(L.tasks||[]).some(t=>t.t==="anubis"||t.t==="ra")){const g=k=>{const t=TASKS[k];return `<span class="mbG" style="--tc:${t.c}"><i></i>${SVG[t.ic].replace("<svg",'<svg style="position:absolute;left:0;top:0;width:58%;height:58%"')}</span>`;};
      if((L.tasks||[]).some(t=>t.t==="anubis"))h+=`<div class="mbI">${g("anubis")}<span>${A("<b>Anubis:</b> muss <b>allein</b> im Bereich sein","<b>Anubis:</b> alanda <b>yalnız olmalı</b>")}</span></div>`;
      if((L.tasks||[]).some(t=>t.t==="ra"))h+=`<div class="mbI">${g("ra")}<span>${A("<b>Ra:</b> darf <b>nicht allein</b> im Bereich sein","<b>Ra:</b> alanda <b>yalnız olamaz</b>")}</span></div>`;}
@@ -21354,7 +21354,11 @@ function renderGame(){applyHow();
     d.style.setProperty("--pc",pColor(p));
     d.innerHTML=`<div class="polw"><div class="pol"${p.role==="gamer"?` style="background:${p.look.bg};border:5px solid #23232c;border-radius:8px;box-shadow:inset 0 0 0 2px #4a4a58,0 3px 0 #0006"`:""}>${p.g?`<span class="gb ${p.g}">${p.g==="m"?(lang==="tr"?"E":"M"):(lang==="tr"?"K":"F")}</span>`:""}${avatar(p).replace(/<rect width="100" height="100" fill="[^"]*"\/>/,"")}</div>${p.role?`<div class="rtag rbot ${p.role}">${{cook:"<span class=\"ri\">🔪</span>"+(lang==="tr"?"Aşçı":(p.g==="f"?"Köchin":"Koch")),player:"<span class=\"ri\">🀄</span>"+(lang==="tr"?"Oyuncu":(p.g==="f"?"Spielerin":"Spieler")),noble:"<span class=\"ri\">👑</span>"+(lang==="tr"?"Soylu":(p.g==="f"?"Adlige":"Adliger")),villager:"<span class=\"ri\">🪵</span>"+(lang==="tr"?"Köylü":(p.g==="f"?"Dorfbewohnerin":"Dorfbewohner")),knight:"<span class=\"ri\">🛡️</span>"+(lang==="tr"?"Şövalye":"Ritter"),roman:"<span class=\"ri\">🏛️</span>"+(lang==="tr"?"Romalı":(p.g==="f"?"Römerin":"Römer")),gorilla:"<span class=\"ri\">🦍</span>"+(lang==="tr"?"Goril":"Gorilla"),ball:"<span class=\"ri\">⚽</span>"+(lang==="tr"?"Top":"Ball"),driver:"<span class=\"ri\">🏁</span>"+(lang==="tr"?"Sürücü":(p.g==="f"?"Fahrerin":"Fahrer")),penguin:"<span class=\"ri\">🐧</span>"+(lang==="tr"?"Penguen":"Pinguin"),gamer:"<span class=\"ri\">🎮</span>"+(L.roles&&board.tm&&board.tm[p.id]!=null&&L.roles[board.tm[p.id]]?loc(L.roles[board.tm[p.id]].t):(lang==="tr"?"Oyuncu adı<br>bilinmiyor":"Gamertag<br>unbekannt"))}[p.role]}</div>`:""}</div><div class="stxt"><div class="nm" style="font-size:${p.name.length>10?14:p.name.length>8?16:p.name.length>6?18:20}px"><span class="lt">${letter(p)}</span>${p.name}</div><div class="clue">${L.tagAssign?((board.tm&&board.tm[p.id]!=null)?`<b style="color:#9ef07a">${loc(L.roles[board.tm[p.id]].t)}</b> – `+(()=>{const[a,b]=splitD(loc(L.roles[board.tm[p.id]].d));return `<span style="color:#c4f09a">${bold(a)}</span> <span style="color:#ffffff">${bold(b)}</span>`;})():`<span style="color:#ff4d5e;font-weight:800">${lang==="tr"?"Oyuncu adı ata":"Gamertag zuordnen"}</span>`):bold(loc(p))}</div></div>`;
     if(L.absentPool&&L.absentPool.includes(p.id)){d.style.paddingBottom="30px";const ob=document.createElement("span");ob.className="outb"+(isOut?" on":"");ob.innerHTML=isOut?(lang==="tr"?"↩ Geri al":"↩ Zurück"):(lang==="tr"?"🚫 Olay yerinde değil":"🚫 Nicht am Tatort");ob.onclick=ev=>{ev.stopPropagation();snap();if(isOut)delete board.pos[p.id];else{delete board.pos[p.id];board.pos[p.id]=[-1,-1];}sel=L.people.find(q=>!board.pos[q.id])?.id||null;showErr=false;accused=null;saveBoard();renderGame();};d.appendChild(ob);}
-    d.onclick=()=>{sel=p.id;tool="place";renderGame();};
+    d.onclick=()=>{if(d._lp){d._lp=0;return;}sel=p.id;tool="place";renderGame();};
+    {let t=null,sx=0,sy=0;const stop=()=>{clearTimeout(t);t=null;};
+     d.addEventListener("pointerdown",ev=>{sx=ev.clientX;sy=ev.clientY;stop();t=setTimeout(()=>{t=null;d._lp=1;clearNotesOf(p);},550);});
+     d.addEventListener("pointermove",ev=>{if(t&&(Math.abs(ev.clientX-sx)>10||Math.abs(ev.clientY-sy)>10))stop();});
+     d.addEventListener("pointerup",stop);d.addEventListener("pointercancel",stop);d.addEventListener("contextmenu",ev=>ev.preventDefault());}
     sp.appendChild(d);
   });
   drawBoard($("board"),Math.min(stableW()-28,532,Math.round((window.innerHeight||800)*.5)),false);pzApply();
@@ -21630,6 +21634,10 @@ function placeSure(id,r,c){ // sicher setzen
     if(gRk(a,b)===gRk(r,c)||gCk(a,b)===gCk(r,c)||!board.n[k].length)delete board.n[k];
   }
 }
+function clearNotesOf(p){const ks=Object.keys(board.n||{}).filter(k=>board.n[k].includes(p.id));
+  if(!ks.length){toast(A(`Keine Vermutungen für ${letter(p)} auf dem Plan.`,`Planda ${letter(p)} için tahmin yok.`));return;}
+  snap();ks.forEach(k=>{board.n[k]=board.n[k].filter(id=>id!==p.id);if(!board.n[k].length)delete board.n[k];});
+  if(navigator.vibrate)navigator.vibrate(30);saveBoard();renderGame();toast(A(`${ks.length} Vermutung${ks.length>1?"en":""} von ${letter(p)} entfernt`,`${letter(p)} için ${ks.length} tahmin silindi`));}
 function hold(r,c){ // gedrückt halten
   if(tool==="x")return;
   const who=whoAt(r,c);
@@ -21638,6 +21646,7 @@ function hold(r,c){ // gedrückt halten
     if(!sel){toast(tt("pickFirst"));return;}
     if(isBlocked(r,c)||onlyBad(r,c,sel)){toast(tt("cantSit"));return;}
     snap();if(board.pos[sel])delete board.pos[sel];
+    Object.keys(board.n||{}).forEach(k=>{board.n[k]=board.n[k].filter(id=>id!==sel);if(!board.n[k].length)delete board.n[k];});
     placeSure(sel,r,c);
     sel=L.people.find(p=>!board.pos[p.id])?.id||null;
   }
