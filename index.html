@@ -93,6 +93,8 @@ body.noHow #howto{display:none}
 .mbB span{background:#c88a72;color:#2a160c;border:1.5px solid #7a4a32;border-radius:4px;padding:3px 8px}.mbB span b{color:#2a160c}
 .mbG{position:relative;display:inline-block;width:26px;height:26px;flex:none}.mbG i{position:absolute;left:16%;top:16%;width:74%;height:74%;box-sizing:border-box;border:3px solid var(--tc)}
 .sus,.sus *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.unkR{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}.unkR select{font:700 14px sans-serif;padding:5px 8px;border-radius:9px;border:2px solid var(--line);background:#fff;color:#2a2230}
+.unkG small{font-weight:400;opacity:.7;font-size:12px}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -393,7 +395,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 22.11.2026 · 02:35</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 22.11.2026 · 08:35</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21312,6 +21314,21 @@ function renderGame(){applyHow();
     if(T)txt=txt.replace(/^(<b>)?[\p{Extended_Pictographic}\u{1F300}-\u{1FAFF}][\uFE0F\u200D\p{Extended_Pictographic}]*\s*/u,(m,b)=>(b||"")+ic(T.ic,24)+" ");
     return `<div class="gen${T?" genT":""}"${T?` style="--tc:${T.c}${/^#f[0-9a-f]{5}$/i.test(T.c)&&T.c.toLowerCase()==="#ffffff"?";--tb:#9aa4b0":""}"`:""}>${T?`<i class="genB">${ic(T.ic,30)}</i>`:"<i>🔍</i>"}<div>${txt}${g.icons?(()=>{const got=T?(L.tasks||[]).filter(t=>t.t===T.key&&Object.values(board.pos).some(([r,c])=>r===t.r&&c===t.c)).length:0;
       return `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">${g.icons.map((k,i)=>`<div class="gIc${i<got?" got":""}" style="width:34px;height:34px">${(SVG[k]||"").replace("<svg",'<svg style="width:100%;height:100%"')}${i<got?'<b class="tk gTk"><svg viewBox="0 0 16 16" width="12" height="12"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b>':""}</div>`).join("")}</div>`;})():""}</div></div>`;}).join("");
+  {const uk=Object.keys(L.roomNames).filter(k=>L.roomNames[k].unk);
+   if(uk.length>1){const cen=k=>{let R=0,C=0,n=0;L.rooms.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch===k){R+=r;C+=c;n++;}}));return [R/n,C/n];};
+     const cs=uk.map(cen),rs=cs.map(x=>x[0]),cc=cs.map(x=>x[1]),vert=(Math.max(...rs)-Math.min(...rs))>=(Math.max(...cc)-Math.min(...cc));
+     const NR=L.rooms.length,NC=L.rooms[0].length;
+     const where=i=>{if(uk.length===2){const o=cs[1-i];return vert?(cs[i][0]<o[0]?A("oben","üstteki"):A("unten","alttaki")):(cs[i][1]<o[1]?A("links","soldaki"):A("rechts","sağdaki"));}
+       const y=cs[i][0]/(NR-1),x=cs[i][1]/(NC-1);const V=y<.34?A("oben","üst"):y>.66?A("unten","alt"):A("Mitte","orta");const H=x<.34?A("links","sol"):x>.66?A("rechts","sağ"):A("Mitte","orta");
+       let t=V===H?V:(V===A("Mitte","orta")?H:H===A("Mitte","orta")?V:V+" "+H);const dup=uk.filter((_,j)=>j<i&&whereRaw(j)===t).length;return t+(dup?" "+(dup+1):"");};
+     const whereRaw=j=>{const y=cs[j][0]/(NR-1),x=cs[j][1]/(NC-1);const V=y<.34?A("oben","üst"):y>.66?A("unten","alt"):A("Mitte","orta");const H=x<.34?A("links","sol"):x>.66?A("rechts","sağ"):A("Mitte","orta");return V===H?V:(V===A("Mitte","orta")?H:H===A("Mitte","orta")?V:V+" "+H);};
+     const cur=board.unk||{};
+     $("general").insertAdjacentHTML("beforeend",`<div class="gen unkG"><i>🏷️</i><div><b>${A("Deine Zuordnung","Senin eşleştirmen")}</b> <small>${A("(nur für dich, wird nicht geprüft)","(sadece senin için, kontrol edilmez)")}</small>
+       ${uk.map((k,i)=>`<div class="unkR"><span>${A("Bereich","Alan")} <b>${where(i)}</b> =</span><select data-uk="${k}"><option value="">???</option>${uk.map(o=>`<option value="${o}"${cur[k]===o?" selected":""}>${loc(L.roomNames[o])}</option>`).join("")}</select></div>`).join("")}</div></div>`);
+     document.querySelectorAll(".unkR select").forEach(sl=>sl.onchange=()=>{board.unk=board.unk||{};const k=sl.dataset.uk,v=sl.value;
+       if(v){Object.keys(board.unk).forEach(o=>{if(board.unk[o]===v&&o!==k)delete board.unk[o];});if(uk.length===2){const other=uk.find(o=>o!==k);board.unk[other]=uk.find(o=>o!==v);}board.unk[k]=v;}
+       else{delete board.unk[k];if(uk.length===2)board.unk={};}
+       saveBoard();renderGame();});}}
   {const need=[...chapRule,...(L.general||[])].map(tkOf).filter(Boolean);const tb=$("taskBar");
    if(tb){if(!need.length||!(L.tasks||[]).length){tb.innerHTML="";tb.style.display="none";}else{tb.style.display="";
      tb.innerHTML=need.map(T=>{const n=(L.general||[]).find(g=>tkOf(g)&&tkOf(g).key===T.key).icons.length;const got=(L.tasks||[]).filter(t=>t.t===T.key&&Object.values(board.pos).some(([r,c])=>r===t.r&&c===t.c)).length;
@@ -21489,7 +21506,7 @@ function drawBoard(B,W,sol,ro){if(L.protos)protoApply(sol?L.protos.answer:board.
     let r0=99,r1=-1,c0=99,c1=-1;
     for(let r=0;r<NR;r++)for(let c=0;c<NC;c++)if(L.rooms[r][c]===k){r0=Math.min(r0,r);r1=Math.max(r1,r);c0=Math.min(c0,c);c1=Math.max(c1,c);}
     if(r1<0)return;
-    const rn=L.roomNames[k], txt=(rn.unk&&!sol)?"???":loc(rn);
+    const rn=L.roomNames[k], gu=board.unk&&board.unk[k]&&L.roomNames[board.unk[k]], txt=(rn.unk&&!sol)?(gu?loc(gu)+" ?":"???"):loc(rn);
     if(!txt||rn.noLab)return;
     // Breite der untersten Zeile des Raums (für Schriftgröße)
     if(L.roomNames[k].row!=null)r1=L.roomNames[k].row;
