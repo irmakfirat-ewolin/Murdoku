@@ -72,7 +72,7 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;paddin
 .ssStars span:nth-child(2),.ssStars span:nth-child(4){--y:-5vw}.ssStars span:nth-child(3){--y:-9vw;font-size:min(23vw,150px)}
 .ssTxt{position:relative;margin-top:26px;font:900 clamp(26px,8.5vw,44px) "Baloo 2",sans-serif;color:#fff;text-align:center;text-shadow:0 0 16px #ffd24d,0 0 34px #ffae00,0 3px 0 #7a5200;opacity:0;animation:ssIn .5s .9s forwards,ssPulse .7s 1.4s ease-in-out infinite alternate}
 @keyframes ssFly{to{opacity:1;transform:translateY(var(--y,0)) scale(1) rotate(0)}}
-@keyframes ssHop{from{opacity:1;transform:translateY(var(--y,0)) scale(1) rotate(-6deg);filter:brightness(1)}to{opacity:1;transform:translateY(calc(var(--y,0px) - 7vw)) scale(1.15) rotate(6deg);filter:brightness(1.35)}}
+@keyframes ssHop{from{opacity:1;transform:translateY(var(--y,0)) scale(1) rotate(-6deg);color:#ffd24d}to{opacity:1;transform:translateY(calc(var(--y,0px) - 7vw)) scale(1.15) rotate(6deg);color:#fff2a8}}
 @keyframes ssIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}@keyframes ssPulse{to{transform:scale(1.08)}}
 @keyframes ssSpin{to{transform:rotate(120deg)}}@keyframes ssBg{0%{opacity:0}8%,88%{opacity:1}100%{opacity:0}}
 .cl>.clh{cursor:pointer;user-select:none;-webkit-user-select:none;text-align:left}.clv{display:inline-block;width:18px;font-size:14px;transition:transform .15s}.cl.coll>.clh .clv{transform:rotate(-90deg)}.cl.coll>.clb{display:none}
@@ -395,7 +395,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 22.11.2026 · 11:55</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 22.11.2026 · 12:10</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21974,7 +21974,7 @@ function resHTML(r){if(!r)return "";const T=(de,tr)=>lang==="tr"?tr:de;
 function bigX(after){const d=document.createElement("div");d.className="bigX";d.innerHTML=`<svg viewBox="0 0 100 100"><path d="M18 18 L82 82 M82 18 L18 82" stroke="#ff2d4a" stroke-width="14" stroke-linecap="round"/></svg>`;document.body.appendChild(d);
   setTimeout(()=>{d.remove();after&&after();},3000);}
 function starShow(after){const o=document.createElement("div");o.className="starShow";
-  o.innerHTML=`<div class="ssRays"></div><div class="ssStars">${[0,1,2,3,4].map(i=>`<span style="--i:${i}">★</span>`).join("")}</div><div class="ssTxt">${A("5 Sterne – perfekt gelöst!","5 yıldız – kusursuz çözüldü!")}</div>`;
+  o.innerHTML=`<div class="ssRays"></div><div class="ssStars">${[0,1,2,3,4].map(i=>`<span style="--i:${i}">★\uFE0E</span>`).join("")}</div><div class="ssTxt">${A("5 Sterne – perfekt gelöst!","5 yıldız – kusursuz çözüldü!")}</div>`;
   document.body.appendChild(o);confetti(()=>{o.remove();after&&after();},1);}
 function confetti(after,big){const c=document.createElement("canvas");c.className="confC";document.body.appendChild(c);const dp=devicePixelRatio||1,W=c.width=innerWidth*dp,H=c.height=innerHeight*dp,x=c.getContext("2d");
   const cols=["#ff2d6f","#ffe14d","#3ef07a","#4ab8ff","#b69cff","#ff8a3a"],P=[];for(let i=0;i<(big?380:220);i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6,vx:(Math.random()-.5)*4*dp,vy:(2+Math.random()*4)*dp,r:Math.random()*6.28,vr:(Math.random()-.5)*.3,w:(6+Math.random()*7)*dp,h:(4+Math.random()*5)*dp,c:cols[i%cols.length]});
