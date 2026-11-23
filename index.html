@@ -106,9 +106,9 @@ body.noHow #howto{display:none}
 .pBtns .pSet.on{background:#3a9a4a;color:#fff}.pBtns .pSet[disabled]{opacity:.4}.pBtns .pX{background:#f3c4c8;color:#8a1020;min-width:34px}.pBtns .pX.on{background:#e8203a;color:#fff}
 .rtag.rasg{background:#f0c84a;color:#1b1a20;font-weight:800;border:1.5px solid #0004}.sus.placed.out{opacity:1;filter:none}.sus.placed.out::after{content:none}.rtag.rasg .ric svg{display:block;margin:0 auto}
 .sus.out .outX{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);pointer-events:none;z-index:3}.sus.out .outX path{stroke-width:9px}
-.tskb{position:absolute;right:8px;bottom:7px;display:inline-flex;align-items:center;gap:4px;font:800 11.5px system-ui,sans-serif;padding:4px 9px;border-radius:999px;background:#ffffff1a;color:#e8e2f4;border:1.5px dashed #ffffff55;z-index:4}
+.tskb{position:absolute;right:8px;bottom:7px;max-width:calc(100% - 16px);box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-flex;align-items:center;gap:4px;font:800 11px system-ui,sans-serif;padding:3px 8px;border-radius:999px;background:#ffffff1a;color:#e8e2f4;border:1.5px dashed #ffffff55;z-index:4}
 .tskb.on{background:color-mix(in srgb,var(--tc) 55%,#fff);color:#1b1a20;border:2px solid var(--tc)}.tskI{display:inline-flex}
-.tskL{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.tskL button{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;border:3px solid var(--tc,#888);background:color-mix(in srgb,var(--tc,#888) 45%,#fff);color:#1b1a20;font:800 14px system-ui,sans-serif;text-align:left}
+.tskL{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0;width:100%;box-sizing:border-box}.tskL button{display:flex;align-items:center;gap:6px;min-width:0;padding:8px 8px;border-radius:12px;border:3px solid var(--tc,#888);background:color-mix(in srgb,var(--tc,#888) 45%,#fff);color:#1b1a20;font:800 13px system-ui,sans-serif;text-align:left;box-sizing:border-box;width:100%;margin:0}.tskL button span{min-width:0;overflow-wrap:anywhere;hyphens:auto;line-height:1.15}.tskL button svg{flex:none}
 .tskL button.on{box-shadow:0 0 0 3px #fff,0 0 12px #fff}.tskL button.none{--tc:#9aa;grid-column:1/-1;justify-content:center}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
@@ -410,7 +410,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 23:45</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 23:55</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
