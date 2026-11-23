@@ -98,6 +98,7 @@ body.noHow #howto{display:none}
 .conf{position:absolute;z-index:6;pointer-events:none;background:#ff2d4a40;box-shadow:inset 0 0 0 3px #ff2d4a;border-radius:3px;animation:cfP 1s ease-in-out infinite alternate}@keyframes cfP{to{background:#ff2d4a20}}
 .bprog{display:flex;align-items:center;gap:7px;font:600 12px sans-serif;opacity:.85;margin-top:3px}.bpb{display:inline-block;width:70px;height:6px;border-radius:4px;background:#ffffff22;overflow:hidden}.bpb i{display:block;height:100%;background:#5bbf6a}
 .gsC button{font:700 14px sans-serif;min-width:34px;height:30px;border-radius:9px;border:1.5px solid #b69cff;background:#2a2140;color:#fff;padding:0 8px}.gsC{gap:4px}
+.hNav{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 2px;flex-wrap:wrap}.hNav .btn{width:auto;margin:0;padding:8px 14px}.hCnt{font:700 13px sans-serif;opacity:.7}.hOld{opacity:.92}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -398,7 +399,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 10:30</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 10:45</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21740,8 +21741,13 @@ $("resetBtn").onclick=()=>modal(`<h2>${tt("resetQ")}</h2><button class="btn" id=
   ()=>{$("mY").onclick=()=>{board={pos:{},x:{},n:{},hk:0};hist=[];tAcc=0;accused=null;sel=L.people[0].id;startTimer();hideModal();saveBoard();renderGame();};$("mN").onclick=hideModal;});
 let hintAcc=[];
 function hintNext(){window._hintOpened=false;hideModal();doHint();if(!window._hintOpened){if(hintAcc.length){setHintGlow(hintAcc);renderGame();}hintAcc=[];}}
-function showHintModal(body,gk){const more=(board.hk||0)<((L.steps&&L.steps.de)||[]).length||L.people.some(p=>!board.pos[p.id]);
-  modal(body+`${more?`<button class="btn" id="mX">${lang==="tr"?"Sonraki ipucu ▸":"Nächster Hinweis ▸"}</button>`:""}<button class="btn sec" id="mN">${lang==="tr"?"Gizle":"Ausblenden"}</button>`,()=>{if($("mX"))$("mX").onclick=()=>{hintAcc.push(...gk);delete board.hl;hintNext();};$("mN").onclick=()=>{hideModal();hintAcc.push(...gk);if(hintAcc.length){setHintGlow([...new Set(hintAcc)]);renderGame();}hintAcc=[];};});}
+function showHintModal(body,gk,fromHist){const more=(board.hk||0)<((L.steps&&L.steps.de)||[]).length||L.people.some(p=>!board.pos[p.id]);
+  board.hh=board.hh||[];if(!fromHist&&(!board.hh.length||board.hh[board.hh.length-1]!==body)){board.hh.push(body);saveBoard();}
+  const n=board.hh.length;
+  modal(body+`<div class="hNav">${n>1?`<button class="btn sec" id="mP">◂ ${lang==="tr"?"Önceki ipucu":"Vorheriger Hinweis"}</button>`:""}${n>1?`<span class="hCnt">${n}/${n}</span>`:""}</div>${more?`<button class="btn" id="mX">${lang==="tr"?"Sonraki ipucu ▸":"Nächster Hinweis ▸"}</button>`:""}<button class="btn sec" id="mN">${lang==="tr"?"Gizle":"Ausblenden"}</button>`,()=>{if($("mP"))$("mP").onclick=()=>{hintAcc.push(...gk);showHintHist(n-2);};if($("mX"))$("mX").onclick=()=>{hintAcc.push(...gk);delete board.hl;hintNext();};$("mN").onclick=()=>{hideModal();hintAcc.push(...gk);if(hintAcc.length){setHintGlow([...new Set(hintAcc)]);renderGame();}hintAcc=[];};});}
+function showHintHist(i){const H=board.hh||[],n=H.length;if(i>=n-1)return showHintModal(H[n-1],[],true);
+  modal(`<div class="hOld">${H[i]}</div><div class="hNav">${i>0?`<button class="btn sec" id="hP">◂</button>`:""}<span class="hCnt">${i+1}/${n}</span><button class="btn sec" id="hF">▸</button></div><button class="btn" id="hC">${lang==="tr"?"Güncel ipucuna dön":"Zum aktuellen Hinweis"}</button>`,
+   ()=>{if($("hP"))$("hP").onclick=()=>showHintHist(i-1);$("hF").onclick=()=>showHintHist(i+1);$("hC").onclick=()=>showHintHist(n-1);});}
 function hintGo(){hintAcc=[];evHint();if(board.hl&&board.hl[lang])showHintModal(board.hl[lang],[]);else{delete board.hl;hintNext();}}
 $("hintBtn").onclick=()=>{const e=evs[L.id]||{};if(e.hint||(solved[L.id]))return hintGo();
   modal(`<h2>💡 ${lang==="tr"?"İpucu kullanılsın mı?":"Tipp verwenden?"}</h2><p>${lang==="tr"?"İpucu kullanırsan bu bulmaca için yıldız alamazsın ve sarı işaretlenir. Bu bulmacada bir daha sorulmaz.":"Wenn du einen Tipp verwendest, gibt es für dieses Rätsel keine Sterne und es wird gelb markiert. Bei diesem Rätsel wird danach nicht mehr gefragt."}</p><button class="btn" id="mY">${tt("yes")}</button><button class="btn sec" id="mN">${tt("no")}</button>`,
