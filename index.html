@@ -95,6 +95,8 @@ body.noHow #howto{display:none}
 .sus,.sus *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .unkR{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}.unkR select{font:700 14px sans-serif;padding:5px 8px;border-radius:9px;border:2px solid var(--line);background:#fff;color:#2a2230}
 .unkG small{font-weight:400;opacity:.7;font-size:12px}
+.conf{position:absolute;z-index:6;pointer-events:none;background:#ff2d4a40;box-shadow:inset 0 0 0 3px #ff2d4a;border-radius:3px;animation:cfP 1s ease-in-out infinite alternate}@keyframes cfP{to{background:#ff2d4a20}}
+.bprog{display:flex;align-items:center;gap:7px;font:600 12px sans-serif;opacity:.85;margin-top:3px}.bpb{display:inline-block;width:70px;height:6px;border-radius:4px;background:#ffffff22;overflow:hidden}.bpb i{display:block;height:100%;background:#5bbf6a}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -395,7 +397,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 06:50</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 09:25</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -410,7 +412,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
     <button id="rulesBtn" data-t="rules"></button>
     <button id="gridBtn" data-t="grid"></button>
     <button id="howBtn"></button>
-    <span class="timer" id="timer">0:00</span>
+    <span class="timer" id="timer" style="display:none">0:00</span>
   </div>
   <div class="stickB" id="stickB"><div class="bwrap" id="board"></div><div id="taskBar"></div><div id="miniBar"></div></div>
   <div class="howto" id="howto"></div>
@@ -20357,7 +20359,7 @@ const T={
   pickFirst:"Tippe zuerst oben auf eine Person.",cantSit:"Dieses Feld kann nicht besetzt werden.",notFull:"Es sind noch nicht alle Personen platziert.",
   wrong:"Da stimmt etwas nicht.",wrongTxt:"Mindestens eine Person steht falsch.",showErr:"Fehler zeigen",close:"Weiter",
   who:"Wer ist der Mörder?",whoTxt:"Alle stehen richtig! Wer war allein mit dem Opfer im selben Raum?",
-  right:"Fall gelöst! 🎉",rightTxt:(n,t)=>`${n} war es! Zeit: ${t}`,wrongM:"Falsch verdächtigt!",wrongMTxt:"Der Mörder war im selben Raum wie das Opfer.",
+  right:"Fall gelöst! 🎉",rightTxt:(n,t)=>`${n} war es!`,wrongM:"Falsch verdächtigt!",wrongMTxt:"Der Mörder war im selben Raum wie das Opfer.",
   back:"Zur Übersicht",resetQ:"Fall neu starten?",yes:"Ja",no:"Nein",local:"lokal",online:"synchron",
   occ:"Können besetzt sein",noocc:"Können nicht besetzt sein",noRules:"Die Regeln dieses Bandes folgen, sobald du sie schickst.",
   hintFix:n=>`${n} stand falsch und wurde entfernt.`,hintSet:n=>`${n} wurde platziert.`},
@@ -20367,7 +20369,7 @@ const T={
   pickFirst:"Önce yukarıdan bir kişiye dokun.",cantSit:"Bu kareye kimse konamaz.",notFull:"Henüz herkes yerleştirilmedi.",
   wrong:"Bir şeyler yanlış.",wrongTxt:"En az bir kişi yanlış yerde.",showErr:"Hataları göster",close:"Devam",
   who:"Katil kim?",whoTxt:"Herkes doğru yerde! Kurbanla aynı odada yalnız olan kimdi?",
-  right:"Vaka çözüldü! 🎉",rightTxt:(n,t)=>`Katil ${n}! Süre: ${t}`,wrongM:"Yanlış şüpheli!",wrongMTxt:"Katil, kurbanla aynı odadaydı.",
+  right:"Vaka çözüldü! 🎉",rightTxt:(n,t)=>`Katil ${n}!`,wrongM:"Yanlış şüpheli!",wrongMTxt:"Katil, kurbanla aynı odadaydı.",
   back:"Genel bakış",resetQ:"Vaka baştan başlasın mı?",yes:"Evet",no:"Hayır",local:"yerel",online:"senkron",
   occ:"Kullanılabilir",noocc:"Kullanılamaz",noRules:"Bu cildin kuralları, sen gönderince eklenecek.",
   hintFix:n=>`${n} yanlış yerdeydi, kaldırıldı.`,hintSet:n=>`${n} yerleştirildi.`}
@@ -20431,7 +20433,7 @@ function renderStarted(){const b=$("startedBtn");if(!b)return;const ls=startedLi
   b.textContent="⏸ "+A("Begonnene Rätsel","Yarım kalanlar")+" ("+ls.length+")";b.onclick=showStarted;}
 function showStarted(){const ls=startedList();const f=t=>fmt(Math.floor(t||0));
   modal(`<h2>⏸ ${A("Begonnene Rätsel","Yarım kalan bulmacalar")}</h2><p class="anote">${A("Tippe ein Rätsel an, um weiterzuspielen. Es verschwindet aus der Liste, wenn du es löst oder mit „Neu“ leerst.","Devam etmek için bir bulmacaya dokun. Çözünce veya „Yeni“ ile sıfırlayınca listeden çıkar.")}</p>
-   <div class="stList">${ls.map(x=>`<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")} · ⏱ ${f(x.t)}</span></button>`).join("")||"<p>–</p>"}</div>
+   <div class="stList">${ls.map(x=>`<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")}</span></button>`).join("")||"<p>–</p>"}</div>
    <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
    ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});}
 function renderHome(){
@@ -20446,7 +20448,8 @@ function renderHome(){
     const sec=document.createElement("div");sec.className="bsec bs-"+bk.id;box.appendChild(sec);
     const h=document.createElement("div");h.className="book";
     const open=q||localStorage.getItem("mk_open_"+bk.id)==="1";
-    h.innerHTML=`<span class="bt"><span class="chev">${open?"▾":"▸"}</span> ${loc(bk)} <small>${loc(bk.sub)}</small></span><button class="rb">${bk.id==="b1"||bk.id==="on"?tt("rules"):(lang==="tr"?bk.tr+" – yeni kurallar":"Neue Regeln in "+bk.de)}</button>`;
+    const all=LEVELS.filter(l=>l.book===bk.id),dn=all.filter(l=>solved[l.id]).length,pc=all.length?Math.round(dn/all.length*100):0;
+    h.innerHTML=`<span class="bt"><span class="chev">${open?"▾":"▸"}</span> ${loc(bk)} <small>${loc(bk.sub)}</small><span class="bprog"><span class="bpb"><i style="width:${pc}%"></i></span>${pc} % · ${dn}/${all.length} ${A("gelöst","çözüldü")}</span></span><button class="rb">${bk.id==="b1"||bk.id==="on"?tt("rules"):(lang==="tr"?bk.tr+" – yeni kurallar":"Neue Regeln in "+bk.de)}</button>`;
     h.querySelector(".rb").onclick=e=>{e.stopPropagation();showRules(bk);};
     const r2=h.querySelector(".rb2");if(r2)r2.onclick=e=>{e.stopPropagation();showDetailRules();};const r3=h.querySelector(".rb3");if(r3)r3.onclick=e=>{e.stopPropagation();showDetailRules2();};const r4=h.querySelector(".rb4");if(r4)r4.onclick=e=>{e.stopPropagation();showDetailRules3();};const r5=h.querySelector(".rb5");if(r5)r5.onclick=e=>{e.stopPropagation();showDetailRules4();};const r6=h.querySelector(".rb6");if(r6)r6.onclick=e=>{e.stopPropagation();showDetailRules5();};
     h.querySelector(".bt").onclick=()=>{localStorage.setItem("mk_open_"+bk.id,open?"0":"1");renderHome();};
@@ -20460,7 +20463,7 @@ function renderHome(){
     if(ch&&!chOpen)return;
     const g=document.createElement("div");g.className="cases";
     gl.forEach(l=>{const sv=solved[l.id],rc=sv?(sv.c||(seen[l.id]?"r":sv.h?"y":"g")):"";const b=document.createElement("button");b.className="case"+(sv?" done c"+rc+(sv.c==="g"&&sv.s===5?" s5":""):"");b.style.setProperty("--cc",caseColor(l));
-      b.innerHTML=`<span class="cn">${l.no||"P"}</span>${l.stamp?`<span class="cc2">✈︎ ${loc(l.stamp.sub)}</span>`:""}<span class="ct">${loc(l.title)}</span>${sv?`<span class="ck ${rc}"><b class="tk"><svg viewBox="0 0 16 16" width="15" height="15"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b> ${fmt(sv.time)}</span>${sv.c?`<span class="cst">${stars(sv.s||0)}</span>`:""}`:""}`;
+      b.innerHTML=`<span class="cn">${l.no||"P"}</span>${l.stamp?`<span class="cc2">✈︎ ${loc(l.stamp.sub)}</span>`:""}<span class="ct">${loc(l.title)}</span>${sv?`<span class="ck ${rc}"><b class="tk"><svg viewBox="0 0 16 16" width="15" height="15"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b></span>${sv.c?`<span class="cst">${stars(sv.s||0)}</span>`:""}`:""}`;
       b.onclick=()=>openLevel(l.id);g.appendChild(b);});
     sec.appendChild(g);});
   });
@@ -21553,6 +21556,7 @@ function drawBoard(B,W,sol,ro){if(L.protos)protoApply(sol?L.protos.answer:board.
     if(who){
       const p=L.people.find(p=>p.id===who);
       const bad=(rows[rk(r,c)]>1||cols[ck(r,c)]>1)||(showErr&&(L.solution[who][0]!==r||L.solution[who][1]!==c));
+      if(rows[rk(r,c)]>1||cols[ck(r,c)]>1)add("conf",css,"");
       add("mark",css,`<div class="tok${p.victim?" vic":""}${bad?" bad":""}" style="font-size:${cs*.42}px">${letter(p)}</div>`);
     }else if(board.x[key]&&!isBlocked(r,c)) add("mark xm",css,XSVG);
     else if((rows[rk(r,c)]||cols[ck(r,c)])&&!isBlocked(r,c)) add("mark auto xm",css,XSVG);
