@@ -97,6 +97,7 @@ body.noHow #howto{display:none}
 .unkG small{font-weight:400;opacity:.7;font-size:12px}
 .conf{position:absolute;z-index:6;pointer-events:none;background:#ff2d4a40;box-shadow:inset 0 0 0 3px #ff2d4a;border-radius:3px;animation:cfP 1s ease-in-out infinite alternate}@keyframes cfP{to{background:#ff2d4a20}}
 .bprog{display:flex;align-items:center;gap:7px;font:600 12px sans-serif;opacity:.85;margin-top:3px}.bpb{display:inline-block;width:70px;height:6px;border-radius:4px;background:#ffffff22;overflow:hidden}.bpb i{display:block;height:100%;background:#5bbf6a}
+.gsC button{font:700 14px sans-serif;min-width:34px;height:30px;border-radius:9px;border:1.5px solid #b69cff;background:#2a2140;color:#fff;padding:0 8px}.gsC{gap:4px}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -397,7 +398,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 09:25</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 23.11.2026 · 10:30</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21351,7 +21352,19 @@ function renderGame(){applyHow();
    if(L.book==="b2"&&(L.tasks||[]).some(t=>t.t==="anubis"||t.t==="ra")){const g=k=>{const t=TASKS[k];return `<span class="mbG" style="--tc:${t.c}"><i></i>${SVG[t.ic].replace("<svg",'<svg style="position:absolute;left:0;top:0;width:58%;height:58%"')}</span>`;};
      if((L.tasks||[]).some(t=>t.t==="anubis"))h+=`<div class="mbI">${g("anubis")}<span>${A("<b>Anubis:</b> muss <b>allein</b> im Bereich sein","<b>Anubis:</b> alanda <b>yalnız olmalı</b>")}</span></div>`;
      if((L.tasks||[]).some(t=>t.t==="ra"))h+=`<div class="mbI">${g("ra")}<span>${A("<b>Ra:</b> darf <b>nicht allein</b> im Bereich sein","<b>Ra:</b> alanda <b>yalnız olamaz</b>")}</span></div>`;}
+   const gq=(L.ships||[]).find(q=>q.ghost);
+   if(gq)h+=`<div class="mbI gsC"><span>👻 <b>${loc(gq.name)}</b>:</span>${board.gs?`<button data-gm="l">◀</button><button data-gm="u">▲</button><button data-gm="d">▼</button><button data-gm="r">▶</button><button data-gm="x">✕</button>`:`<button data-gm="s">${A("Auf den Plan legen","Plana koy")}</button>`}</div>`;
    if(mb){mb.innerHTML=h;mb.style.display=h?"":"none";}}
+  document.querySelectorAll("[data-gm]").forEach(bt=>bt.onclick=()=>{const gq=(L.ships||[]).find(q=>q.ghost),NR=L.rooms.length,NC=L.rooms[0].length,m=bt.dataset.gm;
+    const ok=(r0,c0)=>{if(r0<0||c0<0||r0+gq.h>NR||c0+gq.w>NC)return false;for(let r=r0;r<r0+gq.h;r++)for(let c=c0;c<c0+gq.w;c++){if(L.rooms[r][c]!=="W"||objAt(r,c))return false;}return true;};
+    const all=[];for(let r=0;r<=NR-gq.h;r++)for(let c=0;c<=NC-gq.w;c++)if(ok(r,c))all.push([r,c]);
+    if(m==="s"){const mr=(NR-gq.h)/2,mc=(NC-gq.w)/2;board.gs=all.sort((a,b)=>(Math.abs(a[0]-mr)+Math.abs(a[1]-mc))-(Math.abs(b[0]-mr)+Math.abs(b[1]-mc)))[0];if(!board.gs)delete board.gs;}
+    else if(m==="x")delete board.gs;
+    else{const [dr,dc]={l:[0,-1],r:[0,1],u:[-1,0],d:[1,0]}[m];const [r0,c0]=board.gs;
+      // nächste gültige Position in diese Richtung: zuerst gerade, sonst mit kleinster Seitenabweichung
+      const cand=all.filter(([r,c])=>dr?(Math.sign(r-r0)===dr):(Math.sign(c-c0)===dc)).sort((a,b)=>{const da=dr?Math.abs(a[0]-r0)*10+Math.abs(a[1]-c0)*3:Math.abs(a[1]-c0)*10+Math.abs(a[0]-r0)*3,db=dr?Math.abs(b[0]-r0)*10+Math.abs(b[1]-c0)*3:Math.abs(b[1]-c0)*10+Math.abs(b[0]-r0)*3;return da-db;});
+      if(cand.length)board.gs=cand[0];else{toast(A("Dort ist kein Platz im Wasser.","Orada suda yer yok."));return;}}
+    saveBoard();renderGame();});
   if(L.bandits)$("general").insertAdjacentHTML("afterbegin",`<div style="display:flex;align-items:center;justify-content:center;gap:0;margin:8px auto 10px;max-width:360px">${banditStar(L.bandits.n,92)}<div style="flex:1;margin-left:-10px;background:repeating-linear-gradient(180deg,#c88a72 0 14px,#b87a62 14px 15px);border:2px solid #7a4a32;border-radius:4px;padding:10px 12px 10px 18px;font-family:'Zilla Slab',Georgia,serif;font-size:16px;line-height:1.3;color:#2a160c;text-align:center;box-shadow:0 3px 0 #0004">${bold(loc(L.bandits)).replace(/<span class="badge[^>]*>/g,"<b>").replace(/<\/span>/g,"</b>")}</div></div>`);
   if(L.rankAssign){const ps=L.people,tm=board.tm||{};
     $("general").innerHTML+=`<div class="rkl"><div class="rkh">${lang==="tr"?"Sıralama":"Rangliste"}</div>${[...Array(L.rankAssign)].map((_,ri)=>{const pid=Object.keys(tm).find(k=>tm[k]===ri),pp=ps.find(x=>x.id===pid);
@@ -21452,7 +21465,7 @@ function drawBoard(B,W,sol,ro){if(L.protos)protoApply(sol?L.protos.answer:board.
   // Schiffe (Kapitel 3)
   const inShip=(r,c)=>(L.ships||[]).some(q=>r>=q.r&&r<q.r+q.h&&c>=q.c&&c<q.c+q.w);
   (L.hull||[]).forEach(h=>{const W=NC*cs,H=NR*cs,P=h.d.replace(/-?[\d.]+/g,v=>(+v*cs).toFixed(1));add("ov",`left:0;top:0;width:${W}px;height:${H}px;z-index:1;pointer-events:none;overflow:visible`,`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:100%;overflow:visible"><path d="${P}" fill="${h.fill||"#24222c"}" stroke="#14121a" stroke-width="${Math.max(2,cs*.06)}" stroke-linejoin="round"/></svg>`);});
-  (L.ships||[]).forEach(q=>{if(q.ghost&&!sol)return;const p=cs*.32;if(!q.ghost){const m=cs*.14,x0=Math.max(0,q.c*cs-m),y0=Math.max(0,q.r*cs-m),x1=Math.min(NC*cs,(q.c+q.w)*cs+m),y1=Math.min(NR*cs,(q.r+q.h)*cs+m),W0=(L.roomNames.W||{});add("ov",`left:${x0}px;top:${y0}px;width:${x1-x0}px;height:${y1-y0}px;z-index:3;border-radius:${cs*.3}px;${(FLOORS[W0.floor]||FLOORS.sea)(W0.a,W0.b)};background-size:${cs}px ${cs}px;background-position:${-x0}px ${-y0}px`,"");}const el=add("ov",`left:${q.c*cs-p}px;top:${q.r*cs-p}px;width:${q.w*cs+2*p}px;height:${q.h*cs+2*p}px;z-index:3${q.ghost?";opacity:.7;filter:saturate(.35)":""}`,(q.h>q.w?shipSVGv:shipSVG)(q.w,q.h,{shadow:!q.ghost,deck:q.deck}));el.firstChild?.setAttribute("style","width:100%;height:100%;display:block");if(q.ghost&&q.name){const fs=Math.max(6.5,Math.min(14,cs*.2));const e=add("rlab",`left:${(q.c+q.w/2)*cs}px;top:${(q.r+q.h)*cs-fs*1.9}px;font-size:${fs}px;padding:1px ${Math.max(4,fs*.6)}px;z-index:6`);e.textContent=loc(q.name);}});
+  (L.ships||[]).map(q=>q.ghost&&!sol?(board.gs?Object.assign({},q,{r:board.gs[0],c:board.gs[1],mine:1}):null):q).filter(Boolean).forEach(q=>{const p=cs*.32;if(!q.ghost){const m=cs*.14,x0=Math.max(0,q.c*cs-m),y0=Math.max(0,q.r*cs-m),x1=Math.min(NC*cs,(q.c+q.w)*cs+m),y1=Math.min(NR*cs,(q.r+q.h)*cs+m),W0=(L.roomNames.W||{});add("ov",`left:${x0}px;top:${y0}px;width:${x1-x0}px;height:${y1-y0}px;z-index:3;border-radius:${cs*.3}px;${(FLOORS[W0.floor]||FLOORS.sea)(W0.a,W0.b)};background-size:${cs}px ${cs}px;background-position:${-x0}px ${-y0}px`,"");}const el=add("ov",`left:${q.c*cs-p}px;top:${q.r*cs-p}px;width:${q.w*cs+2*p}px;height:${q.h*cs+2*p}px;z-index:3${q.ghost?";opacity:.7;filter:saturate(.35)":""}`,(q.h>q.w?shipSVGv:shipSVG)(q.w,q.h,{shadow:!q.ghost,deck:q.deck}));el.firstChild?.setAttribute("style","width:100%;height:100%;display:block");if(q.ghost&&q.name){const fs=Math.max(6.5,Math.min(14,cs*.2));const e=add("rlab",`left:${(q.c+q.w/2)*cs}px;top:${(q.r+q.h)*cs-fs*1.9}px;font-size:${fs}px;padding:1px ${Math.max(4,fs*.6)}px;z-index:6`);e.textContent=loc(q.name);}});
   // Adelsbereiche: violette Innenkante
   for(let r=0;r<NR;r++)for(let c=0;c<NC;c++){
     const k=L.rooms[r][c];if(k==="."||!L.roomNames[k]?.noble)continue;
