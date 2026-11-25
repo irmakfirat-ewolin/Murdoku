@@ -114,6 +114,7 @@ body.noHow #howto{display:none}
 .tskO{display:inline-flex;align-items:center;gap:3px;background:color-mix(in srgb,var(--tc) 55%,#fff);color:#1b1a20;border-radius:8px;padding:1px 5px;font-size:10.5px}.tskS{font-style:normal;opacity:.8;margin:0 1px}.tskQ{font-size:14px;color:#ffd24d;margin-left:3px}
 .tskMode{display:flex;gap:6px;justify-content:center;margin:4px 0}.tskMode button{flex:1;max-width:160px;font:800 13px system-ui,sans-serif;padding:7px 10px;border-radius:999px;border:2px solid #b69cff;background:transparent;color:#e8e2f4}.tskMode button.on{background:#8a63ff;color:#fff}
 .tskL .okb{grid-column:1/-1;justify-content:center;--tc:#3a9a4a;background:#3a9a4a!important;color:#fff!important}.tskL .okb[disabled]{opacity:.45}.tskC{margin-left:auto;font-style:normal;font-weight:900;color:#1b6a2a;min-width:14px}
+.bndb.on[style*="#c8603a"]{color:#fff}.bndb .tskI{font-size:13px}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -414,7 +415,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 25.11.2026 · 12:00</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 25.11.2026 · 13:40</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -21430,6 +21431,11 @@ function renderGame(){applyHow();if(L&&L.protos)fillProtoCard();
              const okb=document.querySelector(".tskL .okb");if(okb)okb.onclick=()=>{if(pick.length>=2)save(pick.slice());};});};
          draw();};
        d.appendChild(ob);}}
+    if(L.bandits){const st=board.pband&&board.pband[p.id];const M={b:{c:"#c8603a",t:lang==="tr"?"Haydut":"Bandit",q:"★"},m:{c:"#e8c070",t:lang==="tr"?"Haydut olabilir":"Vielleicht Bandit",q:"❓"},n:{c:"#9aa0a8",t:lang==="tr"?"Haydut değil":"Kein Bandit",q:"🚫"}};
+      if(!d.style.paddingBottom)d.style.paddingBottom="34px";const ob=document.createElement("span");ob.className="tskb bndb"+(st?" on":"");if(st)ob.style.setProperty("--tc",M[st].c);
+      ob.innerHTML=st?`<span class="tskI">${M[st].q}</span>${M[st].t}`:(lang==="tr"?"🤠 Haydut mu?":"🤠 Bandit?");
+      ob.onclick=ev=>{ev.stopPropagation();board.pband=board.pband||{};const nx={undefined:"b",b:"m",m:"n",n:undefined}[st];if(nx)board.pband[p.id]=nx;else delete board.pband[p.id];saveBoard();renderGame();};
+      d.appendChild(ob);}
     if(L.absentPool&&L.absentPool.includes(p.id)){d.style.paddingBottom="30px";const ob=document.createElement("span");ob.className="outb"+(isOut?" on":"");ob.innerHTML=isOut?(lang==="tr"?"↩ Geri al":"↩ Zurück"):(lang==="tr"?"🚫 Olay yerinde değil":"🚫 Nicht am Tatort");ob.onclick=ev=>{ev.stopPropagation();snap();if(isOut)delete board.pos[p.id];else{delete board.pos[p.id];board.pos[p.id]=[-1,-1];}sel=L.people.find(q=>!board.pos[q.id])?.id||null;showErr=false;accused=null;saveBoard();renderGame();};d.appendChild(ob);}
     d.onclick=()=>{if(d._lp){d._lp=0;return;}sel=p.id;tool="place";renderGame();};
     {let t=null,sx=0,sy=0;const stop=()=>{clearTimeout(t);t=null;};
