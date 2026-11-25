@@ -414,7 +414,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 24.11.2026 · 04:45</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 25.11.2026 · 12:00</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -12220,7 +12220,7 @@ const LEVELS=[
   {t:"ftree",r:8,c:7}],
  people:[
   {id:"ayka",name:"Ayka",g:"f",look:{bg:"#d4e8e0",hair:"#c0482a",shirt:"#2a2a30",style:"ayka55",skin:"#e8a070",noEar:true,fbx:"ayka55"},de:"Sie war **allein** in der **West-** oder **Osthöhle**.",tr:"**Batı** ya da **doğu mağarasında yalnızdı**."},
-  {id:"bak",name:"Bak",g:"f",look:{bg:"#d4e8e0",hair:"#8a4a2a",shirt:"#2a2a30",style:"bak55",skin:"#e8a070",noEar:true,fbx:"bak55"},de:"Sie war im **Fluss**. Sie war **nicht** die **Fischerin**.",tr:"**Nehirdeydi**. **Balıkçı değildi**."},
+  {id:"bak",name:"Bak",g:"f",look:{bg:"#d4e8e0",hair:"#8a4a2a",shirt:"#2a2a30",style:"bak55",skin:"#e8a070",noEar:true,fbx:"bak55"},de:"Sie war im **Fluss**. Sie war **nicht** die **Fischerin**.",tr:"**Nehirdeydi**. **Balıkçı kadın o değildi**."},
   {id:"civo",name:"Civo",g:"f",look:{bg:"#d4e8e0",hair:"#2a1e18",shirt:"#2a2a30",style:"civo55",skin:"#e8a070",noEar:true,fbx:"civo55"},de:"Sie war in der **letzten Spalte**.",tr:"**Son sütundaydı**."},
   {id:"deku",name:"Deku",g:"m",look:{bg:"#d4e8e0",hair:"#151313",shirt:"#4a3a2e",style:"deku55",skin:"#e8a070",mbx:"deku55",body:"slim"},de:"Er war **allein**. Er war **eine Zeile nördlich** von **Hima**.",tr:"**Yalnızdı**. **Hima'nın bir satır kuzeyindeydi**."},
   {id:"egrul",name:"Egrul",g:"m",task:"hunt",look:{bg:"#d4e8e0",hair:"#6a6a70",shirt:"#4a3a2e",style:"egrul55",skin:"#e8a070",mbx:"egrul55",body:"slim"},de:"Der Jäger.",tr:"Avcı."},
@@ -12454,7 +12454,7 @@ const LEVELS=[
  people:[
   {id:"argu",name:"Argu",g:"m",look:{bg:"#ecead8",hair:"#e0e0e4",shirt:"#4a3a2e",style:"argu59",skin:"#e8a070",mbx:"argu59",body:"slim"},de:"**Niemand** in seinem **Bereich** hatte eine **Aufgabe**.",tr:"Bulunduğu **alanda** kimsenin **görevi yoktu**."},
   {id:"blik",name:"Blik",g:"m",task:"tool",look:{bg:"#ecead8",hair:"#2a1e18",shirt:"#4a3a2e",style:"blik59",skin:"#e8a070",mbx:"blik59",body:"slim"},de:"Einer der Werkzeugmacher*innen. Er war **nicht mit Gogg** zusammen.",tr:"Alet yapımcılarından biri. **Gogg ile birlikte değildi**."},
-  {id:"crug",name:"Crug",g:"m",look:{bg:"#ecead8",hair:"#e8c860",shirt:"#4a3a2e",style:"crug59",skin:"#e8a070",mbx:"crug59",body:"slim"},de:"Er war **neben** einem **Knochenhaufen**. Er war **allein mit** einer **Wolfszähmerin**.",tr:"Bir **kemik yığınının yanındaydı**. Bir **kurt evcilleştiricisiyle yalnızdı**."},
+  {id:"crug",name:"Crug",g:"m",look:{bg:"#ecead8",hair:"#e8c860",shirt:"#4a3a2e",style:"crug59",skin:"#e8a070",mbx:"crug59",body:"slim"},de:"Er war **neben** einem **Knochenhaufen**. Er war **allein mit** einer **Wolfszähmerin**.",tr:"Bir **kemik yığınının yanındaydı**. Bir **kadın kurt evcilleştiricisiyle yalnızdı**."},
   {id:"doma",name:"Doma",g:"f",look:{bg:"#ecead8",hair:"#8a3a1e",shirt:"#2a2a30",style:"doma59",skin:"#e8a070",noEar:true,fbx:"doma59"},de:"Sie war auf dem **Friedhof**.",tr:"**Mezarlıktaydı**."},
   {id:"eka",name:"Eka",g:"f",look:{bg:"#ecead8",hair:"#e0dcd4",shirt:"#2a2a30",style:"eka59",skin:"#e8a070",noEar:true,fbx:"eka59"},de:"Sie war in der **letzten Spalte**.",tr:"**Son sütundaydı**."},
   {id:"fleki",name:"Fleki",g:"f",look:{bg:"#ecead8",hair:"#a8844a",shirt:"#2a2a30",style:"fleki59",skin:"#e8a070",noEar:true,fbx:"fleki59"},de:"Sie war **mit Gogg** zusammen. Sie war **südlich** von ihm.",tr:"**Gogg ile birlikteydi**. **Onun güneyindeydi**."},
@@ -12670,7 +12670,7 @@ const LEVELS=[
   {id:"dehak",name:"Dehak",g:"f",look:{bg:"#f4ecd8",hair:"#3a3a34",shirt:"#2a2a30",style:"dehak62",skin:"#c88a60",noEar:true,fbx:"dehak62"},de:"Sie war auf einem **Bett**.",tr:"Bir **yataktaydı**."},
   {id:"esak",name:"Esak",g:"f",look:{bg:"#f4ecd8",hair:"#8a5a34",shirt:"#2a2a30",style:"esak62",skin:"#e8a070",noEar:true,fbx:"esak62"},de:"Sie war in der **obersten Zeile**.",tr:"**En üst satırdaydı**."},
   {id:"felk",name:"Felk",g:"m",look:{bg:"#f4ecd8",hair:"#2a1e18",shirt:"#4a3a2e",style:"felk62",skin:"#e8a070",mbx:"felk62",body:"slim"},de:"Er war in einer **Hütte**, zusammen mit einer **Frau**.",tr:"Bir **kulübedeydi**, bir **kadınla** birlikte."},
-  {id:"gark",name:"Gark",g:"m",look:{bg:"#f4ecd8",hair:"#a8945a",shirt:"#4a3a2e",style:"gark62",skin:"#e8a070",mbx:"gark62",body:"slim"},de:"Er war **eine Zeile südlich** der **Sammlerin**.",tr:"**Toplayıcının bir satır güneyindeydi**."},
+  {id:"gark",name:"Gark",g:"m",look:{bg:"#f4ecd8",hair:"#a8945a",shirt:"#4a3a2e",style:"gark62",skin:"#e8a070",mbx:"gark62",body:"slim"},de:"Er war **eine Zeile südlich** der **Sammlerin**.",tr:"**Kadın toplayıcının bir satır güneyindeydi**."},
   {id:"huak",name:"Huak",g:"m",look:{bg:"#f4ecd8",hair:"#2a1e18",shirt:"#4a3a2e",style:"huak62",skin:"#e8a070",mbx:"huak62",body:"slim"},de:"Er war **eine Zeile südlich** der **jagenden Person**.",tr:"**Avlanan kişinin bir satır güneyindeydi**."},
   {id:"igha",name:"Igha",g:"f",look:{bg:"#f4ecd8",hair:"#8a5a3a",shirt:"#2a2a30",style:"igha62",skin:"#e8a070",noEar:true,fbx:"igha62"},de:"Sie war **neben** einem **Baum**.",tr:"Bir **ağacın yanındaydı**."},
   {id:"jahak",name:"Jahak",g:"m",look:{bg:"#f4ecd8",hair:"#151313",shirt:"#4a3a2e",style:"jahak62",skin:"#e8a070",mbx:"jahak62",body:"slim"},de:"Er war **neben** dem **Säbelzahntiger**.",tr:"**Kılıç dişli kaplanın yanındaydı**."},
