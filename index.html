@@ -415,7 +415,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 26.11.2026 · 08:25</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 26.11.2026 · 20:25</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -15619,35 +15619,35 @@ return `<svg width="${W(NC)}" height="${W(NR)}" style="position:absolute;left:0;
  murderer:"amani"
 },
 {
- id:"b3-36",book:"b3",no:36,size:12,
+ id:"b3-36",book:"b3",no:36,size:9,
  title:{de:"Kappadokien",tr:"Kapadokya"},
  intro:{de:"Wir suchen den Mörder in allen Höhen und Tiefen.",tr:"Katili her yükseklikte ve derinlikte arıyoruz."},
  stamp:{de:"Göreme",tr:"Göreme",sub:{de:"Türkei",tr:"Türkiye"}},
  general:[{de:"🎈 **Ballon 2** steht auf der **Bodenebene**.",tr:"🎈 **Balon 2** **zemin seviyesinde** duruyor."}],
  info:[{stamp:"fchim",sq:["r"],title:{de:"Felsbrocken",tr:"Kaya"}}],
- rooms:["............","............","PP.CCCCRR.QQ","PP.CCCCRR.QQ","...WWCCCC...","...SWWCUU...","...SSWWUU...","...SSSWWU..."],
- wagGrid:["aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc","aabbbbbbbbcc"],
- axis:{"rows":["","","1","2","3","4","5","6"],"cols":["","","","","","","","","","","",""],"colsX":[{"row":2,"cols":["","","","1","2","3","4","5","6","","",""]},{"row":5,"cols":["1","2","","","","","","","","","1","2"]}]},
+ rooms:[".........",".........","CCCCRR.PP","CCCCRR.PP","WWCCCC...","SWWCUU...","SSWWUU.QQ","SSSWWU.QQ"],
+ wagGrid:["bbbbbbbaa","bbbbbbbaa","bbbbbbbaa","bbbbbbbaa","bbbbbbbcc","bbbbbbbcc","bbbbbbbcc","bbbbbbbcc"],
+ axis:{"rows":["","","1","2","3","4","5","6"],"cols":["","","","","","","","",""],"colsX":[{"row":2,"cols":["1","2","3","4","5","6","","",""]}]},
  overlay:(cs,NC,NR)=>{const W=v=>(v*cs).toFixed(1);const id="b36"+Math.random().toString(36).slice(2,7);
   const env=(cx,c,bands,n)=>{const d=`M${W(cx-.24)} ${W(1.84)} C${W(cx-.5)} ${W(1.5)} ${W(cx-.93)} ${W(1.14)} ${W(cx-.93)} ${W(.76)} C${W(cx-.93)} ${W(.3)} ${W(cx-.52)} ${W(.0)} ${W(cx)} ${W(.0)} C${W(cx+.52)} ${W(.0)} ${W(cx+.93)} ${W(.3)} ${W(cx+.93)} ${W(.76)} C${W(cx+.93)} ${W(1.14)} ${W(cx+.5)} ${W(1.5)} ${W(cx+.24)} ${W(1.84)} C${W(cx+.14)} ${W(1.98)} ${W(cx+.06)} ${W(2.04)} ${W(cx)} ${W(2.04)} C${W(cx-.06)} ${W(2.04)} ${W(cx-.14)} ${W(1.98)} ${W(cx-.24)} ${W(1.84)}Z`,g=id+"g"+n;
    const band=(y,h,bc)=>`<path d="M${W(cx-1)} ${W(y-.16)} Q${W(cx)} ${W(y+.2)} ${W(cx+1)} ${W(y-.16)} L${W(cx+1)} ${W(y+h-.16)} Q${W(cx)} ${W(y+h+.2)} ${W(cx-1)} ${W(y+h-.16)}Z" fill="${bc}"/>`;
    const gore=(o)=>`<path d="M${W(cx+o)} ${W(.04)} C${W(cx+o*2.1)} ${W(.5)} ${W(cx+o*2)} ${W(1.2)} ${W(cx+o*.3)} ${W(1.9)}" stroke="#2b2a33" stroke-opacity=".35" stroke-width="${W(.014)}" fill="none"/>`;
    return `<defs><clipPath id="${id}${n}"><path d="${d}"/></clipPath><linearGradient id="${g}" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".38" stop-color="#fff" stop-opacity="0"/><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs><path d="${d}" fill="${c}"/><g clip-path="url(#${id}${n})">`+bands.map(([y,h,bc])=>band(y,h,bc)).join("")+`<rect x="${W(cx-.95)}" y="0" width="${W(1.9)}" height="${W(2)}" fill="url(#${g})"/><path d="M${W(cx+.28)} ${W(.0)} C${W(cx+1.02)} ${W(.3)} ${W(cx+1)} ${W(1.2)} ${W(cx+.1)} ${W(1.96)} L${W(cx+1)} ${W(1.96)} L${W(cx+1)} 0Z" fill="#00000022"/>`+gore(-.16)+gore(-.3)+gore(-.42)+`<ellipse cx="${W(cx-.42)}" cy="${W(.42)}" rx="${W(.16)}" ry="${W(.26)}" transform="rotate(25 ${W(cx-.42)} ${W(.42)})" fill="#ffffff40"/></g><path d="${d}" fill="none" stroke="#2b2a33" stroke-width="${W(.045)}"/>`;};
   const rim=(x,y,fh,fc,lc,o=5)=>{const bw=o?cs*.08:0,X0=(x*cs-o-bw).toFixed(1),X1=((x+2)*cs+o+bw).toFixed(1),Y0=(y*cs-o-bw).toFixed(1),Y1=((y+2+fh)*cs+o).toFixed(1);return (o?`<path d="M${X0} ${Y0} H${X1} V${Y1} H${X0}Z M${W(x)} ${W(y)} V${W(y+2)} H${W(x+2)} V${W(y)}Z" fill-rule="evenodd" fill="${shade(fc,-12)}" stroke="#2b2a33" stroke-width="${W(.04)}"/><path d="M${(+X0+2).toFixed(1)} ${(+Y0+2).toFixed(1)} H${(+X1-2).toFixed(1)}" stroke="#ffffff50" stroke-width="${W(.025)}"/>`:"")+`<path d="M${(x*cs-o).toFixed(1)} ${((y+2)*cs+o).toFixed(1)} H${((x+2)*cs+o).toFixed(1)} V${((y+2+fh)*cs+o).toFixed(1)} H${(x*cs-o).toFixed(1)}Z" fill="${fc}" stroke="#2b2a33" stroke-width="${W(.04)}"/><path d="M${(x*cs-o+2).toFixed(1)} ${((y+2)*cs+o+2).toFixed(1)} H${((x+2)*cs+o-2).toFixed(1)}" stroke="#ffffff55" stroke-width="${W(.03)}"/><path d="M${(x*cs-o).toFixed(1)} ${((y+2+fh)*cs+o-2).toFixed(1)} H${((x+2)*cs+o).toFixed(1)}" stroke="#00000030" stroke-width="${W(.05)}"/><rect x="${W(x+.07)}" y="${W(y+.07)}" width="${W(1.86)}" height="${W(1.86)}" fill="none" stroke="${lc}" stroke-width="${W(.14)}"/><rect x="${W(x+.14)}" y="${W(y+.14)}" width="${W(1.72)}" height="${W(1.72)}" fill="none" stroke="#2b2a33" stroke-width="${W(.03)}"/><path d="M${W(x+.14)} ${W(y+.18)} H${W(x+1.86)}" stroke="#00000035" stroke-width="${W(.06)}"/>`+(o?`<path d="M${X0} ${Y0} H${X1} V${Y1} H${X0}Z" fill="none" stroke="#1b1a20" stroke-width="4"/><path d="M${X0} ${(((y+2)*cs)+o).toFixed(1)} H${X1}" stroke="#1b1a20" stroke-width="2.4"/>`:"");};
-  const bp=`M${W(7.14)} ${W(5.14)} H${W(8.86)} V${W(7.86)} H${W(8.14)} V${W(6.86)} H${W(7.14)}Z`;
-  const burg=`<path d="${bp}" fill="none" stroke="#9a6474" stroke-width="${W(.3)}" stroke-linejoin="round"/><path d="${bp}" fill="none" stroke="#d898a8" stroke-width="${W(.22)}" stroke-linejoin="round"/><path d="${bp}" fill="none" stroke="#f2c6d0" stroke-width="${W(.09)}" stroke-linejoin="round" transform="translate(${W(-.03)} ${W(-.03)})"/><path d="${bp}" fill="none" stroke="#7a4a58" stroke-width="${W(.03)}" stroke-dasharray="${W(.04)} ${W(.3)}" stroke-dashoffset="${W(.1)}"/><path d="M${W(7.3)} ${W(5.3)} H${W(8.7)} V${W(7.7)} H${W(8.3)} V${W(6.7)} H${W(7.3)}Z" fill="none" stroke="#00000014" stroke-width="${W(.08)}"/>`;
-  const tag=`<rect x="${W(3.9)}" y="${W(1.12)}" width="${W(2.2)}" height="${W(.42)}" rx="${W(.06)}" fill="#f6f2f4" stroke="#2b2a33" stroke-width="${W(.025)}"/><text x="${W(5)}" y="${W(1.42)}" text-anchor="middle" font-family="Georgia,serif" font-size="${W(.27)}" fill="#2b2a33">${lang==="tr"?"Zemin seviyesi":"Bodenebene"}</text>`;
-  return `<svg width="${W(NC)}" height="${W(NR)}" style="overflow:visible;position:absolute;left:0;top:0;z-index:3;pointer-events:none">${`<rect x="${W(.04)}" y="${W(4.9)}" width="${W(1.92)}" height="${W(1.78)}" rx="${W(.14)}" fill="#00000042"/><rect x="${W(10.04)}" y="${W(4.9)}" width="${W(1.92)}" height="${W(1.78)}" rx="${W(.14)}" fill="#00000042"/>`+burg+rim(0,2,.5,"#c8a070","#e0c090")+rim(7,2,.16,"#d8ccb4","#f0e8d8",0)+rim(10,2,.5,"#a89cc0","#c8bed8")+tag}</svg><svg width="${W(NC)}" height="${W(NR)}" style="overflow:visible;position:absolute;left:0;top:0;z-index:4;pointer-events:none"><g transform="translate(0 ${W(.16)})">${env(1,"#ecd860",[[1.12,.16,"#f0a040"],[1.28,.1,"#e05a40"],[1.38,.14,"#f0a040"]],1)+env(8,"#9a7ac0",[[1.06,.2,"#f4eef4"],[1.62,.4,"#6e5296"]],2)+env(11,"#f8d8c8",[[1.02,.18,"#e85a40"],[1.5,.12,"#e85a40"]],3)}</g></svg>`;},
+  const bp=`M${W(4.14)} ${W(5.14)} H${W(5.86)} V${W(7.86)} H${W(5.14)} V${W(6.86)} H${W(4.14)}Z`;
+  const burg=`<path d="${bp}" fill="none" stroke="#9a6474" stroke-width="${W(.3)}" stroke-linejoin="round"/><path d="${bp}" fill="none" stroke="#d898a8" stroke-width="${W(.22)}" stroke-linejoin="round"/><path d="${bp}" fill="none" stroke="#f2c6d0" stroke-width="${W(.09)}" stroke-linejoin="round" transform="translate(${W(-.03)} ${W(-.03)})"/><path d="${bp}" fill="none" stroke="#7a4a58" stroke-width="${W(.03)}" stroke-dasharray="${W(.04)} ${W(.3)}" stroke-dashoffset="${W(.1)}"/><path d="M${W(4.3)} ${W(5.3)} H${W(5.7)} V${W(7.7)} H${W(5.3)} V${W(6.7)} H${W(4.3)}Z" fill="none" stroke="#00000014" stroke-width="${W(.08)}"/>`;
+  const tag=`<rect x="${W(.9)}" y="${W(1.12)}" width="${W(2.2)}" height="${W(.42)}" rx="${W(.06)}" fill="#f6f2f4" stroke="#2b2a33" stroke-width="${W(.025)}"/><text x="${W(2)}" y="${W(1.42)}" text-anchor="middle" font-family="Georgia,serif" font-size="${W(.27)}" fill="#2b2a33">${lang==="tr"?"Zemin seviyesi":"Bodenebene"}</text>`;
+  return `<svg width="${W(NC)}" height="${W(NR)}" style="overflow:visible;position:absolute;left:0;top:0;z-index:3;pointer-events:none">${burg+rim(7,2,.1,"#c8a070","#e0c090")+rim(4,2,.16,"#d8ccb4","#f0e8d8",0)+rim(7,6,.06,"#a89cc0","#c8bed8")+tag}</svg><svg width="${W(NC)}" height="${W(NR)}" style="overflow:visible;position:absolute;left:0;top:0;z-index:4;pointer-events:none"><g transform="translate(0 ${W(.16)})">${env(8,"#ecd860",[[1.12,.16,"#f0a040"],[1.28,.1,"#e05a40"],[1.38,.14,"#f0a040"]],1)+env(5,"#9a7ac0",[[1.06,.2,"#f4eef4"],[1.62,.4,"#6e5296"]],2)}</g><g transform="translate(0 ${W(4.2)})">${env(8,"#f8d8c8",[[1.02,.18,"#e85a40"],[1.5,.12,"#e85a40"]],3)}</g></svg>`;},
  roomNames:{
-  P:{de:"Ballon 1",tr:"Balon 1",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[3.62,0.5,1.7]},
-  R:{de:"Ballon 2",tr:"Balon 2",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[3,7.15,1.7]},
-  Q:{de:"Ballon 3",tr:"Balon 3",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[3.62,10.5,1.7]},
-  C:{de:"Canyon",tr:"Kanyon",floor:"grass",a:"#b8b45c",b:"#aca850",lab:[3,3.2,1.5]},
-  S:{de:"See",tr:"Göl",floor:"sea",a:"#e898b0",b:"#f0b4c6",lab:[7,4.15,0.8]},
-  W:{de:"Wanderweg",tr:"Yürüyüş yolu",floor:"cobble",a:"#dcbcc0",b:"#ceaeb2",lab:[7,6.1,1.9]},
-  U:{de:"Burg",tr:"Kale",floor:"checker",a:"#f4e4ea",b:"#ecd8e0",lab:[6,7.3,1.3]}
+  P:{de:"Ballon 1",tr:"Balon 1",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[3.62,7.15,1.7]},
+  R:{de:"Ballon 2",tr:"Balon 2",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[3,4.15,1.7]},
+  Q:{de:"Ballon 3",tr:"Balon 3",floor:"wood",a:"#a87a50",b:"#9a6c44",lab:[7.2,7.15,1.7]},
+  C:{de:"Canyon",tr:"Kanyon",floor:"grass",a:"#b8b45c",b:"#aca850",lab:[3,0.85,1.5]},
+  S:{de:"See",tr:"Göl",floor:"sea",a:"#e898b0",b:"#f0b4c6",lab:[7,1.15,0.8]},
+  W:{de:"Wanderweg",tr:"Yürüyüş yolu",floor:"cobble",a:"#dcbcc0",b:"#ceaeb2",lab:[7,3.1,1.9]},
+  U:{de:"Burg",tr:"Kale",floor:"checker",a:"#f4e4ea",b:"#ecd8e0",lab:[6,4.3,1.3]}
  },
- objects:[{t:"carpet",r:2,c:0,w:2,col:"#f4f0e8"},{t:"chair",r:3,c:0,col:"#f6f3ee"},{t:"camel",r:2,c:3},{t:"fchim",r:2,c:5},{t:"chair",r:2,c:7,col:"#f6f3ee"},{t:"carpet",r:2,c:8,h:2,col:"#f4f0e8"},{t:"chair",r:2,c:11,col:"#f6f3ee"},{t:"fchim",r:4,c:7},{t:"camel",r:5,c:6},{t:"fchim",r:7,c:3}],
+ objects:[{t:"carpet",r:2,c:7,w:2,col:"#f4f0e8"},{t:"chair",r:3,c:7,col:"#f6f3ee"},{t:"camel",r:2,c:0},{t:"fchim",r:2,c:2},{t:"chair",r:2,c:4,col:"#f6f3ee"},{t:"carpet",r:2,c:5,h:2,col:"#f4f0e8"},{t:"chair",r:6,c:8,col:"#f6f3ee"},{t:"fchim",r:4,c:4},{t:"camel",r:5,c:3},{t:"fchim",r:7,c:0}],
  people:[
   {id:"anwar",name:"Anwar",g:"m",look:{bg:"#ecd8e8",hair:"#3a3a3a",shirt:"#4a3a2e",style:"anwar",skin:"#c88a60",mbx:"anwar",body:"slim"},de:"Er war die **einzige Person**, die auf einem **Stuhl** saß.",tr:"Bir **sandalyede oturan tek kişi** oydu."},
   {id:"bekir",name:"Bekir",g:"m",look:{bg:"#ecd8e8",hair:"#151313",shirt:"#4a3a2e",style:"bekir",skin:"#d8946a",mbx:"bekir",body:"slim"},de:"Er war **allein** im **See**.",tr:"**Gölde yalnızdı**."},
@@ -15660,11 +15660,11 @@ return `<svg width="${W(NC)}" height="${W(NR)}" style="position:absolute;left:0;
   {id:"inaya",name:"Inaya",g:"f",look:{bg:"#ecd8e8",hair:"#e2e2e2",shirt:"#2a2a30",style:"inaya",skin:"#e0a07a",noEar:true,fbx:"inaya"},de:"Sie war auf der **Bodenebene**, in der **zweiten Spalte**.",tr:"**Zemin seviyesinde**, **ikinci sütundaydı**."},
   {id:"oya",name:"Oya",g:"f",victim:true,look:{bg:"#f0b0a8",hair:"#7a5236",shirt:"#2a2a30",style:"oya",skin:"#e0a07a",noEar:true,fbx:"oya"},de:"**Das Opfer.** Sie war allein mit der Person, die den Mord beging.",tr:"**Kurban.** Cinayeti işleyen kişiyle yalnızdı."}
  ],
- solution:{anwar:[3,0],bekir:[7,5],chadia:[4,8],dilara:[6,6],ekrem:[2,10],faisal:[2,3],gamze:[2,1],halil:[3,7],inaya:[5,4],oya:[3,11]},
+ solution:{anwar:[3,7],bekir:[7,2],chadia:[4,5],dilara:[6,3],ekrem:[6,7],faisal:[2,0],gamze:[2,8],halil:[3,4],inaya:[5,1],oya:[7,8]},
  hintOrder:["bekir","dilara","chadia","faisal","gamze","ekrem","anwar","halil","inaya","oya"],
  hintSteps:[1,2,2,2,2,3,4,4,4,4],
  hintAt:{bekir:[1,1],dilara:[2,2],chadia:[2,2],faisal:[2,2],gamze:[2,3],ekrem:[3,1],anwar:[4,0],halil:[4,0],inaya:[4,1]},
- hintX:{"Schließe die sich überschneidenden Felder Zeile 1, Spalte 4 und Zeile 4, Spalte 1 aus.":[[2,6],[5,3]],"Kesişen kareleri, 1. satır 4. sütunu ve 4. satır 1. sütunu ele.":[[2,6],[5,3]],"Schließe den Rest dieser Zeile aus.":[[4,3],[4,4],[4,5]],"Bu satırın geri kalanını ele.":[[4,3],[4,4],[4,5]]},
+ hintX:{"Schließe die sich überschneidenden Felder Zeile 1, Spalte 4 und Zeile 4, Spalte 1 aus.":[[2,3],[5,0]],"Kesişen kareleri, 1. satır 4. sütunu ve 4. satır 1. sütunu ele.":[[2,3],[5,0]],"Schließe den Rest dieser Zeile aus.":[[4,0],[4,1],[4,2]],"Bu satırın geri kalanını ele.":[[4,0],[4,1],[4,2]]},
  steps:{
   de:["**F** ist auf einem Kamel, entweder in Zeile 1, Spalte 1 oder Zeile 4, Spalte 4. Schließe die sich überschneidenden Felder Zeile 1, Spalte 4 und Zeile 4, Spalte 1 aus.",
       "**B** ist im See. Er kann laut **I**s Hinweis nicht in Spalte 2 sein und laut **C**s Hinweis nicht neben dem Felsbrocken; das lokalisiert **B** in Zeile 6, Spalte 3. **B** ist allein – schließe den Rest des Sees aus.",
