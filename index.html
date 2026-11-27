@@ -415,7 +415,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 26.11.2026 · 20:25</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 27.11.2026 · 21:25</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20447,6 +20447,11 @@ document.addEventListener("click",e=>{if(e.target.closest("#howBtn")){localStora
 (function(){let raf=0;const chk=()=>{raf=0;const b=document.getElementById("stickB");if(!b)return;const g=document.getElementById("game");if(g&&g.classList.contains("hidden")){b.classList.remove("stuck");return;}
   const t=b.getBoundingClientRect().top,st=b.classList.contains("stuck");if(!st&&t<=0.5&&scrollY>0)b.classList.add("stuck");else if(st){const prev=b.previousElementSibling;if(prev&&prev.getBoundingClientRect().bottom>0)b.classList.remove("stuck");}};
   addEventListener("scroll",()=>{if(!raf)raf=requestAnimationFrame(chk);},{passive:true});addEventListener("resize",chk);})();
+// Gegenstände, die über den Plan hinausragen (z. B. Laternen), bekommen Platz innerhalb des Brett-Bereichs
+function fitBoardOverflow(){const b=$("board");if(!b)return;b.style.marginTop="";b.style.marginBottom="";const R=b.getBoundingClientRect();let up=0,dn=0;
+  b.querySelectorAll(".ov svg > g, .ov svg > path, .ov svg > ellipse").forEach(e=>{const r=e.getBoundingClientRect();if(!r.height)return;up=Math.max(up,R.top-r.top);dn=Math.max(dn,r.bottom-R.bottom);});
+  if(up>2)b.style.marginTop=Math.ceil(up+2)+"px";if(dn>2)b.style.marginBottom=Math.ceil(dn+2)+"px";}
+addEventListener("resize",()=>requestAnimationFrame(fitBoardOverflow));
 function startedList(){if(!curUser)return [];const out=[];
   LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
     const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
@@ -21321,7 +21326,7 @@ function whoAt(r,c){return Object.keys(board.pos).find(k=>board.pos[k][0]===r&&b
 function pLight(h){h=(h||"#fff").replace("#","");if(h.length===3)h=h.split("").map(x=>x+x).join("");const v=[0,2,4].map(i=>parseInt(h.substr(i,2),16)/255).map(c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4));return .2126*v[0]+.7152*v[1]+.0722*v[2]>.3;}
 function letter(p){return p.k||p.name[0];}
 
-function renderGame(){applyHow();if(L&&L.protos)fillProtoCard();
+function renderGame(){applyHow();requestAnimationFrame(fitBoardOverflow);if(L&&L.protos)fillProtoCard();
   $("brand").textContent=`${loc(BK)} · ${L.no||(lang==="tr"?"Önsöz":"Prolog")}`;
   $("cTitle").textContent=L.no?`${L.no}. ${loc(L.title)}`:loc(L.title);
   {const ls=siblings(),i=ls.findIndex(l=>l.id===L.id);$("prevBtn").disabled=i<=0;$("nextBtn").disabled=i>=ls.length-1;$("navNo").textContent=L.no?`${L.no} / ${ls.filter(l=>l.no).length}`:(lang==="tr"?"Önsöz":"Prolog");}
