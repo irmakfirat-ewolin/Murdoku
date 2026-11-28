@@ -120,6 +120,9 @@ body.noHow #howto{display:none}
 .stBar{display:block;height:5px;border-radius:3px;background:#e4dcef;margin-top:5px;overflow:hidden}.stBar>i{display:block;height:100%;background:#5bbf6a}
 .case.lastC{outline:3px solid #ff2d4a;outline-offset:2px;animation:lastG .8s ease-in-out infinite alternate;position:relative;z-index:2}@keyframes lastG{from{box-shadow:0 0 6px 2px #ff2d4a99}to{box-shadow:0 0 22px 8px #ff2d4acc}}
 .stItem{display:flex;gap:6px;align-items:stretch;margin:6px 0}.stItem .stOpen{flex:1;min-width:0;margin:0!important}.stList .stRst{margin:0;text-align:center;flex:none;width:54px;border-radius:12px;border:2px solid #e8a0a8;background:#fbe4e6;color:#8a1020;font:900 18px system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0}.stList .stRst small{font:800 10px system-ui,sans-serif}
+.hlx{position:absolute;z-index:8;pointer-events:none;border-radius:4px;box-shadow:inset 0 0 0 3px #ffe14a,0 0 10px 2px #ffe14acc;background:#ffe14a33;animation:hlP .45s ease-in-out infinite alternate}@keyframes hlP{to{background:#ffe14a66;box-shadow:inset 0 0 0 4px #fff3a0,0 0 16px 4px #ffe14a}}
+.hlBtn{position:absolute;left:6px;top:62px;width:30px;height:30px;border-radius:50%;border:2px solid #ffe14a;background:#2a2238;font-size:15px;line-height:1;padding:0;z-index:5;box-shadow:0 2px 4px #0006}.hlBtn.on{background:#ffe14a;box-shadow:0 0 12px #ffe14a}
+.iList{text-align:left;margin:6px 0 10px;padding-left:18px;font-size:14px;line-height:1.4}.iList li{margin:4px 0}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -242,7 +245,7 @@ body.guest .stats{display:none}
 .clue b{font-weight:700;color:var(--yel)}
 .sus.victim{background:#3a1d33}
 .sus.on{background:#ff2d6f22;box-shadow:0 0 0 2.5px var(--pink),0 0 18px #ff2d6f88}
-.sus.placed{border-left-color:#555;box-shadow:none;background-color:#1a1820}.sus.placed>*:not(.tskb):not(.outX):not(.outb){opacity:.4;filter:grayscale(1) brightness(.8)}.sus.placed.on>*:not(.tskb):not(.outX):not(.outb){opacity:.7;filter:grayscale(.4)}.sus.placed::after{content:"✓";position:absolute;right:6px;top:4px;font:900 15px sans-serif;color:#5dff86}
+.sus.placed{border-left-color:#555;box-shadow:none;background-color:#1a1820}.sus.placed>*:not(.tskb):not(.outX):not(.outb):not(.hlBtn){opacity:.4;filter:grayscale(1) brightness(.8)}.sus.placed.on>*:not(.tskb):not(.outX):not(.outb){opacity:.7;filter:grayscale(.4)}.sus.placed::after{content:"✓";position:absolute;right:6px;top:4px;font:900 15px sans-serif;color:#5dff86}
 .stickB{position:sticky;top:0;z-index:20;margin:8px -14px 0;padding:4px 14px 6px;background:var(--bg);box-shadow:0 8px 14px -8px #000c}.stickB.stuck{padding-top:calc(env(safe-area-inset-top,0px) + 22px)}
 #game{padding-bottom:90px}
 #game .tools{position:fixed;left:0;right:0;bottom:0;z-index:30;margin:0;padding:8px 12px calc(env(safe-area-inset-bottom) + 8px);background:#120b22ee;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1.5px solid var(--line);max-width:560px;margin:0 auto}
@@ -420,7 +423,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 16:30</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 17:55</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20377,7 +20380,7 @@ return `<svg width="${W(NC)}" height="${W(NR)}" style="position:absolute;left:0;
 /* ============ TEXTE ============ */
 const T={
  de:{pill:"<b>Logikrätsel</b> rund um mysteriöse Mordfälle",welcome:"Willkommen, Detektiv!",welcomeTxt:"Wähle einen Band und einen Fall. Platziere alle Personen und finde den Mörder.",search:"Fall suchen: Nummer, Titel, Name…",noHits:"Keine Treffer.",player:"Spieler:",
-  undo:"↶ Zurück",grid:"# Raster",reset:"Neu",hint:"💡 Tipp",auto:"Hilfs-✕",rules:"Regeln",toolPlace:"✏️ Person",toolX:"✕ setzen",howto:"1× tippen = Vermutung in die Ecke · 2× tippen = ✕ setzen/entfernen · Gedrückt halten = sicher setzen (nochmal halten = entfernen) · Person unten gedrückt halten = ihre Vermutungen löschen",compass:["N","O","S","W"],zoom:"🔍 Brett vergrößern",zoomHint:"Mit zwei Fingern zoomen, mit einem verschieben",sol:"🔑 Lösung",solQ:"Lösung anzeigen?",solQTxt:"Achtung: Damit wird die komplette Lösung des Falls angezeigt – alle Schritte und der Mörder.",solTitle:"Lösung",solBoard:"Auf dem Brett zeigen",stepT:"Schritt",hintQ:"Tipp anzeigen?",hintQTxt:"Bist du sicher? Die nächste Person, die man logisch finden kann, wird automatisch auf ihr Feld gesetzt.",maxNotes:"Maximal 4 Vermutungen pro Feld.",xBlocked:"Hier kann niemand mehr stehen (Zeile/Spalte belegt).",check:"Prüfen",
+  undo:"↶ Zurück",grid:"# Raster",reset:"Neu",hint:"💡 Tipp",auto:"Hilfs-✕",rules:"Regeln",toolPlace:"✏️ Person",toolX:"✕ setzen",howto:"1× tippen = Vermutung in die Ecke · 2× tippen = ✕ setzen/entfernen · Gedrückt halten = sicher setzen (nochmal halten = entfernen) · Person unten gedrückt halten = ihre Vermutungen löschen · 🔍 auf der Personenkarte = Dinge aus ihrem Hinweis leuchten auf dem Plan",compass:["N","O","S","W"],zoom:"🔍 Brett vergrößern",zoomHint:"Mit zwei Fingern zoomen, mit einem verschieben",sol:"🔑 Lösung",solQ:"Lösung anzeigen?",solQTxt:"Achtung: Damit wird die komplette Lösung des Falls angezeigt – alle Schritte und der Mörder.",solTitle:"Lösung",solBoard:"Auf dem Brett zeigen",stepT:"Schritt",hintQ:"Tipp anzeigen?",hintQTxt:"Bist du sicher? Die nächste Person, die man logisch finden kann, wird automatisch auf ihr Feld gesetzt.",maxNotes:"Maximal 4 Vermutungen pro Feld.",xBlocked:"Hier kann niemand mehr stehen (Zeile/Spalte belegt).",check:"Prüfen",
   verdict:"Der Mord wurde begangen von …",noCases:"Noch keine Fälle – schick mir Fotos!",cases:"Fälle",
   pickFirst:"Tippe zuerst oben auf eine Person.",cantSit:"Dieses Feld kann nicht besetzt werden.",notFull:"Es sind noch nicht alle Personen platziert.",
   wrong:"Da stimmt etwas nicht.",wrongTxt:"Mindestens eine Person steht falsch.",showErr:"Fehler zeigen",close:"Weiter",
@@ -20387,7 +20390,7 @@ const T={
   occ:"Können besetzt sein",noocc:"Können nicht besetzt sein",noRules:"Die Regeln dieses Bandes folgen, sobald du sie schickst.",
   hintFix:n=>`${n} stand falsch und wurde entfernt.`,hintSet:n=>`${n} wurde platziert.`},
  tr:{pill:"Gizemli cinayetler üzerine <b>mantık bulmacaları</b>",welcome:"Hoş geldin, dedektif!",welcomeTxt:"Bir cilt ve bir vaka seç. Herkesi yerleştir ve katili bul.",player:"Oyuncu:",search:"Vaka ara: numara, başlık, isim…",noHits:"Sonuç bulunamadı.",
-  undo:"↶ Geri",grid:"# Izgara",reset:"Yeni",hint:"💡 İpucu",auto:"Yardım-✕",rules:"Kurallar",toolPlace:"✏️ Kişi",toolX:"✕ koy",howto:"1× dokun = köşeye tahmin · 2× dokun = ✕ koy/kaldır · Basılı tut = kesin yerleştir (tekrar basılı tut = kaldır) · Aşağıda kişiye basılı tut = tahminlerini sil",compass:["K","D","G","B"],zoom:"🔍 Tahtayı büyüt",zoomHint:"İki parmakla büyüt, tek parmakla kaydır",sol:"🔑 Çözüm",solQ:"Çözüm gösterilsin mi?",solQTxt:"Dikkat: Vakanın bütün çözümü gösterilecek – tüm adımlar ve katil.",solTitle:"Çözüm",solBoard:"Tahtada göster",stepT:"Adım",hintQ:"İpucu gösterilsin mi?",hintQTxt:"Emin misin? Mantıkla bulunabilecek sıradaki kişi otomatik olarak yerine konacak.",maxNotes:"Bir karede en fazla 4 tahmin.",xBlocked:"Buraya artık kimse konamaz (satır/sütun dolu).",check:"Kontrol",
+  undo:"↶ Geri",grid:"# Izgara",reset:"Yeni",hint:"💡 İpucu",auto:"Yardım-✕",rules:"Kurallar",toolPlace:"✏️ Kişi",toolX:"✕ koy",howto:"1× dokun = köşeye tahmin · 2× dokun = ✕ koy/kaldır · Basılı tut = kesin yerleştir (tekrar basılı tut = kaldır) · Aşağıda kişiye basılı tut = tahminlerini sil · Kişi kartındaki 🔍 = ipucundaki şeyler planda yanar",compass:["K","D","G","B"],zoom:"🔍 Tahtayı büyüt",zoomHint:"İki parmakla büyüt, tek parmakla kaydır",sol:"🔑 Çözüm",solQ:"Çözüm gösterilsin mi?",solQTxt:"Dikkat: Vakanın bütün çözümü gösterilecek – tüm adımlar ve katil.",solTitle:"Çözüm",solBoard:"Tahtada göster",stepT:"Adım",hintQ:"İpucu gösterilsin mi?",hintQTxt:"Emin misin? Mantıkla bulunabilecek sıradaki kişi otomatik olarak yerine konacak.",maxNotes:"Bir karede en fazla 4 tahmin.",xBlocked:"Buraya artık kimse konamaz (satır/sütun dolu).",check:"Kontrol",
   verdict:"Cinayeti işleyen …",noCases:"Henüz vaka yok – fotoğraf gönder!",cases:"vaka",
   pickFirst:"Önce yukarıdan bir kişiye dokun.",cantSit:"Bu kareye kimse konamaz.",notFull:"Henüz herkes yerleştirilmedi.",
   wrong:"Bir şeyler yanlış.",wrongTxt:"En az bir kişi yanlış yerde.",showErr:"Hataları göster",close:"Devam",
@@ -20457,6 +20460,58 @@ function fitBoardOverflow(){const b=$("board");if(!b)return;b.style.marginTop=""
   b.querySelectorAll(".ov svg > g, .ov svg > path, .ov svg > ellipse").forEach(e=>{const r=e.getBoundingClientRect();if(!r.height)return;up=Math.max(up,R.top-r.top);dn=Math.max(dn,r.bottom-R.bottom);});
   if(up>2)b.style.marginTop=Math.ceil(up+2)+"px";if(dn>2)b.style.marginBottom=Math.ceil(dn+2)+"px";}
 addEventListener("resize",()=>requestAnimationFrame(fitBoardOverflow));
+// Hinweis-Marker: fett gedrucktes Wort in einem Hinweis antippen -> passende Gegenstände/Bereiche auf dem Plan leuchten kurz auf
+function hlNorm(t){return String(t||"").toLocaleLowerCase("de").replace(/\*in(nen)?/g,"").replace(/ı/g,"i").replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,"");}
+function hlWords(t){return hlNorm(t).split(/[^a-z0-9]+/).filter(Boolean);}
+const HL_STOP=new Set(["der","die","das","ein","eine","von","im","in","am","an","mit","und","oder","bir","ve","ya","da","de","the","of","a","b","c"]);
+function hlWordHit(tw,nw){if(/^[0-9]+$/.test(nw))return tw===nw;if(nw.length<2||HL_STOP.has(nw))return false;
+  const m={k:"g",p:"b",t:"d"},l=nw.slice(-1),vs=[nw];if(m[l])vs.push(nw.slice(0,-1)+m[l]);if(nw.length>4)vs.push(nw.slice(0,-1));if(nw.length>5)vs.push(nw.slice(0,-2));
+  if(vs.some(v=>tw.startsWith(v)&&tw.length-v.length<=(v.length<=2?4:7)))return true;
+  // Komposita: Lagerfeuer ~ Feuer, Wasserpfütze ~ Pfütze
+  return (nw.length>=4&&tw.length>nw.length&&tw.endsWith(nw))||(tw.length>=4&&nw.length>tw.length&&nw.endsWith(tw));}
+// ganze Namensfolge im Begriff suchen -> [start,end] oder null
+function hlSeq(T,N){N=N.filter(w=>!HL_STOP.has(w)||/^[0-9]+$/.test(w));if(!N.length)return null;for(let i=0;i+N.length<=T.length;i++){let ok=true;for(let j=0;j<N.length;j++)if(!hlWordHit(T[i+j],N[j])){ok=false;break;}if(ok)return [i,i+N.length];}return null;}
+function hlCells(w){if(!L)return [];const out=new Set();const add=(r,c)=>out.add(r+","+c);const T=hlWords(w),used=new Array(T.length).fill(false);
+  const free=sp=>{for(let k=sp[0];k<sp[1];k++)if(used[k])return false;return true;},mark=sp=>{for(let k=sp[0];k<sp[1];k++)used[k]=true;};
+  const RK=[],SPS=[],isCorner=/\becke|\bkose/.test(hlNorm(w));
+  // 1) Bereiche (mehrwortige Namen zuerst)
+  Object.entries(L.roomNames||{}).filter(([k,rn])=>!rn.unk).map(([k,rn])=>[k,rn,Math.max(hlWords(rn.de).length,hlWords(rn.tr||"").length)]).sort((a,b)=>b[2]-a[2]).forEach(([k,rn])=>{
+    let sp=[hlSeq(T,hlWords(rn.de)),hlSeq(T,hlWords(rn.tr||""))].find(x=>x&&free(x));
+    if(!sp){const DIR=/^(nord|sud|ost|west|kuzey|guney|dogu|bati|north|south|east)/;for(const nw of hlWords(rn.de)){if(nw.length<4||DIR.test(nw))continue;for(let k=0;k<T.length;k++)if(!used[k]&&hlWordHit(T[k],nw)){sp=[k,k+1];break;}if(sp)break;}}
+    if(!sp)return;SPS.push(sp);RK.push(k);});SPS.forEach(mark);
+  if(!isCorner)RK.forEach(k=>L.rooms.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch===k)add(r,c);})));
+  // 2) Gegenstände: ganzer Name oder ein Hauptwort des Namens
+  const HL_AL={felsblock:"felsbrocken",kiste:"truhe",baum:"kiefer"};T.forEach((w,k)=>{for(const a in HL_AL)if(w.startsWith(a))T.push(HL_AL[a]),used.push(used[k]);});
+  const objHit=O=>{for(const nm of [O.de,O.tr||""]){const N=hlWords(nm);const sp=hlSeq(T,N);if(sp&&free(sp))return sp;
+      for(const nw of N){if(nw.length<3&&N.length>1)continue;for(let k=0;k<T.length;k++)if(!used[k]&&hlWordHit(T[k],nw))return [k,k+1];}}return null;};
+  const hits={};(L.objects||[]).forEach(o=>{const O=OBJ[o.t];if(!O)return;if(hits[o.t]===undefined)hits[o.t]=objHit(O);});
+  (L.objects||[]).forEach(o=>{if(!hits[o.t])return;if(o.cells){o.cells.forEach(([r,c])=>add(r,c));return;}if(o.r==null)return;const W=o.w||1,H=o.h||1;for(let r=o.r;r<o.r+H;r++)for(let c=o.c;c<o.c+W;c++)add(r,c);});
+  // 3) Aufgabenfelder
+  (L.tasks||[]).forEach(t=>{const TT=TASKS[t.t];if(!TT)return;for(const nm of [TT.de,TT.tr||""])if(hlSeq(T,hlWords(nm))){add(t.r,t.c);break;}});
+  // 4) Ecken
+  const tn=hlNorm(w),NR=L.rooms.length,NC=L.rooms[0].length,rm=(r,c)=>r<0||c<0||r>=NR||c>=NC?".":L.rooms[r][c];
+  if(/\becke|\bkose/.test(tn)){const up=/\bob(en|eren)|\bust/.test(tn),dn=/\bunt(en|eren)|\balt/.test(tn),lf=/\blink|\bsol/.test(tn),rt=/\brecht|\bsag/.test(tn);
+    if(/raster|izgara|grid/.test(tn)){const cs=[];for(let r=0;r<NR;r++)for(let c=0;c<NC;c++)if(rm(r,c)!==".")cs.push([r,c]);if(cs.length){const r0=Math.min(...cs.map(x=>x[0])),r1=Math.max(...cs.map(x=>x[0])),c0=Math.min(...cs.map(x=>x[1])),c1=Math.max(...cs.map(x=>x[1]));
+        [[r0,c0,1,1],[r0,c1,1,0],[r1,c0,0,1],[r1,c1,0,0]].forEach(([r,c,t,l])=>{if((up&&!t)||(dn&&t)||(lf&&!l)||(rt&&l))return;add(r,c);});}}
+    else for(let r=0;r<NR;r++)for(let c=0;c<NC;c++){const k=rm(r,c);if(k===".")continue;if(RK.length&&!RK.includes(k))continue;const T0=rm(r-1,c)!==k,B=rm(r+1,c)!==k,Lf=rm(r,c-1)!==k,R=rm(r,c+1)!==k;
+      const cand=[[T0&&Lf,1,1],[T0&&R,1,0],[B&&Lf,0,1],[B&&R,0,0]].filter(([ok,t,l])=>ok&&!((up&&!t)||(dn&&t)||(lf&&!l)||(rt&&l)));if(cand.length)add(r,c);}}
+  // 5) bestimmte Zeile/Spalte
+  const ORD={ersten:1,erste:1,zweiten:2,dritten:3,vierten:4,funften:5,sechsten:6,siebten:7,achten:8,neunten:9,zehnten:10,elften:11,zwolften:12};
+  const lineNo=kind=>{let m=tn.match(new RegExp(kind+"\\s*(\\d+)"))||tn.match(new RegExp("(\\d+)\\.?\\s*"+kind));if(m)return +m[1];for(const k in ORD)if(new RegExp("\\b"+k+"\\s+"+kind).test(tn))return ORD[k];if(new RegExp("\\bletzten\\s+"+kind).test(tn))return -1;return null;};
+  const ax=L.axis||{};
+  const colIdx=n=>{if(n===-1)return NC-1;if(ax.cols){const i=ax.cols.findIndex(x=>String(x)===String(n));if(i>=0)return i;const X=(ax.colsX||[]).map(o=>o.cols.findIndex(x=>String(x)===String(n))).find(i=>i>=0);if(X!=null&&X>=0)return X;}return n-1;};
+  const rowIdx=n=>{if(n===-1)return NR-1;if(ax.rows){const i=ax.rows.findIndex(x=>String(x)===String(n));if(i>=0)return i;}return n-1;};
+  const sn=lineNo("spalte"),zn=lineNo("zeile");
+  if(sn!=null){const c=colIdx(sn);if(c>=0&&c<NC)for(let r=0;r<NR;r++)if(rm(r,c)!==".")add(r,c);}
+  const playR=[...Array(NR).keys()].filter(r=>[...L.rooms[r]].some(ch=>ch!==".")),playC=[...Array(NC).keys()].filter(c=>L.rooms.some(row=>row[c]!=="."));
+  const lineAdd=(rs,cs2)=>rs.forEach(r=>cs2.forEach(c=>{if(rm(r,c)!==".")add(r,c);}));
+  if(/\bobersten\s+zeile/.test(tn))lineAdd([playR[0]],playC);if(/\buntersten\s+zeile/.test(tn))lineAdd([playR[playR.length-1]],playC);
+  if(/\b(westlichsten|linken)\s+spalte/.test(tn))lineAdd(playR,[playC[0]]);if(/\b(ostlichsten|rechten)\s+spalte/.test(tn))lineAdd(playR,[playC[playC.length-1]]);
+  if(zn!=null&&!/(nordlich|sudlich|ostlich|westlich|uber|unter)/.test(tn)){const r=rowIdx(zn);if(r>=0&&r<NR)for(let c=0;c<NC;c++)if(rm(r,c)!==".")add(r,c);}
+  return [...out].map(x=>x.split(",").map(Number));}
+function hlShow(cells){const b=$("board");if(!b)return;b.querySelectorAll(".hlx").forEach(e=>e.remove());const cs=b.getBoundingClientRect().width/L.rooms[0].length;
+  cells.forEach(([r,c])=>{const d=document.createElement("div");d.className="hlx";d.style.cssText=`left:${c*cs}px;top:${r*cs}px;width:${cs}px;height:${cs}px`;b.appendChild(d);});
+  setTimeout(()=>b.querySelectorAll(".hlx").forEach(e=>e.remove()),2600);}
 function startedList(){if(!curUser)return [];const out=[];
   LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
     const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
@@ -21464,6 +21519,10 @@ function renderGame(){applyHow();requestAnimationFrame(fitBoardOverflow);if(L&&L
       ob.innerHTML=st?`<span class="tskI">${M[st].q}</span>${M[st].t}`:(lang==="tr"?"🤠 Haydut mu?":"🤠 Bandit?");
       ob.onclick=ev=>{ev.stopPropagation();board.pband=board.pband||{};const nx={undefined:"b",b:"m",m:"n",n:undefined}[st];if(nx)board.pband[p.id]=nx;else delete board.pband[p.id];saveBoard();renderGame();};
       d.appendChild(ob);}
+    {const terms=[...(p.de||"").matchAll(/\*\*(.+?)\*\*/g)].map(m=>m[1]);const cells=[];const seenC=new Set();[terms.join(" ")].concat(/ecke/i.test(terms.join(" "))?[]:terms).forEach(t=>hlCells(t).forEach(([r,c2])=>{const k=r+","+c2;if(!seenC.has(k)){seenC.add(k);cells.push([r,c2]);}}));
+     if(cells.length){const hb=document.createElement("button");hb.className="hlBtn";hb.innerHTML="🔍";hb.title=A("Auf dem Plan zeigen","Planda göster");
+       hb.onclick=ev=>{ev.stopPropagation();hlShow(cells);hb.classList.add("on");setTimeout(()=>hb.classList.remove("on"),2600);const sb=$("stickB");if(sb&&sb.getBoundingClientRect().top>innerHeight*.3)sb.scrollIntoView({block:"start",behavior:"smooth"});};
+       d.appendChild(hb);}}
     if(L.absentPool&&L.absentPool.includes(p.id)){d.style.paddingBottom="30px";const ob=document.createElement("span");ob.className="outb"+(isOut?" on":"");ob.innerHTML=isOut?(lang==="tr"?"↩ Geri al":"↩ Zurück"):(lang==="tr"?"🚫 Olay yerinde değil":"🚫 Nicht am Tatort");ob.onclick=ev=>{ev.stopPropagation();snap();if(isOut)delete board.pos[p.id];else{delete board.pos[p.id];board.pos[p.id]=[-1,-1];}sel=L.people.find(q=>!board.pos[q.id])?.id||null;showErr=false;accused=null;saveBoard();renderGame();};d.appendChild(ob);}
     d.onclick=()=>{if(d._lp){d._lp=0;return;}sel=p.id;tool="place";renderGame();};
     {let t=null,sx=0,sy=0;const stop=()=>{clearTimeout(t);t=null;};
@@ -22334,6 +22393,7 @@ function showInfo(){const card=(c,t,d)=>`<div class="icard"><div class="imini ${
    <h3>${A("Sterne","Yıldızlar")}</h3><div class="stTab">${[1,2,3,4,5,6].map(n=>`<div><span>${n<6?n+". "+A("Versuch","deneme"):A("ab 6. Versuch","6. denemeden sonra")}</span>${stars(Math.max(0,6-n))}</div>`).join("")}</div>
    <p class="anote">${A("Jeder Druck auf „Prüfen“ mit vollständig besetztem Brett zählt als Versuch – auch ein falscher. 💡 Hinweise oder 🔑 die Lösung verhindern die Sterne.","Tahta tam doluyken her „Kontrol“ basışı bir deneme sayılır – yanlış olsa bile. 💡 İpucu ya da 🔑 çözüm yıldızları engeller.")}</p>
    <h3>${A("Rückmeldung beim Prüfen","Kontrolde geri bildirim")}</h3><div class="icard"><div class="imini" style="color:#ff2d4a;font-size:40px;font-weight:900;justify-content:center;align-items:center">✕</div><div>${A("Falsch: ein großes rotes X (3 Sekunden).","Yanlış: büyük kırmızı X (3 saniye).")}</div></div><div class="icard"><div class="imini" style="font-size:32px;justify-content:center;align-items:center">🎉</div><div>${A("Richtig: Konfetti (3 Sekunden), danach deine Bewertung.","Doğru: konfeti (3 saniye), ardından puanın.")}</div></div>
+   <h3>${A("Bedienung im Rätsel","Bulmacada kullanım")}</h3><ul class="iList"><li>${A("<b>1× tippen</b> = Vermutung in die Ecke","<b>1× dokun</b> = köşeye tahmin")}</li><li>${A("<b>2× tippen</b> = X setzen / entfernen (nur wo eine Person stehen darf)","<b>2× dokun</b> = X koy / kaldır (sadece kişinin durabileceği yerlerde)")}</li><li>${A("<b>Feld gedrückt halten</b> = Person sicher setzen, ihre Vermutungen verschwinden. Nochmal halten = entfernen","<b>Kareye basılı tut</b> = kişiyi kesin yerleştir, tahminleri silinir. Tekrar basılı tut = kaldır")}</li><li>${A("<b>Personenkarte gedrückt halten</b> = alle Vermutungen dieser Person löschen","<b>Kişi kartına basılı tut</b> = bu kişinin tüm tahminlerini sil")}</li><li>${A("<b>🔍 auf der Personenkarte</b> (unten links) = alles aus dem Hinweis dieser Person leuchtet kurz auf dem Plan: Dinge und Bereiche (z. B. <b>Busch</b>, <b>Stuhl</b>, <b>Wald</b>), Ecken (z. B. <b>untere linke Ecke eines Ballons</b>) und genannte Zeilen/Spalten (z. B. <b>dritte Spalte</b>, <b>oberste Zeile</b>). Verrät nichts über die Lösung.","<b>Kişi kartındaki 🔍</b> (sol altta) = bu kişinin ipucundaki her şey planda kısa süre yanar: şeyler ve alanlar (ör. <b>Çalı</b>, <b>Sandalye</b>, <b>Orman</b>), köşeler (ör. <b>bir balonun sol alt köşesi</b>) ve belirtilen satır/sütunlar (ör. <b>üçüncü sütun</b>, <b>en üst satır</b>). Çözümü göstermez.")}</li><li>${A("<b>Zurück</b> = letzten Schritt rückgängig · <b>Anleitung</b> = Erklärtext ein/aus · <b>Raster</b> = Zeilen-/Spaltennummern","<b>Geri</b> = son adımı geri al · <b>Kılavuz</b> = açıklama aç/kapat · <b>Izgara</b> = satır/sütun numaraları")}</li><li>${A("Rot leuchtende Felder = zwei feste Personen in derselben Zeile oder Spalte","Kırmızı yanan kareler = aynı satır veya sütunda iki kesin kişi")}</li><li>${A("Notizen auf Personenkarten (nur für dich, werden nicht geprüft): 🎯 Aufgabe (Steinzeit), 🤠 Bandit? (Western), Rollen/Ränge, 🏷️ unbekannte Bereiche benennen, Prototypen, Geisterschiff","Kişi kartlarında notlar (sadece senin için, kontrol edilmez): 🎯 Görev (Taş Devri), 🤠 Haydut mu? (Vahşi Batı), roller/sıralar, 🏷️ bilinmeyen alanları adlandır, prototipler, hayalet gemi")}</li></ul>
    <h3>${A("Oben auf der Startseite","Ana sayfanın üstünde")}</h3><p class="anote">${A("„Insgesamt Sterne“ zeigt deine Sterne von allen möglichen (Rätsel × 5). Der Prozentwert zeigt, wie viele Rätsel du schon gelöst hast. Kommen neue Rätsel dazu, passt sich beides automatisch an.","„Toplam yıldız“, mümkün olan tüm yıldızlar içinden seninkileri gösterir (bulmaca × 5). Yüzde, kaç bulmaca çözdüğünü gösterir. Yeni bulmacalar eklenince ikisi de otomatik güncellenir.")}</p>
    <div style="text-align:center"><button class="btn" id="mN">OK</button></div>`,()=>$("mN").onclick=hideModal,"wide");}
 
