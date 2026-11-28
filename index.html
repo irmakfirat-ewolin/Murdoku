@@ -423,7 +423,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 17:55</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 19:10</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20463,8 +20463,8 @@ addEventListener("resize",()=>requestAnimationFrame(fitBoardOverflow));
 // Hinweis-Marker: fett gedrucktes Wort in einem Hinweis antippen -> passende Gegenstände/Bereiche auf dem Plan leuchten kurz auf
 function hlNorm(t){return String(t||"").toLocaleLowerCase("de").replace(/\*in(nen)?/g,"").replace(/ı/g,"i").replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,"");}
 function hlWords(t){return hlNorm(t).split(/[^a-z0-9]+/).filter(Boolean);}
-const HL_STOP=new Set(["der","die","das","ein","eine","von","im","in","am","an","mit","und","oder","bir","ve","ya","da","de","the","of","a","b","c"]);
-function hlWordHit(tw,nw){if(/^[0-9]+$/.test(nw))return tw===nw;if(nw.length<2||HL_STOP.has(nw))return false;
+const HL_STOP=new Set(["der","die","das","ein","eine","von","im","in","am","an","mit","und","oder","bir","ve","ya","da","de","the","of"]);
+function hlWordHit(tw,nw){if(/^([0-9]+|[a-z])$/.test(nw))return tw===nw;if(nw.length<2||HL_STOP.has(nw))return false;
   const m={k:"g",p:"b",t:"d"},l=nw.slice(-1),vs=[nw];if(m[l])vs.push(nw.slice(0,-1)+m[l]);if(nw.length>4)vs.push(nw.slice(0,-1));if(nw.length>5)vs.push(nw.slice(0,-2));
   if(vs.some(v=>tw.startsWith(v)&&tw.length-v.length<=(v.length<=2?4:7)))return true;
   // Komposita: Lagerfeuer ~ Feuer, Wasserpfütze ~ Pfütze
@@ -20474,14 +20474,26 @@ function hlSeq(T,N){N=N.filter(w=>!HL_STOP.has(w)||/^[0-9]+$/.test(w));if(!N.len
 function hlCells(w){if(!L)return [];const out=new Set();const add=(r,c)=>out.add(r+","+c);const T=hlWords(w),used=new Array(T.length).fill(false);
   const free=sp=>{for(let k=sp[0];k<sp[1];k++)if(used[k])return false;return true;},mark=sp=>{for(let k=sp[0];k<sp[1];k++)used[k]=true;};
   const RK=[],SPS=[],isCorner=/\becke|\bkose/.test(hlNorm(w));
-  // 1) Bereiche (mehrwortige Namen zuerst)
-  Object.entries(L.roomNames||{}).filter(([k,rn])=>!rn.unk).map(([k,rn])=>[k,rn,Math.max(hlWords(rn.de).length,hlWords(rn.tr||"").length)]).sort((a,b)=>b[2]-a[2]).forEach(([k,rn])=>{
-    let sp=[hlSeq(T,hlWords(rn.de)),hlSeq(T,hlWords(rn.tr||""))].find(x=>x&&free(x));
-    if(!sp){const DIR=/^(nord|sud|ost|west|kuzey|guney|dogu|bati|north|south|east)/;for(const nw of hlWords(rn.de)){if(nw.length<4||DIR.test(nw))continue;for(let k=0;k<T.length;k++)if(!used[k]&&hlWordHit(T[k],nw)){sp=[k,k+1];break;}if(sp)break;}}
-    if(!sp)return;SPS.push(sp);RK.push(k);});SPS.forEach(mark);
-  if(!isCorner)RK.forEach(k=>L.rooms.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch===k)add(r,c);})));
+  // 1) Bereiche: Hauptwort muss passen, Zusatzwörter (oberer, nördliches, 3 …) entscheiden bei gleichem Hauptwort
+  const ADJ=/^(ober|unter|mittler|nord|sud|ost|west|link|recht|gross|klein|alt|neu|vorder|hinter|inner|ausser|erst|zweit|dritt|haupt|heilig|geheim)/;
+  const tFree=k=>!used[k]&&!/lich(e|en|er|es)?$/.test(T[k]);
+  const cand=[];Object.entries(L.roomNames||{}).forEach(([k,rn])=>{if(rn.unk)return;let best=null;
+    for(const nm of [rn.de]){const N=hlWords(nm).filter(x=>!HL_STOP.has(x));if(!N.length)continue;
+      const nouns=N.filter(x=>!/^([0-9]+|[a-z])$/.test(x)&&!ADJ.test(x));const nn=(nouns.length?nouns:N.filter(x=>!/^([0-9]+|[a-z])$/.test(x)));const noun=nn[nn.length-1];if(!noun)continue;
+      const ni=T.findIndex((tw,ix)=>tFree(ix)&&hlWordHit(tw,noun));if(ni<0)continue;let sc=1,bad=false;const idx=[ni];
+      N.forEach(x=>{if(x===noun)return;if(/^([0-9]+|[a-z])$/.test(x)){const tn=T.filter(t=>/^([0-9]+|[a-z])$/.test(t));if(tn.length&&!tn.includes(x))bad=true;else if(tn.includes(x)){sc++;}return;}
+        const xi=T.findIndex((tw,ix)=>tFree(ix)&&hlWordHit(tw,x));if(xi>=0){sc++;idx.push(xi);}});
+      if(!bad&&(!best||sc>best.sc))best={sc,noun,idx};}
+    if(best)cand.push({k,...best});});
+  const maxBy={};cand.forEach(c=>{maxBy[c.noun]=Math.max(maxBy[c.noun]||0,c.sc);});
+  cand.filter(c=>c.sc===maxBy[c.noun]).forEach(c=>{RK.push(c.k);c.idx.forEach(ix=>SPS.push([ix,ix+1]));});SPS.forEach(mark);
+  const tnn=hlNorm(w),relLine=RK.length&&/\b(oberste[nr]?|unterste[nr]?)\s+zeile|\b(linke[nr]?|rechte[nr]?|westlichste[nr]?|ostlichste[nr]?)\s+spalte/.test(tnn);
+  if(relLine)RK.forEach(k=>{const cs=[];L.rooms.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch===k)cs.push([r,c]);}));const rs=cs.map(x=>x[0]),cl=cs.map(x=>x[1]);
+    const pick=/oberste[nr]?\s+zeile/.test(tnn)?x=>x[0]===Math.min(...rs):/unterste[nr]?\s+zeile/.test(tnn)?x=>x[0]===Math.max(...rs):/(linke[nr]?|westlichste[nr]?)\s+spalte/.test(tnn)?x=>x[1]===Math.min(...cl):x=>x[1]===Math.max(...cl);
+    cs.filter(pick).forEach(([r,c])=>add(r,c));});
+  else if(!isCorner)RK.forEach(k=>L.rooms.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch===k)add(r,c);})));
   // 2) Gegenstände: ganzer Name oder ein Hauptwort des Namens
-  const HL_AL={felsblock:"felsbrocken",kiste:"truhe",baum:"kiefer"};T.forEach((w,k)=>{for(const a in HL_AL)if(w.startsWith(a))T.push(HL_AL[a]),used.push(used[k]);});
+  const HL_AL={felsblock:"felsbrocken",kiste:"truhe",baum:"kiefer",kutsche:"planwagen wagen",fahrzeug:"auto bus wagen gelandewagen",feuer:"lagerfeuer"};const T0=T.length;for(let k=0;k<T0;k++){const w=T[k];for(const a in HL_AL)if(w.startsWith(a))HL_AL[a].split(" ").forEach(x=>{T.push(x);used.push(used[k]);});}
   const objHit=O=>{for(const nm of [O.de,O.tr||""]){const N=hlWords(nm);const sp=hlSeq(T,N);if(sp&&free(sp))return sp;
       for(const nw of N){if(nw.length<3&&N.length>1)continue;for(let k=0;k<T.length;k++)if(!used[k]&&hlWordHit(T[k],nw))return [k,k+1];}}return null;};
   const hits={};(L.objects||[]).forEach(o=>{const O=OBJ[o.t];if(!O)return;if(hits[o.t]===undefined)hits[o.t]=objHit(O);});
@@ -20505,13 +20517,13 @@ function hlCells(w){if(!L)return [];const out=new Set();const add=(r,c)=>out.add
   if(sn!=null){const c=colIdx(sn);if(c>=0&&c<NC)for(let r=0;r<NR;r++)if(rm(r,c)!==".")add(r,c);}
   const playR=[...Array(NR).keys()].filter(r=>[...L.rooms[r]].some(ch=>ch!==".")),playC=[...Array(NC).keys()].filter(c=>L.rooms.some(row=>row[c]!=="."));
   const lineAdd=(rs,cs2)=>rs.forEach(r=>cs2.forEach(c=>{if(rm(r,c)!==".")add(r,c);}));
-  if(/\bobersten\s+zeile/.test(tn))lineAdd([playR[0]],playC);if(/\buntersten\s+zeile/.test(tn))lineAdd([playR[playR.length-1]],playC);
-  if(/\b(westlichsten|linken)\s+spalte/.test(tn))lineAdd(playR,[playC[0]]);if(/\b(ostlichsten|rechten)\s+spalte/.test(tn))lineAdd(playR,[playC[playC.length-1]]);
+  if(!relLine){if(/\boberste[nr]?\s+zeile/.test(tn))lineAdd([playR[0]],playC);if(/\bunterste[nr]?\s+zeile/.test(tn))lineAdd([playR[playR.length-1]],playC);
+  if(/\b(westlichste[nr]?|linke[nr]?)\s+spalte/.test(tn))lineAdd(playR,[playC[0]]);if(/\b(ostlichste[nr]?|rechte[nr]?)\s+spalte/.test(tn))lineAdd(playR,[playC[playC.length-1]]);}
   if(zn!=null&&!/(nordlich|sudlich|ostlich|westlich|uber|unter)/.test(tn)){const r=rowIdx(zn);if(r>=0&&r<NR)for(let c=0;c<NC;c++)if(rm(r,c)!==".")add(r,c);}
   return [...out].map(x=>x.split(",").map(Number));}
-function hlShow(cells){const b=$("board");if(!b)return;b.querySelectorAll(".hlx").forEach(e=>e.remove());const cs=b.getBoundingClientRect().width/L.rooms[0].length;
+function hlShow(cells){const bd=$("board");if(!bd)return;bd.querySelectorAll(".hlx").forEach(e=>e.remove());const c0=bd.querySelector(".cell");const b=c0?c0.parentElement:bd;const cs=c0?c0.getBoundingClientRect().width:bd.getBoundingClientRect().width/L.rooms[0].length;
   cells.forEach(([r,c])=>{const d=document.createElement("div");d.className="hlx";d.style.cssText=`left:${c*cs}px;top:${r*cs}px;width:${cs}px;height:${cs}px`;b.appendChild(d);});
-  setTimeout(()=>b.querySelectorAll(".hlx").forEach(e=>e.remove()),2600);}
+  setTimeout(()=>bd.querySelectorAll(".hlx").forEach(e=>e.remove()),2600);}
 function startedList(){if(!curUser)return [];const out=[];
   LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
     const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
