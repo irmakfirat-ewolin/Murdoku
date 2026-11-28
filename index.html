@@ -118,6 +118,8 @@ body.noHow #howto{display:none}
 .stChips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}.stChips button{font:700 12.5px system-ui,sans-serif;padding:5px 11px;border-radius:999px;border:1.5px solid #b69cff;background:transparent;color:#e8e2f4}.stChips button.on{background:#8a63ff;color:#fff}
 .stSort{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 8px;font-size:13px}.stSort select{font:700 13px system-ui,sans-serif;padding:5px 8px;border-radius:9px;border:1.5px solid #b69cff;background:#fff;color:#2a2230;max-width:70%}
 .stBar{display:block;height:5px;border-radius:3px;background:#e4dcef;margin-top:5px;overflow:hidden}.stBar>i{display:block;height:100%;background:#5bbf6a}
+.case.lastC{outline:3px solid #ff2d4a;outline-offset:2px;animation:lastG .8s ease-in-out infinite alternate;position:relative;z-index:2}@keyframes lastG{from{box-shadow:0 0 6px 2px #ff2d4a99}to{box-shadow:0 0 22px 8px #ff2d4acc}}
+.stItem{display:flex;gap:6px;align-items:stretch;margin:6px 0}.stItem .stOpen{flex:1;min-width:0;margin:0!important}.stList .stRst{margin:0;text-align:center;flex:none;width:54px;border-radius:12px;border:2px solid #e8a0a8;background:#fbe4e6;color:#8a1020;font:900 18px system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0}.stList .stRst small{font:800 10px system-ui,sans-serif}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -418,7 +420,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 15:55</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 16:30</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20471,10 +20473,12 @@ function showStarted(){const all=startedList();
     modal(`<h2>⏸ ${A("Begonnene Rätsel","Yarım kalan bulmacalar")}</h2>
      <div class="stChips"><button data-fb="all" class="${stF.b==="all"?"on":""}">${A("Alle","Tümü")} (${all.length})</button>${books.map(b=>`<button data-fb="${b}" class="${stF.b===b?"on":""}">${bn(b)} (${all.filter(x=>x.book===b).length})</button>`).join("")}</div>
      <div class="stSort"><span>${A("Sortieren:","Sırala:")}</span><select id="stS">${[["date",A("Zuletzt gespielt","Son oynanan")],["prog",A("Fortschritt (am weitesten zuerst)","İlerleme (en çok önce)")],["size",A("Größe (groß zuerst)","Boyut (büyük önce)")],["small",A("Größe (klein zuerst)","Boyut (küçük önce)")],["no",A("Band und Nummer","Cilt ve numara")]].map(([v,t])=>`<option value="${v}"${stF.s===v?" selected":""}>${t}</option>`).join("")}</select></div>
-     <div class="stList">${ls.map(x=>{const pc=Math.round(x.np/x.tot*100);return `<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")}${x.ts?" · 🕒 "+ago(x.ts):""} · ▦ ${Math.sqrt(x.sz)%1?LEVELS.find(l=>l.id===x.id).rooms[0].length+"×"+LEVELS.find(l=>l.id===x.id).rooms.length:Math.sqrt(x.sz)+"×"+Math.sqrt(x.sz)}</span><i class="stBar"><i style="width:${pc}%"></i></i></button>`;}).join("")||"<p>–</p>"}</div>
+     <div class="stList">${ls.map(x=>{const pc=Math.round(x.np/x.tot*100);return `<div class="stItem"><button class="stOpen" data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")}${x.ts?" · 🕒 "+ago(x.ts):""} · ▦ ${Math.sqrt(x.sz)%1?LEVELS.find(l=>l.id===x.id).rooms[0].length+"×"+LEVELS.find(l=>l.id===x.id).rooms.length:Math.sqrt(x.sz)+"×"+Math.sqrt(x.sz)}</span><i class="stBar"><i style="width:${pc}%"></i></i></button><button class="stRst" data-rs="${x.id}" title="${A("Zurücksetzen","Sıfırla")}">↺<small>${A("Neu","Sıfırla")}</small></button></div>`;}).join("")||"<p>–</p>"}</div>
      <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
      ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stChips button").forEach(b=>b.onclick=()=>{stF.b=b.dataset.fb;draw();});$("stS").onchange=e=>{stF.s=e.target.value;draw();};
-       document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});};
+       document.querySelectorAll(".stList .stOpen").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});
+       document.querySelectorAll(".stList .stRst").forEach(e=>e.onclick=async()=>{const id=e.dataset.rs;if(!await askYes(A(`»${lvName(id)}« zurücksetzen? Alle Einträge auf dem Brett werden gelöscht.`,`»${lvName(id)}« sıfırlansın mı? Tahtadaki tüm girişler silinir.`)))return showStarted();
+         try{localStorage.setItem(bKey(id),JSON.stringify({b:{pos:{},x:{},n:{}},t:0,ts:Date.now()}));}catch(er){}all.splice(all.findIndex(x=>x.id===id),1);renderStarted();if(!all.length)return hideModal();draw();});},"wide");};
   draw();}
 function renderHome(){
   renderStats();renderStarted();applyHow();const box=$("bookList");box.innerHTML="";
@@ -20504,7 +20508,7 @@ function renderHome(){
     const g=document.createElement("div");g.className="cases";
     gl.forEach(l=>{const sv=solved[l.id],rc=sv?(sv.c||(seen[l.id]?"r":sv.h?"y":"g")):"";const b=document.createElement("button");b.className="case"+(sv?" done c"+rc+(sv.c==="g"&&sv.s===5?" s5":""):"");b.style.setProperty("--cc",caseColor(l));
       b.innerHTML=`<span class="cn">${l.no||"P"}</span>${l.stamp?`<span class="cc2">✈︎ ${loc(l.stamp.sub)}</span>`:""}<span class="ct">${loc(l.title)}</span>${sv?`<span class="ck ${rc}"><b class="tk"><svg viewBox="0 0 16 16" width="15" height="15"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="#5dff86" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></b></span>${sv.c?`<span class="cst">${stars(sv.s||0)}</span>`:""}`:""}`;
-      b.onclick=()=>openLevel(l.id);g.appendChild(b);});
+      b.dataset.lid=l.id;b.onclick=()=>openLevel(l.id);g.appendChild(b);});
     sec.appendChild(g);});
   });
   if(!box.children.length){const e=document.createElement("div");e.className="empty";e.textContent=tt("noHits");box.appendChild(e);}
@@ -21319,9 +21323,11 @@ function openLevel(id){
  function siblings(){return LEVELS.filter(l=>l.book===L.book).sort((a,b)=>a.no-b.no);}
 function goCase(d){const ls=siblings(),i=ls.findIndex(l=>l.id===L.id),t=ls[i+d];if(!t)return;saveBoard();stopTimer();openLevel(t.id);}
 $("prevBtn").onclick=()=>goCase(-1);$("nextBtn").onclick=()=>goCase(1);
-function closeLevel(){stopTimer();evTime(1);saveBoard();L=null;applyTheme(null);
+function closeLevel(){const lastId=L&&L.id,lastL=L;stopTimer();evTime(1);saveBoard();L=null;applyTheme(null);
   document.documentElement.style.setProperty("--case","#b69cff");
-  $("game").classList.add("hidden");$("home").classList.remove("hidden");$("backBtn").classList.add("hidden");$("brand").textContent="";renderHome();}
+  if(lastL){try{localStorage.setItem("mk_open_"+lastL.book,"1");const bk=BOOKS.find(b=>b.id===lastL.book);if(bk&&bk.chapters&&bk.chapters.length&&lastL.chap!=null)localStorage.setItem("mk_ch_"+lastL.book+"_"+lastL.chap,"1");}catch(e){}}
+  $("game").classList.add("hidden");$("home").classList.remove("hidden");$("backBtn").classList.add("hidden");$("brand").textContent="";renderHome();
+  if(lastId){const el=document.querySelector(`.case[data-lid="${lastId}"]`);if(el){el.scrollIntoView({block:"center"});el.classList.add("lastC");setTimeout(()=>el.classList.remove("lastC"),4000);}}}
 $("backBtn").onclick=closeLevel;
 function splitD(t){const i=t.indexOf(". ");return i<0?[t,""]:[t.slice(0,i+1),t.slice(i+2)];}
 function setTag(ri,pid){board.tm=board.tm||{};const cur=board.tm[pid];Object.keys(board.tm).forEach(k=>{if(board.tm[k]===ri)delete board.tm[k];});if(cur!==ri)board.tm[pid]=ri;saveBoard();renderGame();}
@@ -22313,7 +22319,7 @@ async function showRank(){const D=await loadAll();const ok=Object.entries(D.user
       <div class="rk2bar"><i style="width:${w}%"></i></div><div class="rk2s">${r.s.solvedAll} ${A("von","/")} ${r.s.N} ${A("gelöst","çözüldü")} · ${r.s.pct} %</div>
       <div class="rk2c"><span class="cg2">🟢 ${r.s.g}</span><span class="cy2">🟡 ${r.s.y}</span><span class="cr2">🔴 ${r.s.r}</span></div></div>
       <div class="rk2v"><b>${big[1]}</b><span>${big[0]} ${big[2]}</span></div></div>`;}).join("")||`<p>–</p>`}</div>
-   <div class="anote">${A("Große Zahl rechts = gewählte Sortierung. Balken = Anteil gelöster Rätsel.<br>🟢 ohne Hilfe · 🟡 mit Hinweis oder ab 6 Versuchen · 🔴 Lösung angesehen. Aktualisiert sich automatisch.","Sağdaki büyük sayı = seçilen sıralama. Çubuk = çözülen bulmaca oranı.<br>🟢 yardımsız · 🟡 ipucuyla veya 6+ denemeyle · 🔴 çözüme bakıldı. Otomatik güncellenir.")}</div>
+   <div class="anote">${A("🟢 ohne Hilfe · 🟡 mit Hinweis oder ab 6 Versuchen · 🔴 Lösung angesehen","🟢 yardımsız · 🟡 ipucuyla veya 6+ denemeyle · 🔴 çözüme bakıldı")}</div>
    <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,()=>{$("mN").onclick=()=>{clearInterval(rankT);hideModal();};
     document.querySelectorAll("[data-rk]").forEach(b=>b.onclick=()=>{rankSort=b.dataset.rk;showRank();});
     clearInterval(rankT);rankT=setInterval(()=>{if($("modal").classList.contains("hidden")||!document.querySelector(".rank")){clearInterval(rankT);return;}showRank();},20000);},"wide");}
