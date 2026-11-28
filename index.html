@@ -424,7 +424,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 20:15</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 20:35</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20513,6 +20513,9 @@ function hlCells(w){if(!L)return [];const out=new Set();const add=(r,c)=>out.add
   const objHit=O=>{for(const nm of [O.de,O.tr||""]){const N=hlWords(nm);const sp=hlSeq(T,N);if(sp&&free(sp))return sp;
       for(const nw of N){if(nw.length<3&&N.length>1)continue;for(let k=0;k<T.length;k++)if(!used[k]&&hlWordHit(T[k],nw))return [k,k+1];}}return null;};
   const hits={};(L.objects||[]).forEach(o=>{const O=OBJ[o.t];if(!O)return;if(hits[o.t]===undefined)hits[o.t]=objHit(O);});
+  {const CW={rot:"R",blau:"B",gelb:"Y",grun:"G",weiss:"W",schwarz:"K",orange:"O"};const cw=Object.keys(CW).find(c=>T.some(x=>x.startsWith(c)&&x.length-c.length<=3));
+   if(cw){const colOf=t=>{const n=hlWords((OBJ[t]||{}).de||"");const k=Object.keys(CW).find(c=>n.some(x=>x.startsWith(c)));if(k)return CW[k];const m=t.match(/([RBYGWKO])\d*(_\d+)?$/);return m?m[1]:"";};
+    const ks=Object.keys(hits).filter(t=>hits[t]);if(ks.some(t=>colOf(t)===CW[cw]))ks.forEach(t=>{if(colOf(t)!==CW[cw])hits[t]=null;});}}
   (L.objects||[]).forEach(o=>{if(!hits[o.t])return;if(o.cells){o.cells.forEach(([r,c])=>oadd(r,c));return;}if(o.r==null)return;const W=o.w||1,H=o.h||1;for(let r=o.r;r<o.r+H;r++)for(let c=o.c;c<o.c+W;c++)oadd(r,c);});
   // 3) Aufgabenfelder
   {const TS=L.tasks||[];const full=t=>{const TT=TASKS[t.t];return TT&&[TT.de,TT.tr||""].some(nm=>hlSeq(T,hlWords(nm)));};const anyFull=TS.some(full);const aufg=T.some(x=>/^aufgabe/.test(x));
