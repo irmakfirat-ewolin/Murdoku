@@ -115,6 +115,9 @@ body.noHow #howto{display:none}
 .tskMode{display:flex;gap:6px;justify-content:center;margin:4px 0}.tskMode button{flex:1;max-width:160px;font:800 13px system-ui,sans-serif;padding:7px 10px;border-radius:999px;border:2px solid #b69cff;background:transparent;color:#e8e2f4}.tskMode button.on{background:#8a63ff;color:#fff}
 .tskL .okb{grid-column:1/-1;justify-content:center;--tc:#3a9a4a;background:#3a9a4a!important;color:#fff!important}.tskL .okb[disabled]{opacity:.45}.tskC{margin-left:auto;font-style:normal;font-weight:900;color:#1b6a2a;min-width:14px}
 .bndb.on[style*="#c8603a"]{color:#fff}.bndb .tskI{font-size:13px}
+.stChips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}.stChips button{font:700 12.5px system-ui,sans-serif;padding:5px 11px;border-radius:999px;border:1.5px solid #b69cff;background:transparent;color:#e8e2f4}.stChips button.on{background:#8a63ff;color:#fff}
+.stSort{display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0 8px;font-size:13px}.stSort select{font:700 13px system-ui,sans-serif;padding:5px 8px;border-radius:9px;border:1.5px solid #b69cff;background:#fff;color:#2a2230;max-width:70%}
+.stBar{display:block;height:5px;border-radius:3px;background:#e4dcef;margin-top:5px;overflow:hidden}.stBar>i{display:block;height:100%;background:#5bbf6a}
 .rk2{display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:9px 12px;margin:7px 0;text-align:left;color:#2a2230}
 .rk2.top{background:#fff8e6;border-color:#e8c45a}.rk2.me{border-color:#8a63ff;box-shadow:0 0 0 2px #b69cff88}
 .rk2p{font:800 22px "Baloo 2",sans-serif;min-width:34px;text-align:center;color:#2a2230}
@@ -415,7 +418,7 @@ html[data-th=gloom] #lvlBg{background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="acct" id="acct"></div><span class="sync hidden" id="syncSt"></span>
   <div class="search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg><input id="searchIn" type="search" autocomplete="off"><button id="searchX" class="hidden">✕</button></div><div class="stRow"><button id="startedBtn" class="stBtn hidden"></button></div>
   <div id="bookList"></div>
-  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 15:25</div></div>
+  <div class="adminF"><button id="adminBtn">🔒 Admin</button><div class="appVer">Version 28.11.2026 · 15:55</div></div>
 </div>
 <div id="gate" class="gate hidden"><div class="gbox"><h1>Murdoku</h1><p id="gateT"></p><input id="gatePw" type="password" inputmode="numeric" autocomplete="off"><button class="btn" id="gateOk">OK</button><div id="gateErr" class="aerr"></div></div></div>
 
@@ -20455,14 +20458,24 @@ addEventListener("resize",()=>requestAnimationFrame(fitBoardOverflow));
 function startedList(){if(!curUser)return [];const out=[];
   LEVELS.forEach(l=>{if(solved[l.id])return;let d=null;try{d=JSON.parse(localStorage.getItem(bKey(l.id))||"null");}catch(e){}
     const b=d&&d.b;if(!b)return;const np=Object.keys(b.pos||{}).length,nx=Object.keys(b.x||{}).length,nn=Object.values(b.n||{}).filter(v=>v&&v.length).length;
-    if(np+nx+nn>0)out.push({id:l.id,np,tot:l.people.length,t:d.t||0});});return out;}
+    if(np+nx+nn>0)out.push({id:l.id,book:l.book,no:l.no||0,np,tot:l.people.length,t:d.t||0,ts:d.ts||0,sz:l.rooms.length*l.rooms[0].length});});return out;}
 function renderStarted(){const b=$("startedBtn");if(!b)return;const ls=startedList();b.classList.toggle("hidden",!ls.length);
   b.textContent="⏸ "+A("Begonnene Rätsel","Yarım kalanlar")+" ("+ls.length+")";b.onclick=showStarted;}
-function showStarted(){const ls=startedList();const f=t=>fmt(Math.floor(t||0));
-  modal(`<h2>⏸ ${A("Begonnene Rätsel","Yarım kalan bulmacalar")}</h2><p class="anote">${A("Tippe ein Rätsel an, um weiterzuspielen. Es verschwindet aus der Liste, wenn du es löst oder mit „Neu“ leerst.","Devam etmek için bir bulmacaya dokun. Çözünce veya „Yeni“ ile sıfırlayınca listeden çıkar.")}</p>
-   <div class="stList">${ls.map(x=>`<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")}</span></button>`).join("")||"<p>–</p>"}</div>
-   <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
-   ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});}
+let stF={b:"all",s:"date"};
+function showStarted(){const all=startedList();
+  const books=[...new Set(all.map(x=>x.book))];const bn=b=>{const B=BOOKS.find(k=>k.id===b);return B?loc(B):b;};
+  const draw=()=>{let ls=all.filter(x=>stF.b==="all"||x.book===stF.b);
+    const S={date:(a,b)=>b.ts-a.ts,prog:(a,b)=>(b.np/b.tot)-(a.np/a.tot)||b.ts-a.ts,size:(a,b)=>b.sz-a.sz||a.no-b.no,small:(a,b)=>a.sz-b.sz||a.no-b.no,no:(a,b)=>BOOKS.findIndex(k=>k.id===a.book)-BOOKS.findIndex(k=>k.id===b.book)||a.no-b.no};
+    ls.sort(S[stF.s]||S.date);
+    const ago=ts=>{if(!ts)return "";const m=Math.round((Date.now()-ts)/60000);if(m<60)return A(`vor ${Math.max(1,m)} Min.`,`${Math.max(1,m)} dk önce`);const h=Math.round(m/60);if(h<24)return A(`vor ${h} Std.`,`${h} sa önce`);const d=Math.round(h/24);return A(d===1?"gestern":`vor ${d} Tagen`,d===1?"dün":`${d} gün önce`);};
+    modal(`<h2>⏸ ${A("Begonnene Rätsel","Yarım kalan bulmacalar")}</h2>
+     <div class="stChips"><button data-fb="all" class="${stF.b==="all"?"on":""}">${A("Alle","Tümü")} (${all.length})</button>${books.map(b=>`<button data-fb="${b}" class="${stF.b===b?"on":""}">${bn(b)} (${all.filter(x=>x.book===b).length})</button>`).join("")}</div>
+     <div class="stSort"><span>${A("Sortieren:","Sırala:")}</span><select id="stS">${[["date",A("Zuletzt gespielt","Son oynanan")],["prog",A("Fortschritt (am weitesten zuerst)","İlerleme (en çok önce)")],["size",A("Größe (groß zuerst)","Boyut (büyük önce)")],["small",A("Größe (klein zuerst)","Boyut (küçük önce)")],["no",A("Band und Nummer","Cilt ve numara")]].map(([v,t])=>`<option value="${v}"${stF.s===v?" selected":""}>${t}</option>`).join("")}</select></div>
+     <div class="stList">${ls.map(x=>{const pc=Math.round(x.np/x.tot*100);return `<button data-id="${x.id}"><b>${lvName(x.id)}</b><span>👤 ${x.np}/${x.tot} ${A("gesetzt","yerleşti")}${x.ts?" · 🕒 "+ago(x.ts):""} · ▦ ${Math.sqrt(x.sz)%1?LEVELS.find(l=>l.id===x.id).rooms[0].length+"×"+LEVELS.find(l=>l.id===x.id).rooms.length:Math.sqrt(x.sz)+"×"+Math.sqrt(x.sz)}</span><i class="stBar"><i style="width:${pc}%"></i></i></button>`;}).join("")||"<p>–</p>"}</div>
+     <div style="text-align:center"><button class="btn sec" id="mN">${A("Schließen","Kapat")}</button></div>`,
+     ()=>{$("mN").onclick=hideModal;document.querySelectorAll(".stChips button").forEach(b=>b.onclick=()=>{stF.b=b.dataset.fb;draw();});$("stS").onchange=e=>{stF.s=e.target.value;draw();};
+       document.querySelectorAll(".stList button").forEach(e=>e.onclick=()=>{hideModal();openLevel(e.dataset.id);});});};
+  draw();}
 function renderHome(){
   renderStats();renderStarted();applyHow();const box=$("bookList");box.innerHTML="";
   $("searchIn").placeholder=tt("search");$("searchX").classList.toggle("hidden",!$("searchIn").value);
@@ -21313,7 +21326,7 @@ $("backBtn").onclick=closeLevel;
 function splitD(t){const i=t.indexOf(". ");return i<0?[t,""]:[t.slice(0,i+1),t.slice(i+2)];}
 function setTag(ri,pid){board.tm=board.tm||{};const cur=board.tm[pid];Object.keys(board.tm).forEach(k=>{if(board.tm[k]===ri)delete board.tm[k];});if(cur!==ri)board.tm[pid]=ri;saveBoard();renderGame();}
 function bKey(id){return "mk_b_"+(curUser?curUser.key+"_":"")+id;}
-function saveBoard(){if(L){localStorage.setItem(bKey(L.id),JSON.stringify({b:board,t:elapsed()}));evTime();}}
+function saveBoard(){if(L){localStorage.setItem(bKey(L.id),JSON.stringify({b:board,t:elapsed(),ts:Date.now()}));evTime();}}
 
 function cellsOf(o){if(o.cells)return o.cells;const a=[];for(let i=0;i<(o.h||1);i++)for(let j=0;j<(o.w||1);j++)a.push([o.r+i,o.c+j]);return a;}
 function objAt(r,c){const f=o=>o.t!=="window"&&o.t!=="door"&&o.t!=="rink"&&o.t!=="stairs"&&o.t!=="deco"&&cellsOf(o).some(([a,b])=>a===r&&b===c);return L.objects.find(o=>o.t!=="carpet"&&f(o))||L.objects.find(f);}
